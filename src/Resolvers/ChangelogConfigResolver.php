@@ -13,27 +13,27 @@ class ChangelogConfigResolver
     private $pluginPackage;
 
     /**
-     * @var \Composer\Installer\InstallationManager
-     */
-    private $installationManager;
-
-    /**
      * @var \Vaimo\ComposerChangelogs\Interfaces\PackageConfigExtractorInterface
      */
     private $configExtractor;
 
     /**
+     * @var \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver
+     */
+    private $packageInfoResolver;
+
+    /**
      * @param \Composer\Package\PackageInterface $pluginPackage
-     * @param \Composer\Installer\InstallationManager $installationManager
+     * @param \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver $packageInfoResolver
      * @param \Vaimo\ComposerChangelogs\Interfaces\PackageConfigExtractorInterface $configExtractor
      */
     public function __construct(
         \Composer\Package\PackageInterface $pluginPackage,
-        \Composer\Installer\InstallationManager $installationManager,
+        \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver $packageInfoResolver,
         \Vaimo\ComposerChangelogs\Interfaces\PackageConfigExtractorInterface $configExtractor
     ) {
         $this->pluginPackage = $pluginPackage;
-        $this->installationManager = $installationManager;
+        $this->packageInfoResolver = $packageInfoResolver;
         $this->configExtractor = $configExtractor;
     }
 
@@ -45,7 +45,7 @@ class ChangelogConfigResolver
             return array();
         }
 
-        $installPath = $this->installationManager->getInstallPath($package);
+        $installPath = $this->packageInfoResolver->getSourcePath($package);
 
         return array_filter(
             array_map(function ($config) use ($installPath) {
@@ -68,8 +68,8 @@ class ChangelogConfigResolver
             return array();
         }
 
-        $installPath = $this->installationManager->getInstallPath($package);
-        $pluginRoot = $this->installationManager->getInstallPath($this->pluginPackage);
+        $installPath = $this->packageInfoResolver->getSourcePath($package);
+        $pluginRoot = $this->packageInfoResolver->getSourcePath($this->pluginPackage);
 
         $templatePathSegments = array();
 
@@ -94,7 +94,7 @@ class ChangelogConfigResolver
             return false;
         }
 
-        return $this->installationManager->getInstallPath($package)
+        return $this->packageInfoResolver->getSourcePath($package)
             . DIRECTORY_SEPARATOR
             . $config['source'];
     }

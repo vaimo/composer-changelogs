@@ -79,8 +79,10 @@ class GenerateCommand extends \Composer\Command\BaseCommand
             $docsGenerator->generate($package);
         } catch (\Vaimo\ComposerChangelogs\Exceptions\GeneratorException $exception) {
             $output->writeln(
-                sprintf('<error>%s</error>', $exception)
+                sprintf('<error>%s</error>', $exception->getMessage())
             );
+
+            return;
         }
 
         $output->writeln('<info>Done</info>');

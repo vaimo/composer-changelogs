@@ -1,4 +1,10 @@
 {
+    "0.1.2": {
+        "fix": [
+            "wrong path resolved for root package (causing event handler to fail and no docs to be generated)",
+            "generate command failure printed out whole exception rather than just it's message"
+        ]
+    },
     "0.1.1": {
         "fix": [
             "fixed a typo in plugin's event observer name (changelog bot generated when package installed as root package)"

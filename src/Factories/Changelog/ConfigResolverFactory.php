@@ -39,12 +39,11 @@ class ConfigResolverFactory
     public function create($fromSource = false)
     {
         $packageResolver = new \Vaimo\ComposerChangelogs\Resolvers\PluginPackageResolver();
+        $packageInfoResolver = new \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver(
+            $this->installationManager
+        );
 
         if ($fromSource) {
-            $packageInfoResolver = new \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver(
-                $this->installationManager
-            );
-
             $infoExtractor = new Extractors\VendorConfigExtractor($packageInfoResolver);
         } else {
             $infoExtractor = new Extractors\InstalledConfigExtractor();
@@ -52,7 +51,7 @@ class ConfigResolverFactory
 
         return new \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver(
             $packageResolver->resolveForNamespace($this->packageRepository, __NAMESPACE__),
-            $this->installationManager,
+            $packageInfoResolver,
             $infoExtractor
         );
     }
