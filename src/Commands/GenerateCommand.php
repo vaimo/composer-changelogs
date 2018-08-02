@@ -97,6 +97,14 @@ class GenerateCommand extends \Composer\Command\BaseCommand
 
         $templates = $configResolver->resolveOutputTemplates($package);
 
+        $output->writeln(
+            sprintf(
+                'Generating change-log output for <info>%s</info> (<comment>%s</comment>)',
+                $package->getName(),
+                implode(',', array_keys($targets))
+            )
+        );
+
         foreach ($targets as $type => $target) {
             if (!isset($generators[$type])) {
                 continue;
@@ -128,5 +136,7 @@ class GenerateCommand extends \Composer\Command\BaseCommand
                 break;
             }
         }
+
+        $output->writeln('<info>Done</info>');
     }
 }

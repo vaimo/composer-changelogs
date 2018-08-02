@@ -40,24 +40,25 @@ class SphinxDocGenerator implements \Vaimo\ComposerChangelogs\Interfaces\Documen
         $contextData = array();
 
         foreach ($changelog as $version => $details) {
-            $item = array();
+            $item = array(
+                'version' => $version,
+                'overview' => isset($details['overview']) ? $details['overview'] : '',
+            );
 
-            $item['version'] = $version;
-            $item['overview'] = isset($details['overview']) ? $details['overview'] : '';
-            $item['groups'] = array();
+            $groups = array();
 
-            $groups = array_diff_key($details, array('overview' => true));
-
-            foreach ($groups as $name => $groupItems) {
+            foreach (array_diff_key($details, array('overview' => true)) as $name => $groupItems) {
                 $group = array();
 
                 $group['name'] = ucfirst($name);
                 $group['items'] = $groupItems;
 
-                $item['groups'][] = $group;
+                $groups[] = $group;
             }
 
-            $contextData[] = $item;
+            $contextData[] = array_filter(
+                array_replace($item, array('groups' => $groups))
+            );
         }
 
         $output = $outputGenerator(
