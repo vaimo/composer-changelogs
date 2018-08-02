@@ -1,0 +1,7 @@
+{
+    "0.1.0": {
+        "feature": [
+            "allow Sphinx documentation file to be generated from changelog contents"
+        ]
+    }
+}
