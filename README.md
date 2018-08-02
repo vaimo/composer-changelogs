@@ -49,7 +49,7 @@ added for the developers.
 }
 ```
 
-## Configuring generators
+## Configuration: generators
 
 This example is based on making Sphinx documentation generation available
 
@@ -65,6 +65,32 @@ This example is based on making Sphinx documentation generation available
   }
 }
 ```
+
+## Configuration: generator templates
+
+The plugin ships with built-in templates for each of the generators, which can be configured by defining 
+generators in an extended format.
+
+```json
+{
+  "extra": {
+    "changelog": {
+      "source": "changelog.json",
+      "output": {
+        "sphinx": {
+          "path": "docs/changelog.rst",
+          "template": "my/template/path"
+        }
+      }
+    }
+  }
+}
+```
+
+Note that the template file path is relative to the package root that owns the changelog configuration.
+
+Templates use Mustache syntax with some extra helpers (for which the built-in templates serve as 
+documentation/examples).  
   
 ## Changelog 
 
