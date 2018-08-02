@@ -21,8 +21,8 @@ class Plugin implements \Composer\Plugin\PluginInterface,
     public static function getSubscribedEvents()
     {
         return array(
-            \Composer\Script\ScriptEvents::POST_INSTALL_CMD => 'bootstrapChangelogs',
-            \Composer\Script\ScriptEvents::POST_UPDATE_CMD => 'bootstrapChangelogs'
+            \Composer\Script\ScriptEvents::POST_INSTALL_CMD => 'bootstrapImplementation',
+            \Composer\Script\ScriptEvents::POST_UPDATE_CMD => 'bootstrapImplementation'
         );
     }
 
@@ -40,7 +40,7 @@ class Plugin implements \Composer\Plugin\PluginInterface,
     /**
      * Events
      */
-    public function bootstrapChangelog()
+    public function bootstrapImplementation()
     {
         $this->changelogManager->bootstrap();
     }
