@@ -98,6 +98,13 @@ When relying on the generators to produce the changelog documentation, make sure
 VCS ignore file as well to avoid producing unintended modifications. The file will be overwritten if exist 
 in the repository before the documentation generation is called.
 
+## Commands
+
+```shell
+# Generate documentation pages from changelog configuration
+composer changelog:generate 
+```
+
 ## Changelog 
 
 _Changelog included in the composer.json of the package_
