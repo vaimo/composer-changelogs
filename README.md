@@ -91,7 +91,11 @@ Note that the template file path is relative to the package root that owns the c
 
 Templates use Mustache syntax with some extra helpers (for which the built-in templates serve as 
 documentation/examples).  
-  
+
+When relying on the generators to produce the changelog documentation, make sure to add the output path to 
+VCS ignore file as well to avoid producing unintended modifications. The file will be overwritten if exist 
+in the repository before the documentation generation is called.
+
 ## Changelog 
 
 _Changelog included in the composer.json of the package_
