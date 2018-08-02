@@ -17,7 +17,7 @@ Environment variables can be defined as key value pairs in the project's compose
 }
 ```
 
-## Configuration: changelog format
+## Configuration: changelog file format
 
 The module expects certain conventions to be used when declaring new changelog records, which are based
 on grouping the changes based on sematic versioning rules (+ provides some extra ones for even greater 
@@ -48,6 +48,8 @@ added for the developers.
     }
 }
 ```
+
+Note that all the groups are optional - the documentation generation and other features of the plugin will not error out when they're missing.
 
 ## Configuration: generators
 
