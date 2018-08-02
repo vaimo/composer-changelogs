@@ -3,12 +3,12 @@
  * Copyright © Vaimo Group. All rights reserved.
  * See LICENSE_VAIMO.txt for license details.
  */
-namespace Vaimo\ComposerChangelogs\Generators;
+namespace Vaimo\ComposerChangelogs\Generators\DocumentationTypes;
 
 use LightnCandy\LightnCandy;
 use Vaimo\ComposerChangelogs\Exceptions\TemplateValidationException;
 
-class SphinxDocGenerator implements \Vaimo\ComposerChangelogs\Interfaces\DocumentationGeneratorInterface
+class Sphinx implements \Vaimo\ComposerChangelogs\Interfaces\DocumentationGeneratorInterface
 {
     public function generate(array $changelog, $templatePath, $outputPath)
     {

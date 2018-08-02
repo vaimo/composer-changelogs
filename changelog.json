@@ -1,7 +1,8 @@
 {
     "0.1.0": {
         "feature": [
-            "allow Sphinx documentation file to be generated from changelog contents"
+            "allow Sphinx documentation file to be generated from changelog contents ('changelog:generate' command)",
+            "generate changelog for root package on install/update"
         ]
     }
 }

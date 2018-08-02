@@ -25,13 +25,6 @@ class GenerateCommand extends \Composer\Command\BaseCommand
         );
 
         $this->addOption(
-            '--type',
-            null,
-            \Symfony\Component\Console\Input\InputOption::VALUE_NONE,
-            'Generate documentation of certain type'
-        );
-
-        $this->addOption(
             '--from-source',
             null,
             \Symfony\Component\Console\Input\InputOption::VALUE_NONE,
@@ -42,7 +35,6 @@ class GenerateCommand extends \Composer\Command\BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $packageName = $input->getArgument('name');
-        $generatorType = $input->getOption('type');
         $fromSource = $input->getOption('from-source');
 
         $composer = $this->getComposer();
@@ -65,76 +57,30 @@ class GenerateCommand extends \Composer\Command\BaseCommand
             return;
         }
 
-        $configResolverFactory = new Factories\Changelog\ConfigResolverFactory(
+        $realPackageResolver = new \Vaimo\ComposerChangelogs\Resolvers\RealPackageResolver();
+
+        $package = $realPackageResolver->resolve($package);
+
+        $output->writeln(
+            sprintf('Generating change-log output for <info>%s</info>', $package->getName())
+        );
+
+        $configResolverFactory = new \Vaimo\ComposerChangelogs\Factories\Changelog\ConfigResolverFactory(
             $composer->getRepositoryManager()->getLocalRepository(),
             $composer->getInstallationManager()
         );
 
-        $configResolver = $configResolverFactory->create($fromSource);
+        $docsGenerator = new \Vaimo\ComposerChangelogs\Generators\DocumentationGenerator(
+            $configResolverFactory->create($fromSource),
+            new \Vaimo\ComposerChangelogs\Repositories\Documentation\TypeRepository()
+        );
 
-        $jsonFileReader = new \Vaimo\ComposerChangelogs\Readers\JsonFileReader();
-
-        if (!$sourcePath = $configResolver->resolveSourcePath($package)) {
-            $output->writeln(sprintf(
-                '<error>Changelog source path not defined for: %s</error>', $package->getName())
+        try {
+            $docsGenerator->generate($package);
+        } catch (\Vaimo\ComposerChangelogs\Exceptions\GeneratorException $exception) {
+            $output->writeln(
+                sprintf('<error>%s</error>', $exception)
             );
-
-            return;
-        }
-
-        $changelog = $jsonFileReader->readToArray($sourcePath);
-
-        $outputPaths = $configResolver->resolveOutputTargets($package);
-
-        $targets = $generatorType
-            ? array_intersect_key($outputPaths, array($generatorType => true))
-            : $outputPaths;
-
-        /** @var \Vaimo\ComposerChangelogs\Interfaces\DocumentationGeneratorInterface[] $generators */
-        $generators = array(
-            'sphinx' => new \Vaimo\ComposerChangelogs\Generators\SphinxDocGenerator()
-        );
-
-        $templates = $configResolver->resolveOutputTemplates($package);
-
-        $output->writeln(
-            sprintf(
-                'Generating change-log output for <info>%s</info> (<comment>%s</comment>)',
-                $package->getName(),
-                implode(',', array_keys($targets))
-            )
-        );
-
-        foreach ($targets as $type => $target) {
-            if (!isset($generators[$type])) {
-                continue;
-            }
-
-            $generator = $generators[$type];
-
-            try {
-                $generator->generate($changelog,  $templates[$type], $target);
-            } catch (\Vaimo\ComposerChangelogs\Exceptions\TemplateValidationException $exception) {
-                $messages = array();
-
-                do {
-                    $messages[] = $exception->getMessage();
-                } while ($exception = $exception->getPrevious());
-
-                $messages = array_map(function ($message, $index) {
-                    return sprintf('#%s - %s', $index + 1, $message);
-                }, $messages, array_keys($messages));
-
-                $errorMessage = sprintf(
-                    "<error>Generator run for '%s' caused an error:<error>\n%s</error></error>",
-                    $type,
-                    implode("\n", $messages)
-                );
-
-                $output->writeln($errorMessage);
-
-                break;
-            }
         }
 
         $output->writeln('<info>Done</info>');

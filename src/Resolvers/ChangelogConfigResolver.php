@@ -99,11 +99,18 @@ class ChangelogConfigResolver
             . $config['source'];
     }
 
+    public function hasConfig(\Composer\Package\PackageInterface $package)
+    {
+        $packageExtraConfig = $this->configExtractor->getConfig($package);
+
+        return isset($packageExtraConfig['changelog']) && is_array($packageExtraConfig['changelog']);
+    }
+
     private function getConfig(\Composer\Package\PackageInterface $package)
     {
         $packageExtraConfig = $this->configExtractor->getConfig($package);
 
-        if (!isset($packageExtraConfig['changelog'])) {
+        if (!isset($packageExtraConfig['changelog']) || !is_array($packageExtraConfig['changelog'])) {
             return array();
         }
 

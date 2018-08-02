@@ -6,7 +6,6 @@
 namespace Vaimo\ComposerChangelogs\Factories\Changelog;
 
 use Vaimo\ComposerChangelogs\Extractors;
-use Vaimo\ComposerChangelogs\Resolvers;
 
 class ConfigResolverFactory
 {
@@ -32,18 +31,26 @@ class ConfigResolverFactory
         $this->installationManager = $installationManager;
     }
 
+    /**
+     * @param bool $fromSource
+     * @return \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver
+     * @throws \Exception
+     */
     public function create($fromSource = false)
     {
         $packageResolver = new \Vaimo\ComposerChangelogs\Resolvers\PluginPackageResolver();
 
         if ($fromSource) {
-            $packageInfoResolver = new Resolvers\PackageInfoResolver($this->installationManager);
+            $packageInfoResolver = new \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver(
+                $this->installationManager
+            );
+
             $infoExtractor = new Extractors\VendorConfigExtractor($packageInfoResolver);
         } else {
             $infoExtractor = new Extractors\InstalledConfigExtractor();
         }
 
-        return new Resolvers\ChangelogConfigResolver(
+        return new \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver(
             $packageResolver->resolveForNamespace($this->packageRepository, __NAMESPACE__),
             $this->installationManager,
             $infoExtractor
