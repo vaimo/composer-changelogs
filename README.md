@@ -1,7 +1,8 @@
 # composer-changelogs
 
-Provide information about package changes based on changelog files that are bundled with releases; 
-introduces tools/commands for generating documentation files from changelog sources
+Provides information about package changes based on changelog files that are bundled with releases; 
+
+It also introduces tools/commands for generating documentation files from changelog sources.
 
 ## Configuration: overview
 
