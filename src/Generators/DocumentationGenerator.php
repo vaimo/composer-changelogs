@@ -5,7 +5,6 @@
  */
 namespace Vaimo\ComposerChangelogs\Generators;
 
-use Composer\Package\PackageInterface;
 use Vaimo\ComposerChangelogs\Factories;
 
 class DocumentationGenerator
@@ -16,14 +15,14 @@ class DocumentationGenerator
     private $configResolver;
 
     /**
-     * @var \Vaimo\ComposerChangelogs\Readers\JsonFileReader
-     */
-    private $jsonFileReader;
-
-    /**
      * @var \Vaimo\ComposerChangelogs\Repositories\Documentation\TypeRepository
      */
     private $docTypeRepository;
+
+    /**
+     * @var \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader
+     */
+    private $changelogLoader;
 
     /**
      * @param \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver $configResolver
@@ -34,23 +33,16 @@ class DocumentationGenerator
         \Vaimo\ComposerChangelogs\Repositories\Documentation\TypeRepository $docTypeRepository
     ) {
         $this->configResolver = $configResolver;
-        $this->jsonFileReader = new \Vaimo\ComposerChangelogs\Readers\JsonFileReader();
-
         $this->docTypeRepository = $docTypeRepository;
+
+        $this->changelogLoader = new \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader($configResolver);
     }
 
-    public function generate(PackageInterface $package)
+    public function generate(\Composer\Package\PackageInterface $package)
     {
-        if (!$sourcePath = $this->configResolver->resolveSourcePath($package)) {
-            throw new \Vaimo\ComposerChangelogs\Exceptions\GeneratorException(
-                sprintf('Changelog source path not defined for: %s', $package->getName())
-            );
-        }
-
-        $changelog = $this->jsonFileReader->readToArray($sourcePath);
+        $changelog = $this->changelogLoader->load($package);
 
         $outputPaths = $this->configResolver->resolveOutputTargets($package);
-
         $templates = $this->configResolver->resolveOutputTemplates($package);
 
         $docTypes = $this->docTypeRepository->getAllTypes();

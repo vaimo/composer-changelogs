@@ -51,6 +51,25 @@ added for the developers.
 
 Note that all the groups are optional - the documentation generation and other features of the plugin will not error out when they're missing.
 
+## Configuration: upcoming releases
+
+To make sure that all the commands of the plugin work as intended, upcoming releases should be marked in
+the changelog as "X.X.X", which will cause latest version reporter command to skip over it. Same could be
+achieved if the values is left blank.
+
+ ```json
+ {
+     "X.X.X": {
+         "feature": [
+             "some upcoming, yet to be released feature"
+         ]
+     }
+ }
+ ```
+ 
+ The plugin uses composer constraints validator so anything that does not validate as version constraint
+ will be skipped over.
+
 ## Configuration: generators
 
 This example is based on making Sphinx documentation generation available
@@ -103,6 +122,9 @@ in the repository before the documentation generation is called.
 ```shell
 # Generate documentation pages from changelog configuration
 composer changelog:generate 
+
+# Report latest valid version from changelog (skip over the ones that are yet to be released)
+composer changelog:version
 ```
 
 ## Changelog 

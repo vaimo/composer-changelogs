@@ -1,4 +1,9 @@
 {
+    "0.2.0": {
+        "feature": [
+            "new command added for reporting latest valid version tag from changelog: changelog:version"
+        ]
+    },
     "0.1.2": {
         "fix": [
             "wrong path resolved for root package (causing event handler to fail and no docs to be generated)",
