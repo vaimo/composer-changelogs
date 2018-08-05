@@ -12,6 +12,7 @@ class CommandsProvider implements \Composer\Plugin\Capability\CommandProvider
         return array(
             new \Vaimo\ComposerChangelogs\Commands\GenerateCommand,
             new \Vaimo\ComposerChangelogs\Commands\VersionCommand,
+            new \Vaimo\ComposerChangelogs\Commands\InfoCommand
         );
     }
 }

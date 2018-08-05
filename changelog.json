@@ -1,4 +1,10 @@
 {
+    "0.3.0": {
+        "feature": [
+            "new command added for acquiring information about specific release: changelog:info",
+            "allow multi-line contents for 'overview'"
+        ]
+    },
     "0.2.0": {
         "feature": [
             "new command added for reporting latest valid version tag from changelog: changelog:version"

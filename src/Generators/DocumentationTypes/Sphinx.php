@@ -45,6 +45,10 @@ class Sphinx implements \Vaimo\ComposerChangelogs\Interfaces\DocumentationGenera
                 'overview' => isset($details['overview']) ? $details['overview'] : '',
             );
 
+            if (!is_array($item['overview'])) {
+                $item['overview'] = array($item['overview']);
+            }
+
             $groups = array();
 
             foreach (array_diff_key($details, array('overview' => true)) as $name => $groupItems) {
