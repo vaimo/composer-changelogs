@@ -21,7 +21,7 @@ Environment variables can be defined as key value pairs in the project's compose
 ## Configuration: changelog file format
 
 The module expects certain conventions to be used when declaring new changelog records, which are based
-on grouping the changes based on sematic versioning rules (+ provides some extra ones for even greater 
+on grouping the changes based on semantic versioning rules (+ provides some extra ones for even greater 
 detail): breaking, feature, fix (extras: overview, maintenance). The extra keys are mostly meant for dumping
 some data into the release notes about general theme of the new release or allowing some extra details to be 
 added for the developers.
@@ -29,7 +29,7 @@ added for the developers.
 ```json
 {
     "1.0.0": {
-        "overview": "Some general overarching description about this release",
+        "overview": "Some general overarching description about this release; Can be declared as a list",
         "breaking": [
             "code: Something changed in the sourcecode",
             "data: Something changed about the data format",
@@ -50,7 +50,12 @@ added for the developers.
 }
 ```
 
-Note that all the groups are optional - the documentation generation and other features of the plugin will not error out when they're missing.
+Note that all the groups are optional - the documentation generation and other features of the plugin 
+will not error out when they're missing.
+
+Developer is not limited only to these groups and any other group will end up being used in documentation 
+generator output as well. The exception to this rule is the "overview" group, which is bound to additional
+processing logic and is not perceived as a "changes" group in the code. 
 
 ## Configuration: upcoming releases
 
@@ -101,7 +106,7 @@ generators in an extended format.
       "output": {
         "sphinx": {
           "path": "docs/changelog.rst",
-          "template": "my/template/path"
+          "template": "my/template/path/template123.mustache"
         }
       }
     }
@@ -118,6 +123,27 @@ When relying on the generators to produce the changelog documentation, make sure
 VCS ignore file as well to avoid producing unintended modifications. The file will be overwritten if exist 
 in the repository before the documentation generation is called.
 
+The generator does support Mustache partials as well in which case the template paths should be given as 
+dictionary where the entry point template has been defined under the key "root".
+
+ ```json
+ {
+ 
+   "template": {
+     "root": "my/template/path/custom_root.mustache",
+     "mypartial": "my/template/path/release.mustache"
+   }
+ }
+ ```
+
+In this example, the choice to define a template for the key "mypartial" derives directly from referring to
+such a Mustache partial in the template that's defined in "root". 
+
+The reserved names for partials in this plugin are:
+
+* root - main entry-point for the renderer
+* release - used by default to output certain changelog group/version and it's details AND by changelog:info
+
 ## Commands
 
 ```shell
@@ -126,6 +152,9 @@ composer changelog:generate
 
 # Report latest valid version from changelog (skip over the ones that are yet to be released)
 composer changelog:version
+
+# Report latest release details (in requested format)
+composer changelog:info
 ```
 
 ## Changelog 
