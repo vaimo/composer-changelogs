@@ -3,6 +3,9 @@
         "feature": [
             "new command added for acquiring information about specific release: changelog:info",
             "allow multi-line contents for 'overview'"
+        ],
+        "maintenance": [
+            "output templating changed to be more granular to allow same templates to be used for both changelog:info output and for documentation generation"
         ]
     },
     "0.2.0": {

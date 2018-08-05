@@ -49,7 +49,8 @@ class InfoCommand extends \Composer\Command\BaseCommand
             '--format',
             null,
             \Symfony\Component\Console\Input\InputOption::VALUE_OPTIONAL,
-            'Format of the output (json, html, txt)'
+            'Format of the output (json, html, txt)',
+            'txt'
         );
     }
 
@@ -60,6 +61,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
         $fromSource = $input->getOption('from-source');
         $briefMode = $input->getOption('brief');
         $version = $input->getOption('release');
+        $format = $input->getOption('format');
 
         $changelogRepository = new \Vaimo\ComposerChangelogs\Factories\Changelog\RepositoryFactory(
             $this->getComposer()
@@ -77,24 +79,49 @@ class InfoCommand extends \Composer\Command\BaseCommand
             return;
         }
 
-        $changelogContentResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogContentsResolver();
-
         if (!$version) {
-            $version = $changelogContentResolver->resolveLatestVersionedRelease($changelog);
+            $changelogReleaseResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogReleaseResolver();
+
+            $version = $changelogReleaseResolver->resolveLatestVersionedRelease($changelog);
         }
 
         if (!$version || !isset($changelog[$version])) {
             return;
         }
 
-        $info = $changelog[$version];
+        $details = $changelog[$version];
 
-//        if ($briefMode) {
-//            foreach ($info
-//        }
+        $releaseDetailsResolver = new \Vaimo\ComposerChangelogs\Resolvers\ReleaseDetailsResolver();
+
+        $generalInfo = $releaseDetailsResolver->resolveOverview($details);
+        $groups = $releaseDetailsResolver->resolveChangeGroups($details);
+
+        if ($briefMode) {
+            $summary = array_map(function ($key, $group) {
+                return sprintf('%s (%s)', $key, count($group));
+            }, array_keys($groups), $groups);
+
+            $generalInfo = $releaseDetailsResolver->resolveOverview($details);
+
+            $groups = array(
+                'overview' => array_merge(
+                    $generalInfo['overview'],
+                    array('Includes: ' . implode(', ', $summary))
+                )
+            );
+        } else if ($generalInfo['overview']) {
+            $groups = array_merge(
+                $groups,
+                array('overview' => $generalInfo['overview'])
+            );
+        }
+
+        $releaseInfoGenerator = new \Vaimo\ComposerChangelogs\Generators\ReleaseInfoGenerator();
+
+        $releaseInfoGenerator->generate($groups, $format);
 
         $output->writeln(
-            json_encode($changelog[$version], JSON_PRETTY_PRINT)
+            json_encode($groups, JSON_PRETTY_PRINT)
         );
     }
 }

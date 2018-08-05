@@ -10,9 +10,19 @@ use Vaimo\ComposerChangelogs\Exceptions\TemplateValidationException;
 
 class Sphinx implements \Vaimo\ComposerChangelogs\Interfaces\DocumentationGeneratorInterface
 {
-    public function generate(array $changelog, $templatePath, $outputPath)
+    /**
+     * @var \Vaimo\ComposerChangelogs\Loaders\TemplateLoader
+     */
+    private $templateLoader;
+
+    public function __construct()
     {
-        $templateContents = file_get_contents($templatePath);
+        $this->templateLoader = new \Vaimo\ComposerChangelogs\Loaders\TemplateLoader();
+    }
+
+    public function generate(array $data, array $templatePaths)
+    {
+        $templateLoader = $this->templateLoader;
 
         $options = array(
             'flags' => LightnCandy::FLAG_MUSTACHE
@@ -22,53 +32,34 @@ class Sphinx implements \Vaimo\ComposerChangelogs\Interfaces\DocumentationGenera
                 'line' => function ($context, $char) {
                     return str_pad('', strlen($context), $char);
                 }
-            )
+            ),
+            'partialresolver' => function ($cx, $name) use ($templatePaths, $templateLoader) {
+                if (isset($templatePaths[$name])) {
+                    try {
+                        return $templateLoader->load($templatePaths[$name]);
+                    } catch (\Exception $e) {
+                        return sprintf('Missing template: %s', $templatePaths[$name]);
+                    }
+                }
+
+                return sprintf('Unknown partial: %s', $name);
+            }
         );
 
+        $rootTemplate = $this->templateLoader->load($templatePaths['root']);
+
         try {
-            $generatorSeed = LightnCandy::compile($templateContents, $options);
+            $generatorCode = LightnCandy::compile($rootTemplate, $options);
         } catch (\Exception $exception) {
             throw new TemplateValidationException(
-                sprintf('Failed to parse %s', $templatePath),
+                sprintf('Failed to parse %s', $rootTemplate),
                 null,
                 $exception
             );
         }
 
-        $outputGenerator = eval($generatorSeed);
+        $outputGenerator = eval($generatorCode);
 
-        $contextData = array();
-
-        foreach ($changelog as $version => $details) {
-            $item = array(
-                'version' => $version,
-                'overview' => isset($details['overview']) ? $details['overview'] : '',
-            );
-
-            if (!is_array($item['overview'])) {
-                $item['overview'] = array($item['overview']);
-            }
-
-            $groups = array();
-
-            foreach (array_diff_key($details, array('overview' => true)) as $name => $groupItems) {
-                $group = array();
-
-                $group['name'] = ucfirst($name);
-                $group['items'] = $groupItems;
-
-                $groups[] = $group;
-            }
-
-            $contextData[] = array_filter(
-                array_replace($item, array('groups' => $groups))
-            );
-        }
-
-        $output = $outputGenerator(
-            array('log' => $contextData)
-        );
-
-        file_put_contents($outputPath, $output);
+        return $outputGenerator($data);
     }
 }

@@ -5,7 +5,7 @@
  */
 namespace Vaimo\ComposerChangelogs\Resolvers;
 
-class ChangelogContentsResolver
+class ChangelogReleaseResolver
 {
     /**
      * @var \Vaimo\ComposerChangelogs\Validators\ConstraintValidator

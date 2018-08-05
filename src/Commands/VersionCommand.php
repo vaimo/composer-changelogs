@@ -53,9 +53,9 @@ class VersionCommand extends \Composer\Command\BaseCommand
             return;
         }
 
-        $changelogContentResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogContentsResolver();
+        $changelogReleaseResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogReleaseResolver();
 
-        $version = $changelogContentResolver->resolveLatestVersionedRelease($changelog);
+        $version = $changelogReleaseResolver->resolveLatestVersionedRelease($changelog);
 
         if (!$version) {
             return;

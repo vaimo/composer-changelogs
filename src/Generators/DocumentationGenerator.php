@@ -51,7 +51,14 @@ class DocumentationGenerator
             $generator = $docTypes[$type];
 
             try {
-                $generator->generate($changelog,  $templates[$type], $target);
+                // @todo: move this somewhere, where it can be switched by type (needed for info as well)
+                $mustacheConverter = new \Vaimo\ComposerChangelogs\Converters\MustacheConverter();
+                $contextData = $mustacheConverter->convertChangelog($changelog);
+
+                file_put_contents(
+                    $target,
+                    $generator->generate($contextData,  $templates[$type])
+                );
             } catch (\Vaimo\ComposerChangelogs\Exceptions\TemplateValidationException $exception) {
                 $messages = array();
 

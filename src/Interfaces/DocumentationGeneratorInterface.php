@@ -9,8 +9,7 @@ interface DocumentationGeneratorInterface
 {
     /**
      * @param array $changelog
-     * @param string $templatePath
-     * @param string $outputPath
+     * @param array $templatePaths
      */
-    public function generate(array $changelog, $templatePath, $outputPath);
+    public function generate(array $changelog, array $templatePaths);
 }

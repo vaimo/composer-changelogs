@@ -35,6 +35,12 @@ class ChangelogLoader
             );
         }
 
-        return $this->jsonFileReader->readToArray($sourcePath);
+        $groups = $this->jsonFileReader->readToArray($sourcePath);
+
+        foreach ($groups as $version => $group) {
+            $groups[$version]['version'] = $version;
+        }
+
+        return $groups;
     }
 }

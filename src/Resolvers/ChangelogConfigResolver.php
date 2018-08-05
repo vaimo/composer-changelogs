@@ -71,19 +71,35 @@ class ChangelogConfigResolver
         $installPath = $this->packageInfoResolver->getSourcePath($package);
         $pluginRoot = $this->packageInfoResolver->getSourcePath($this->pluginPackage);
 
-        $templatePathSegments = array();
+        $templateGroups = array();
 
         foreach ($config['output'] as $type => $outputConfig) {
             if (is_array($outputConfig) && isset($outputConfig['template']) && $outputConfig['template']) {
-                $templatePathSegments[$type] = array($installPath, $outputConfig['template']);
+                if (!is_array($outputConfig['template'])) {
+                    $outputConfig['template'] = array(
+                        'root' => $outputConfig['template']
+                    );
+                }
+
+                $templateGroups[$type] = array_map(
+                    function ($item) use ($installPath) {
+                        return array($installPath, $item['template']);
+                    },
+                    $outputConfig['template']
+                );
             }
 
-            $templatePathSegments[$type] = array($pluginRoot, 'views', $type . '.mustache');
+            $templateGroups[$type] = array(
+                'root' => array($pluginRoot, 'views', $type, 'changelog.mustache'),
+                'release' => array($pluginRoot, 'views', $type, 'release.mustache')
+            );
         }
 
-        return array_map(function ($segments) {
-            return implode(DIRECTORY_SEPARATOR, $segments);
-        }, $templatePathSegments);
+        return array_map(function (array $group) {
+            return array_map(function (array $segments) {
+                return implode(DIRECTORY_SEPARATOR, $segments);
+            }, $group);
+        }, $templateGroups);
     }
 
     public function resolveSourcePath(\Composer\Package\PackageInterface $package)
