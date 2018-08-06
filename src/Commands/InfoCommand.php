@@ -109,7 +109,10 @@ class InfoCommand extends \Composer\Command\BaseCommand
             $groups = array(
                 'overview' => array_merge(
                     $generalInfo['overview'],
-                    array('----------------------', 'Includes: ' . implode(', ', $summary))
+                    array_filter(array(
+                        $generalInfo['overview'] ? '----------------------' : '',
+                        'Includes: ' . implode(', ', $summary)
+                    ))
                 )
             );
         } else if ($generalInfo['overview']) {

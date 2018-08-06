@@ -1,4 +1,9 @@
 {
+    "0.3.1": {
+        "fix": [
+            "brief changelog info mode added overview separator even when there was no overview set"
+        ]
+    },
     "0.3.0": {
         "feature": [
             "new command added for acquiring information about specific release: changelog:info",
