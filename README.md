@@ -1,8 +1,8 @@
 # composer-changelogs
 
-Provides information about package changes based on changelog files that are bundled with releases; 
+Provides information about package changes based on changelog files that are bundled with releases and introduces tools/commands for generating documentation files from changelog sources.
 
-It also introduces tools/commands for generating documentation files from changelog sources.
+It comes with several commands that aid developer on setting up automatic package publishing logic in CI.
 
 ## Configuration: overview
 
@@ -156,6 +156,18 @@ composer changelog:version
 # Report latest release details (in requested format)
 composer changelog:info
 ```
+
+## Upgrading The Module
+
+When upgrading the module, one might encounter odd crashes about classes not being found or class 
+constructor arguments being wrong. 
+
+This usually means that the class structure or constructor footprint in some of the classes have changed 
+after the upgrade which means that the plugin might be running with some classes from the old and some 
+classes from the new version. 
+
+It is safe to ignore errors like these when running the `composer update` command again does not produce 
+any side-effects.
 
 ## Changelog 
 
