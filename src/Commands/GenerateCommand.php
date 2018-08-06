@@ -39,40 +39,28 @@ class GenerateCommand extends \Composer\Command\BaseCommand
 
         $composer = $this->getComposer();
 
-        if (!$packageName) {
-            $package = $composer->getPackage();
-        } else {
-            $matches = $composer->getRepositoryManager()
-                ->getLocalRepository()
-                ->findPackages($packageName, '*');
+        $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composer);
 
-            $package = reset($matches);
-        }
+        $packageRepository = $packageRepositoryFactory->create();
 
-        if (!$package) {
+        try {
+            $package = $packageRepository->getByName($packageName);
+        } catch (\Exception $e) {
             $output->writeln(
-                sprintf('<error>Failed to locate the package: %s</error>', $packageName)
+                sprintf('<error>%s</error>', $e->getMessage())
             );
 
             return;
         }
 
-        $realPackageResolver = new \Vaimo\ComposerChangelogs\Resolvers\RealPackageResolver();
-
-        $package = $realPackageResolver->resolve($package);
-
         $output->writeln(
             sprintf('Generating change-log output for <info>%s</info>', $package->getName())
         );
 
-        $configResolverFactory = new \Vaimo\ComposerChangelogs\Factories\Changelog\ConfigResolverFactory(
-            $composer->getRepositoryManager()->getLocalRepository(),
-            $composer->getInstallationManager()
-        );
+        $configResolverFactory = new Factories\Changelog\ConfigResolverFactory($composer);
 
         $docsGenerator = new \Vaimo\ComposerChangelogs\Generators\DocumentationGenerator(
-            $configResolverFactory->create($fromSource),
-            new \Vaimo\ComposerChangelogs\Repositories\Documentation\TypeRepository()
+            $configResolverFactory->create($fromSource)
         );
 
         try {

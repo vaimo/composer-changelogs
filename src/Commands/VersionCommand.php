@@ -37,14 +37,17 @@ class VersionCommand extends \Composer\Command\BaseCommand
         $packageName = $input->getArgument('name');
         $fromSource = $input->getOption('from-source');
 
-        $changelogRepository = new \Vaimo\ComposerChangelogs\Factories\Changelog\RepositoryFactory(
-            $this->getComposer()
-        );
+        $composer = $this->getComposer();
 
-        $changelogRepository = $changelogRepository->create($fromSource);
+        $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composer);
+        $changelogLoaderFactory = new Factories\Changelog\LoaderFactory($composer);
+
+        $packageRepository = $packageRepositoryFactory->create();
+        $changelogLoader = $changelogLoaderFactory->create($fromSource);
 
         try {
-            $changelog = $changelogRepository->getForPackage($packageName);
+            $package = $packageRepository->getByName($packageName);
+            $changelog = $changelogLoader->load($package);
         } catch (\Exception $e) {
             $output->writeln(
                 sprintf('<error>%s</error>', $e->getMessage())

@@ -7,7 +7,7 @@ namespace Vaimo\ComposerChangelogs\Factories\Changelog;
 
 use Vaimo\ComposerChangelogs\Factories;
 
-class RepositoryFactory
+class LoaderFactory
 {
     /**
      * @var \Composer\Composer
@@ -25,21 +25,10 @@ class RepositoryFactory
 
     public function create($fromSource = false)
     {
-        $packageRepository = $this->composerRuntime->getRepositoryManager()->getLocalRepository();
+        $configResolverFactory = new Factories\Changelog\ConfigResolverFactory($this->composerRuntime);
 
-        $configResolverFactory = new Factories\Changelog\ConfigResolverFactory(
-            $packageRepository,
-            $this->composerRuntime->getInstallationManager()
-        );
-
-        $changelogLoader = new \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader(
+        return new \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader(
             $configResolverFactory->create($fromSource)
-        );
-
-        return new \Vaimo\ComposerChangelogs\Repositories\ChangelogRepository(
-            $this->composerRuntime->getPackage(),
-            $packageRepository,
-            $changelogLoader
         );
     }
 }

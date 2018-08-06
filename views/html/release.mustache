@@ -1,0 +1,16 @@
+{{#overview}}
+<br/>{{.}}
+{{/overview}}
+{{#groups.length}}
+<br/>
+{{/groups.length}}
+{{#groups}}
+<div>
+<b>{{name}}</b>
+<ol>
+{{#items}}
+<li>{{.}}</li>
+{{/items}}
+</ol>
+</div>
+{{/groups}}

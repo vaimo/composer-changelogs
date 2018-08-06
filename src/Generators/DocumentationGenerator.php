@@ -15,27 +15,32 @@ class DocumentationGenerator
     private $configResolver;
 
     /**
-     * @var \Vaimo\ComposerChangelogs\Repositories\Documentation\TypeRepository
-     */
-    private $docTypeRepository;
-
-    /**
      * @var \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader
      */
     private $changelogLoader;
 
     /**
+     * @var \Vaimo\ComposerChangelogs\Generators\Changelog\RenderContextGenerator
+     */
+    private $dataConverter;
+
+    /**
+     * @var \Vaimo\ComposerChangelogs\Generators\TemplateOutputGenerator
+     */
+    private $templateRenderer;
+
+    /**
      * @param \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver $configResolver
-     * @param \Vaimo\ComposerChangelogs\Repositories\Documentation\TypeRepository $docTypeRepository
      */
     public function __construct(
-        \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver $configResolver,
-        \Vaimo\ComposerChangelogs\Repositories\Documentation\TypeRepository $docTypeRepository
+        \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver $configResolver
     ) {
         $this->configResolver = $configResolver;
-        $this->docTypeRepository = $docTypeRepository;
 
         $this->changelogLoader = new \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader($configResolver);
+
+        $this->dataConverter = new \Vaimo\ComposerChangelogs\Generators\Changelog\RenderContextGenerator();
+        $this->templateRenderer = new \Vaimo\ComposerChangelogs\Generators\TemplateOutputGenerator();
     }
 
     public function generate(\Composer\Package\PackageInterface $package)
@@ -45,19 +50,13 @@ class DocumentationGenerator
         $outputPaths = $this->configResolver->resolveOutputTargets($package);
         $templates = $this->configResolver->resolveOutputTemplates($package);
 
-        $docTypes = $this->docTypeRepository->getAllTypes();
+        $contextData = $this->dataConverter->generate($changelog);
 
-        foreach (array_intersect_key($outputPaths, $docTypes) as $type => $target) {
-            $generator = $docTypes[$type];
-
+        foreach ($outputPaths as $type => $target) {
             try {
-                // @todo: move this somewhere, where it can be switched by type (needed for info as well)
-                $mustacheConverter = new \Vaimo\ComposerChangelogs\Converters\MustacheConverter();
-                $contextData = $mustacheConverter->convertChangelog($changelog);
-
                 file_put_contents(
                     $target,
-                    $generator->generate($contextData,  $templates[$type])
+                    $this->templateRenderer->generateOutput($contextData,  $templates[$type])
                 );
             } catch (\Vaimo\ComposerChangelogs\Exceptions\TemplateValidationException $exception) {
                 $messages = array();

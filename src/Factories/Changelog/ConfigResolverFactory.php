@@ -10,25 +10,17 @@ use Vaimo\ComposerChangelogs\Extractors;
 class ConfigResolverFactory
 {
     /**
-     * @var \Composer\Repository\WritableRepositoryInterface
+     * @var \Composer\Composer
      */
-    private $packageRepository;
+    private $composerRuntime;
 
     /**
-     * @var \Composer\Installer\InstallationManager
-     */
-    private $installationManager;
-
-    /**
-     * @param \Composer\Repository\WritableRepositoryInterface $packageRepository
-     * @param \Composer\Installer\InstallationManager $installationManager
+     * @param \Composer\Composer $composerRuntime
      */
     public function __construct(
-        \Composer\Repository\WritableRepositoryInterface $packageRepository,
-        \Composer\Installer\InstallationManager $installationManager
+        \Composer\Composer $composerRuntime
     ) {
-        $this->packageRepository = $packageRepository;
-        $this->installationManager = $installationManager;
+        $this->composerRuntime = $composerRuntime;
     }
 
     /**
@@ -40,7 +32,7 @@ class ConfigResolverFactory
     {
         $packageResolver = new \Vaimo\ComposerChangelogs\Resolvers\PluginPackageResolver();
         $packageInfoResolver = new \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver(
-            $this->installationManager
+            $this->composerRuntime->getInstallationManager()
         );
 
         if ($fromSource) {
@@ -49,8 +41,10 @@ class ConfigResolverFactory
             $infoExtractor = new Extractors\InstalledConfigExtractor();
         }
 
+        $packageRepository = $this->composerRuntime->getRepositoryManager()->getLocalRepository();
+
         return new \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver(
-            $packageResolver->resolveForNamespace($this->packageRepository, __NAMESPACE__),
+            $packageResolver->resolveForNamespace($packageRepository, __NAMESPACE__),
             $packageInfoResolver,
             $infoExtractor
         );

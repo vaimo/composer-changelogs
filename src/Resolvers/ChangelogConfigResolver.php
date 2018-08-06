@@ -71,27 +71,37 @@ class ChangelogConfigResolver
         $installPath = $this->packageInfoResolver->getSourcePath($package);
         $pluginRoot = $this->packageInfoResolver->getSourcePath($this->pluginPackage);
 
-        $templateGroups = array();
+        $types = array('sphinx', 'html');
+
+        $templateGroups = array_combine(
+            $types,
+            array_map(function ($type) use ($pluginRoot) {
+                return array(
+                    'root' => array($pluginRoot, 'views', $type, 'changelog.mustache'),
+                    'release' => array($pluginRoot, 'views', $type, 'release.mustache')
+                );
+            }, $types)
+        );
 
         foreach ($config['output'] as $type => $outputConfig) {
-            if (is_array($outputConfig) && isset($outputConfig['template']) && $outputConfig['template']) {
-                if (!is_array($outputConfig['template'])) {
-                    $outputConfig['template'] = array(
-                        'root' => $outputConfig['template']
-                    );
-                }
+            if (!is_array($outputConfig) || !isset($outputConfig['template']) || !$outputConfig['template']) {
+                continue;
+            }
 
-                $templateGroups[$type] = array_map(
+            if (!is_array($outputConfig['template'])) {
+                $outputConfig['template'] = array(
+                    'root' => $outputConfig['template']
+                );
+            }
+
+            $templateGroups[$type] = array_replace(
+                isset($templateGroups[$type]) ? $templateGroups[$type] : array(),
+                array_map(
                     function ($item) use ($installPath) {
                         return array($installPath, $item['template']);
                     },
                     $outputConfig['template']
-                );
-            }
-
-            $templateGroups[$type] = array(
-                'root' => array($pluginRoot, 'views', $type, 'changelog.mustache'),
-                'release' => array($pluginRoot, 'views', $type, 'release.mustache')
+                )
             );
         }
 

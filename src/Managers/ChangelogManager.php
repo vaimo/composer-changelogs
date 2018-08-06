@@ -5,6 +5,8 @@
  */
 namespace Vaimo\ComposerChangelogs\Managers;
 
+use Vaimo\ComposerChangelogs\Factories;
+
 class ChangelogManager
 {
     /**
@@ -31,10 +33,7 @@ class ChangelogManager
 
     public function bootstrap()
     {
-        $configResolverFactory = new \Vaimo\ComposerChangelogs\Factories\Changelog\ConfigResolverFactory(
-            $this->composer->getRepositoryManager()->getLocalRepository(),
-            $this->composer->getInstallationManager()
-        );
+        $configResolverFactory = new Factories\Changelog\ConfigResolverFactory($this->composer);
 
         $configResolver = $configResolverFactory->create();
 
@@ -44,11 +43,8 @@ class ChangelogManager
             return;
         }
 
-        $typesRepository = new \Vaimo\ComposerChangelogs\Repositories\Documentation\TypeRepository();
-
         $docsGenerator = new \Vaimo\ComposerChangelogs\Generators\DocumentationGenerator(
-            $configResolver,
-            $typesRepository
+            $configResolver
         );
 
         try {

@@ -20,7 +20,7 @@ class ReleaseDetailsResolver
     public function resolveOverview(array $release)
     {
         return array(
-            'version' => $release['version'],
+            'version' => isset($release['version']) ? $release['version'] : '',
             'overview' => isset($release['overview'])
                 ? (is_array($release['overview']) ? $release['overview'] : array($release['overview']))
                 : array()

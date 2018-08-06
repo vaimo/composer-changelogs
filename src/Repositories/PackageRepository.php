@@ -5,7 +5,7 @@
  */
 namespace Vaimo\ComposerChangelogs\Repositories;
 
-class ChangelogRepository
+class PackageRepository
 {
     /**
      * @var \Composer\Package\RootPackageInterface
@@ -18,11 +18,6 @@ class ChangelogRepository
     private $packageRepository;
 
     /**
-     * @var \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader
-     */
-    private $changelogLoader;
-
-    /**
      * @var \Vaimo\ComposerChangelogs\Resolvers\RealPackageResolver
      */
     private $realPackageResolver;
@@ -30,21 +25,18 @@ class ChangelogRepository
     /**
      * @param \Composer\Package\RootPackageInterface $rootPackage
      * @param \Composer\Repository\WritableRepositoryInterface $packageRepository
-     * @param \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader $changelogLoader
      */
     public function __construct(
         \Composer\Package\RootPackageInterface $rootPackage,
-        \Composer\Repository\WritableRepositoryInterface $packageRepository,
-        \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader $changelogLoader
+        \Composer\Repository\WritableRepositoryInterface $packageRepository
     ) {
         $this->rootPackage = $rootPackage;
         $this->packageRepository = $packageRepository;
-        $this->changelogLoader = $changelogLoader;
 
         $this->realPackageResolver = new \Vaimo\ComposerChangelogs\Resolvers\RealPackageResolver();
     }
 
-    public function getForPackage($packageName)
+    public function getByName($packageName)
     {
         if (!$packageName) {
             $package = $this->rootPackage;
@@ -60,8 +52,6 @@ class ChangelogRepository
             );
         }
 
-        return $this->changelogLoader->load(
-            $this->realPackageResolver->resolve($package)
-        );
+        return $this->realPackageResolver->resolve($package);
     }
 }

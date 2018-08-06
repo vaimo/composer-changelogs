@@ -3,11 +3,11 @@
  * Copyright © Vaimo Group. All rights reserved.
  * See LICENSE_VAIMO.txt for license details.
  */
-namespace Vaimo\ComposerChangelogs\Converters;
+namespace Vaimo\ComposerChangelogs\Generators\Changelog;
 
-class MustacheConverter
+class RenderContextGenerator implements \Vaimo\ComposerChangelogs\Interfaces\RenderContextGeneratorInterface
 {
-    public function convertChangelog(array $changelog)
+    public function generate(array $changelog)
     {
         $contextData = array();
 

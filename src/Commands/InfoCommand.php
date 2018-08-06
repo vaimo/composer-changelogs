@@ -49,8 +49,8 @@ class InfoCommand extends \Composer\Command\BaseCommand
             '--format',
             null,
             \Symfony\Component\Console\Input\InputOption::VALUE_OPTIONAL,
-            'Format of the output (json, html, txt)',
-            'txt'
+            'Format of the output (json, sphinx)',
+            'json'
         );
     }
 
@@ -63,14 +63,17 @@ class InfoCommand extends \Composer\Command\BaseCommand
         $version = $input->getOption('release');
         $format = $input->getOption('format');
 
-        $changelogRepository = new \Vaimo\ComposerChangelogs\Factories\Changelog\RepositoryFactory(
-            $this->getComposer()
-        );
+        $composer = $this->getComposer();
 
-        $changelogRepository = $changelogRepository->create($fromSource);
+        $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composer);
+        $changelogLoaderFactory = new Factories\Changelog\LoaderFactory($composer);
+
+        $packageRepository = $packageRepositoryFactory->create();
+        $changelogLoader = $changelogLoaderFactory->create($fromSource);
 
         try {
-            $changelog = $changelogRepository->getForPackage($packageName);
+            $package = $packageRepository->getByName($packageName);
+            $changelog = $changelogLoader->load($package);
         } catch (\Exception $e) {
             $output->writeln(
                 sprintf('<error>%s</error>', $e->getMessage())
@@ -106,7 +109,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
             $groups = array(
                 'overview' => array_merge(
                     $generalInfo['overview'],
-                    array('Includes: ' . implode(', ', $summary))
+                    array('----------------------', 'Includes: ' . implode(', ', $summary))
                 )
             );
         } else if ($generalInfo['overview']) {
@@ -116,12 +119,26 @@ class InfoCommand extends \Composer\Command\BaseCommand
             );
         }
 
-        $releaseInfoGenerator = new \Vaimo\ComposerChangelogs\Generators\ReleaseInfoGenerator();
+        if ($format === 'json') {
+            $result = json_encode($groups, JSON_PRETTY_PRINT);
+        } else {
+            $configResolverFactory = new Factories\Changelog\ConfigResolverFactory($composer);
 
-        $releaseInfoGenerator->generate($groups, $format);
+            $configResolver = $configResolverFactory->create($fromSource);
 
-        $output->writeln(
-            json_encode($groups, JSON_PRETTY_PRINT)
-        );
+            $templates = $configResolver->resolveOutputTemplates($package);
+
+            $dataConverter = new \Vaimo\ComposerChangelogs\Generators\Changelog\RenderContextGenerator();
+            $templateRenderer = new \Vaimo\ComposerChangelogs\Generators\TemplateOutputGenerator();
+
+            $contextData = $dataConverter->generate(array('' => $groups));
+
+            $result = $templateRenderer->generateOutput(
+                reset($contextData['releases']),
+                array('root' => $templates[$format]['release'])
+            );
+        }
+
+        $output->writeln($result);
     }
 }

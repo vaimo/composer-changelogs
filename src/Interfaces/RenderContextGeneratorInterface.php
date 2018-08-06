@@ -5,11 +5,11 @@
  */
 namespace Vaimo\ComposerChangelogs\Interfaces;
 
-interface DocumentationGeneratorInterface
+interface RenderContextGeneratorInterface
 {
     /**
      * @param array $changelog
-     * @param array $templatePaths
+     * @return array
      */
-    public function generate(array $changelog, array $templatePaths);
+    public function generate(array $changelog);
 }
