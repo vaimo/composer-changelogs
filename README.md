@@ -153,8 +153,17 @@ composer changelog:generate
 # Report latest valid version from changelog (skip over the ones that are yet to be released)
 composer changelog:version
 
+# Report latest release record from changelog (might be same as last valid)
+composer changelog:version --tip
+
+# Report upcoming release version from changelog (returns blank if there is no upcoming version)
+composer changelog:version --upcoming
+
 # Report latest release details (in requested format)
 composer changelog:info
+
+# Validate changelog files content
+composer changelog:validate
 ```
 
 ## Upgrading The Module
