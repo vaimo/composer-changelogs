@@ -52,15 +52,23 @@ class ValidateCommand extends \Composer\Command\BaseCommand
 
             $changelogLoader->load($package);
         } catch (\Exception $exception) {
-            if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
+            if ($output->getVerbosity() > OutputInterface::VERBOSITY_VERBOSE) {
                 throw $exception;
             }
 
-            $messages = $errorExtractor->extractMessages($exception);
+            if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
+                $messages = $errorExtractor->extractMessages($exception);
+
+                array_walk($messages, function (&$message, $index) {
+                    $message = sprintf('#%s %s', $index, $message);
+                });
+            } else {
+                $messages = array('Changelog is invalid');
+            }
 
             foreach ($messages as $index => $message) {
                 $output->writeln(
-                    sprintf('<error>#%s %s</error>', $index, $message)
+                    sprintf('<error>%s</error>', $message)
                 );
             }
 
