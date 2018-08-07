@@ -74,10 +74,6 @@ class VersionCommand extends \Composer\Command\BaseCommand
             $package = $packageRepository->getByName($packageName);
             $changelog = $changelogLoader->load($package);
         } catch (\Exception $e) {
-            $output->writeln(
-                sprintf('<error>%s</error>', $e->getMessage())
-            );
-
             return;
         }
 
