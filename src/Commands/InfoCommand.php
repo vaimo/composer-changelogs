@@ -49,7 +49,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
             '--format',
             null,
             \Symfony\Component\Console\Input\InputOption::VALUE_OPTIONAL,
-            'Format of the output (json, sphinx)',
+            'Format of the output (json, sphinx, html)',
             'json'
         );
     }

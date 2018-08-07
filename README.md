@@ -60,12 +60,12 @@ processing logic and is not perceived as a "changes" group in the code.
 ## Configuration: upcoming releases
 
 To make sure that all the commands of the plugin work as intended, upcoming releases should be marked in
-the changelog as "X.X.X", which will cause latest version reporter command to skip over it. Same could be
+the changelog as "DEV.1.2.3", which will cause latest version reporter command to skip over it. Same could be
 achieved if the values is left blank.
 
  ```json
  {
-     "X.X.X": {
+     "DEV.1.2.3": {
          "feature": [
              "some upcoming, yet to be released feature"
          ]

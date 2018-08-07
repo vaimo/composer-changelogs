@@ -1,4 +1,14 @@
 {
+    "0.4.0": {
+        "feature": [
+            "format option added for version command",
+            "upcoming version output added to version command"
+        ],
+        "fix": [
+            "info command was missing one formatting option",
+            "improved error management"
+        ]
+    },
     "0.3.1": {
         "fix": [
             "brief changelog info mode added overview separator even when there was no overview set"

@@ -16,7 +16,7 @@ class VersionCommand extends \Composer\Command\BaseCommand
     {
         $this->setName('changelog:version');
 
-        $this->setDescription('Generates documentation output from changelog source');
+        $this->setDescription('Display version information from changelog. (Default: latest stable)');
 
         $this->addArgument(
             'name',
@@ -30,12 +30,37 @@ class VersionCommand extends \Composer\Command\BaseCommand
             \Symfony\Component\Console\Input\InputOption::VALUE_NONE,
             'Extract configuration from vendor package instead of using global installation data'
         );
+
+        $this->addOption(
+            '--format',
+            null,
+            \Symfony\Component\Console\Input\InputOption::VALUE_OPTIONAL,
+            'Format of the output (regex)'
+        );
+
+        $this->addOption(
+            '--upcoming',
+            null,
+            \Symfony\Component\Console\Input\InputOption::VALUE_NONE,
+            'Show upcoming version (if there is one)'
+        );
+
+        $this->addOption(
+            '--tip',
+            null,
+            \Symfony\Component\Console\Input\InputOption::VALUE_NONE,
+            'Show upcoming version (if there is one)'
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $packageName = $input->getArgument('name');
         $fromSource = $input->getOption('from-source');
+        $format = $input->getOption('format');
+
+        $showUpcoming = $input->getOption('upcoming');
+        $showTip = $input->getOption('tip');
 
         $composer = $this->getComposer();
 
@@ -58,10 +83,22 @@ class VersionCommand extends \Composer\Command\BaseCommand
 
         $changelogReleaseResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogReleaseResolver();
 
-        $version = $changelogReleaseResolver->resolveLatestVersionedRelease($changelog);
+        if (!$showTip) {
+            $version = $changelogReleaseResolver->resolveLatestVersionedRelease($changelog);
+
+            if ($showUpcoming) {
+                $version = $version !== key($changelog) ? key($changelog) : '';
+            }
+        } else {
+            $version = key($changelog);
+        }
 
         if (!$version) {
             return;
+        }
+
+        if ($format == 'regex') {
+            $version = preg_quote($version);
         }
 
         $output->writeln($version);
