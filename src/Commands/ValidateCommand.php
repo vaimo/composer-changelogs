@@ -52,6 +52,10 @@ class ValidateCommand extends \Composer\Command\BaseCommand
 
             $changelogLoader->load($package);
         } catch (\Exception $exception) {
+            if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
+                throw $exception;
+            }
+
             $messages = $errorExtractor->extractMessages($exception);
 
             foreach ($messages as $index => $message) {
@@ -60,7 +64,11 @@ class ValidateCommand extends \Composer\Command\BaseCommand
                 );
             }
 
-            return;
+            $this->setCode(function () {
+                return 1;
+            });
+
+            exit(1);
         }
 
         $output->writeln('<info>Changelog is valid</info>');

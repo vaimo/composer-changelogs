@@ -1,4 +1,9 @@
 {
+    "0.5.1": {
+        "fix": [
+            "validation exited with wrong exit code on failure"
+        ]
+    },
     "0.5.0": {
         "feature": [
             "added new command to validate the changelog's contents"
