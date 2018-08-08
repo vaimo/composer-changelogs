@@ -7,7 +7,10 @@ namespace Vaimo\ComposerChangelogs\Loaders;
 
 class TemplateLoader
 {
-    private $content;
+    /**
+     * @var array
+     */
+    private $content = array();
 
     public function load($path)
     {

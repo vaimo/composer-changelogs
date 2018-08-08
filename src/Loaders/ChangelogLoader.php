@@ -18,6 +18,11 @@ class ChangelogLoader
     private $jsonFileReader;
 
     /**
+     * @var array
+     */
+    private $cache = array();
+
+    /**
      * @param \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver $configResolver
      */
     public function __construct(
@@ -29,18 +34,24 @@ class ChangelogLoader
 
     public function load(\Composer\Package\PackageInterface $package)
     {
-        if (!$sourcePath = $this->configResolver->resolveSourcePath($package)) {
-            throw new \Vaimo\ComposerChangelogs\Exceptions\GeneratorException(
-                sprintf('Changelog source path not defined for: %s', $package->getName())
-            );
+        $packageName = $package->getName();
+
+        if (!isset($this->cache[$packageName])) {
+            if (!$sourcePath = $this->configResolver->resolveSourcePath($package)) {
+                throw new \Vaimo\ComposerChangelogs\Exceptions\GeneratorException(
+                    sprintf('Changelog source path not defined for: %s', $package->getName())
+                );
+            }
+
+            $groups = $this->jsonFileReader->readToArray($sourcePath);
+
+            foreach ($groups as $version => $group) {
+                $groups[$version]['version'] = $version;
+            }
+
+            $this->cache[$packageName] = $groups;
         }
 
-        $groups = $this->jsonFileReader->readToArray($sourcePath);
-
-        foreach ($groups as $version => $group) {
-            $groups[$version]['version'] = $version;
-        }
-
-        return $groups;
+        return $this->cache[$packageName];
     }
 }

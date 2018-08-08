@@ -33,11 +33,11 @@ class DocumentationGenerator
      * @param \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver $configResolver
      */
     public function __construct(
-        \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver $configResolver
+        \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver $configResolver,
+        \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader $changelogLoader
     ) {
         $this->configResolver = $configResolver;
-
-        $this->changelogLoader = new \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader($configResolver);
+        $this->changelogLoader = $changelogLoader;
 
         $this->dataConverter = new \Vaimo\ComposerChangelogs\Generators\Changelog\RenderContextGenerator();
         $this->templateRenderer = new \Vaimo\ComposerChangelogs\Generators\TemplateOutputGenerator();

@@ -43,8 +43,19 @@ class ChangelogManager
             return;
         }
 
+        $changelogLoader = new \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader($configResolver);
+
+        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader);
+
+        $result = $validator->validateForPackage($package);
+
+        if (!$result()) {
+            return;
+        }
+
         $docsGenerator = new \Vaimo\ComposerChangelogs\Generators\DocumentationGenerator(
-            $configResolver
+            $configResolver,
+            $changelogLoader
         );
 
         try {

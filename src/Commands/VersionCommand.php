@@ -72,10 +72,25 @@ class VersionCommand extends \Composer\Command\BaseCommand
 
         try {
             $package = $packageRepository->getByName($packageName);
-            $changelog = $changelogLoader->load($package);
         } catch (\Exception $e) {
             return;
         }
+
+        try {
+            $package = $packageRepository->getByName($packageName);
+        } catch (\Exception $e) {
+            return;
+        }
+
+        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader);
+
+        $result = $validator->validateForPackage($package, $output->getVerbosity());
+
+        if (!$result()) {
+            return;
+        }
+
+        $changelog = $changelogLoader->load($package);
 
         $changelogReleaseResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogReleaseResolver();
 

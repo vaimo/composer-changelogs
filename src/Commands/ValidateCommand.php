@@ -16,7 +16,7 @@ class ValidateCommand extends \Composer\Command\BaseCommand
     {
         $this->setName('changelog:validate');
 
-        $this->setDescription('Validate changelog.');
+        $this->setDescription('Validate package changelog markup and structure');
 
         $this->addArgument(
             'name',
@@ -47,38 +47,27 @@ class ValidateCommand extends \Composer\Command\BaseCommand
         $packageRepository = $packageRepositoryFactory->create();
         $changelogLoader = $changelogLoaderFactory->create($fromSource);
 
+        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader, [
+            'failure' => '<error>%s</error>',
+            'success' => '<info>%s</info>'
+        ]);
+
         try {
             $package = $packageRepository->getByName($packageName);
-
-            $changelogLoader->load($package);
-        } catch (\Exception $exception) {
-            if ($output->getVerbosity() > OutputInterface::VERBOSITY_VERBOSE) {
-                throw $exception;
-            }
-
-            if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
-                $messages = $errorExtractor->extractMessages($exception);
-
-                array_walk($messages, function (&$message, $index) {
-                    $message = sprintf('#%s %s', $index, $message);
-                });
-            } else {
-                $messages = array('Changelog is invalid');
-            }
-
-            foreach ($messages as $index => $message) {
-                $output->writeln(
-                    sprintf('<error>%s</error>', $message)
-                );
-            }
-
-            $this->setCode(function () {
-                return 1;
-            });
+        } catch (\Exception $e) {
+            $output->writeln(
+                sprintf('<error>%s</error>', $e->getMessage())
+            );
 
             exit(1);
         }
 
-        $output->writeln('<info>Changelog is valid</info>');
+        $result = $validator->validateForPackage($package, $output->getVerbosity());
+
+        array_map([$output, 'writeln'], $result->getMessages());
+
+        if (!$result()) {
+            exit(1);
+        }
     }
 }

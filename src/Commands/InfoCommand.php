@@ -73,14 +73,27 @@ class InfoCommand extends \Composer\Command\BaseCommand
 
         try {
             $package = $packageRepository->getByName($packageName);
-            $changelog = $changelogLoader->load($package);
         } catch (\Exception $e) {
             $output->writeln(
                 sprintf('<error>%s</error>', $e->getMessage())
             );
 
-            return;
+            exit(1);
         }
+
+        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader, [
+            'failure' => '<error>%s</error>',
+            'success' => '<info>%s</info>'
+        ]);
+
+        $result = $validator->validateForPackage($package, $output->getVerbosity());
+
+        if (!$result()) {
+            array_map([$output, 'writeln'], $result->getMessages());
+            exit(1);
+        }
+
+        $changelog = $changelogLoader->load($package);
 
         if (!$version) {
             $changelogReleaseResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogReleaseResolver();

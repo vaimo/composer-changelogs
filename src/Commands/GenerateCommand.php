@@ -53,14 +53,31 @@ class GenerateCommand extends \Composer\Command\BaseCommand
             return;
         }
 
-        $output->writeln(
-            sprintf('Generating change-log output for <info>%s</info>', $package->getName())
-        );
-
         $configResolverFactory = new Factories\Changelog\ConfigResolverFactory($composer);
 
+        $configResolver = $configResolverFactory->create($fromSource);
+
+        $changelogLoader = new \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader($configResolver);
+
+        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader, [
+            'failure' => '<error>%s</error>',
+            'success' => '<info>%s</info>'
+        ]);
+
+        $result = $validator->validateForPackage($package, $output->getVerbosity());
+
+        if (!$result()) {
+            array_map([$output, 'writeln'], $result->getMessages());
+            exit(1);
+        }
+
+        $output->writeln(
+            sprintf('Generating changelog output for <info>%s</info>', $package->getName())
+        );
+
         $docsGenerator = new \Vaimo\ComposerChangelogs\Generators\DocumentationGenerator(
-            $configResolverFactory->create($fromSource)
+            $configResolver,
+            $changelogLoader
         );
 
         try {

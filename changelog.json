@@ -1,4 +1,9 @@
 {
+    "0.5.2": {
+        "fix": [
+            "avoid loud crash when changelog file has syntax errors; proper error handling and validation introduced instead"
+        ]
+    },
     "0.5.1": {
         "fix": [
             "validation exited with wrong exit code on failure"
