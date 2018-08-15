@@ -31,7 +31,7 @@ class ReleaseDetailsResolver
     {
         return array_diff_key(
             $release,
-            array('overview' => true, 'version' => true)
+            array('overview' => true, 'version' => true, 'branch' => true)
         );
     }
 }

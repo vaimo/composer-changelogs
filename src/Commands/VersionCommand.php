@@ -46,6 +46,13 @@ class VersionCommand extends \Composer\Command\BaseCommand
         );
 
         $this->addOption(
+            '--branch',
+            null,
+            \Symfony\Component\Console\Input\InputOption::VALUE_OPTIONAL,
+            'Match release branch (if provided in changelog item)'
+        );
+
+        $this->addOption(
             '--tip',
             null,
             \Symfony\Component\Console\Input\InputOption::VALUE_NONE,
@@ -58,6 +65,7 @@ class VersionCommand extends \Composer\Command\BaseCommand
         $packageName = $input->getArgument('name');
         $fromSource = $input->getOption('from-source');
         $format = $input->getOption('format');
+        $branch = $input->getOption('branch');
 
         $showUpcoming = $input->getOption('upcoming');
         $showTip = $input->getOption('tip');
@@ -69,12 +77,6 @@ class VersionCommand extends \Composer\Command\BaseCommand
 
         $packageRepository = $packageRepositoryFactory->create();
         $changelogLoader = $changelogLoaderFactory->create($fromSource);
-
-        try {
-            $package = $packageRepository->getByName($packageName);
-        } catch (\Exception $e) {
-            return;
-        }
 
         try {
             $package = $packageRepository->getByName($packageName);
@@ -95,10 +97,10 @@ class VersionCommand extends \Composer\Command\BaseCommand
         $changelogReleaseResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogReleaseResolver();
 
         if (!$showTip) {
-            $version = $changelogReleaseResolver->resolveLatestVersionedRelease($changelog);
+            $version = $changelogReleaseResolver->resolveLatestVersionedRelease($changelog, $branch);
 
             if ($showUpcoming) {
-                $version = $version !== key($changelog) ? key($changelog) : '';
+                $version = $changelogReleaseResolver->resolveUpcomingRelease($changelog, $branch);
             }
         } else {
             $version = key($changelog);

@@ -17,12 +17,33 @@ class ChangelogReleaseResolver
         $this->constraintValidator = new \Vaimo\ComposerChangelogs\Validators\ConstraintValidator();
     }
 
-    public function resolveLatestVersionedRelease(array $changelog)
+    public function resolveUpcomingRelease(array $changelog, $branch = false)
     {
-        $versions = array_keys($changelog);
+        foreach ($changelog as $version => $item) {
+            if ($this->constraintValidator->isConstraint($version)) {
+                break;
+            }
 
-        foreach ($versions as $version) {
+            if (isset($item['branch']) && (!$branch || $item['branch'] !== $branch)) {
+                continue;
+            }
+
+            return $version;
+
+            break;
+        }
+
+        return false;
+    }
+
+    public function resolveLatestVersionedRelease(array $changelog, $branch = false)
+    {
+        foreach ($changelog as $version => $item) {
             if (!$this->constraintValidator->isConstraint($version)) {
+                continue;
+            }
+
+            if (isset($item['branch']) && (!$branch || $item['branch'] !== $branch)) {
                 continue;
             }
 

@@ -1,4 +1,10 @@
 {
+    "0.6.0": {
+        "feature": [
+            "support for using changelog-based releases on multiple branches (--branch option added, version command now return version that either has no branch or matches branch)",
+            "added 'upcoming' support for changelog:info command"
+        ]
+    },
     "0.5.2": {
         "fix": [
             "avoid loud crash when changelog file has syntax errors; proper error handling and validation introduced instead"

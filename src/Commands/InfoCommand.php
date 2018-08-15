@@ -46,11 +46,25 @@ class InfoCommand extends \Composer\Command\BaseCommand
         );
 
         $this->addOption(
+            '--branch',
+            null,
+            \Symfony\Component\Console\Input\InputOption::VALUE_OPTIONAL,
+            'Match release branch (if provided in changelog item)'
+        );
+
+        $this->addOption(
             '--format',
             null,
             \Symfony\Component\Console\Input\InputOption::VALUE_OPTIONAL,
             'Format of the output (json, sphinx, html)',
             'json'
+        );
+
+        $this->addOption(
+            '--upcoming',
+            null,
+            \Symfony\Component\Console\Input\InputOption::VALUE_NONE,
+            'Show upcoming version (if there is one)'
         );
     }
 
@@ -62,6 +76,8 @@ class InfoCommand extends \Composer\Command\BaseCommand
         $briefMode = $input->getOption('brief');
         $version = $input->getOption('release');
         $format = $input->getOption('format');
+        $branch = $input->getOption('branch');
+        $showUpcoming = $input->getOption('upcoming');
 
         $composer = $this->getComposer();
 
@@ -98,7 +114,11 @@ class InfoCommand extends \Composer\Command\BaseCommand
         if (!$version) {
             $changelogReleaseResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogReleaseResolver();
 
-            $version = $changelogReleaseResolver->resolveLatestVersionedRelease($changelog);
+            if (!$showUpcoming) {
+                $version = $changelogReleaseResolver->resolveLatestVersionedRelease($changelog, $branch);
+            } else {
+                $version = $changelogReleaseResolver->resolveUpcomingRelease($changelog, $branch);
+            }
         }
 
         if (!$version || !isset($changelog[$version])) {
