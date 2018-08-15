@@ -1,4 +1,10 @@
 {
+    "0.6.1": {
+        "fox": [
+            "treat 'master' and 'default' branches also match with changelog records that don't have branch specified (these branch names CAN still be used on changelog items)",
+            "changelog:version --upcoming not taking --branch config into account"
+        ]
+    },
     "0.6.0": {
         "feature": [
             "support for using changelog-based releases on multiple branches (--branch option added, version command now return version that either has no branch or matches branch)",
