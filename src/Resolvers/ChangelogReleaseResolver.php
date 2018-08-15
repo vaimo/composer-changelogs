@@ -57,6 +57,8 @@ class ChangelogReleaseResolver
 
     private function matchBranch(array $item, $branch)
     {
+        $branch = urldecode($branch);
+
         if (!isset($item['branch']) && !$branch) {
             return true;
         }

@@ -1,4 +1,9 @@
 {
+    "0.6.2": {
+        "fix": [
+            "url-decoded branch names not dealt with correctly when provided as branch variables"
+        ]
+    },
     "0.6.1": {
         "fix": [
             "treat 'master' and 'default' branches also match with changelog records that don't have branch specified (these branch names CAN still be used on changelog items)",
