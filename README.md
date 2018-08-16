@@ -48,7 +48,7 @@ added for the developers.
         "maintenance": [
             "short description about changing something about the architecture, etc"
         ],
-        "branch": "useful when having multiple major-release branches and using 'version' and 'info'"
+        "branch": "useful for multiple major-release branches and using 'version' and 'info' commands"
     }
 }
 ```
