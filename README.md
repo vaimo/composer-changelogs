@@ -2,7 +2,7 @@
 
 Provides information about package changes based on changelog files that are bundled with releases and introduces tools/commands for generating documentation files from changelog sources. 
 
-It comes with several commands that aid developer on setting up automatic package publishing logic in CI.
+It comes with several commands that aid the developer on setting up automatic package publishing logic in CI.
 
 ## Configuration: overview
 
