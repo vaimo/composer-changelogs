@@ -33,7 +33,9 @@ added for the developers.
         "breaking": [
             "code: Something changed in the sourcecode",
             "data: Something changed about the data format",
-            "schema: Something changed about the database"
+            "schema: Something changed about the database",
+            "config: config path or flag renamed",
+            "logic: default/expected execution path of the application/module changed"
         ],
         "feature": [
             "short description about feature1",
