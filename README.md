@@ -1,6 +1,6 @@
 # composer-changelogs
 
-Provides information about package changes based on changelog files that are bundled with releases and introduces tools/commands for generating documentation files from changelog sources.
+Provides information about package changes based on changelog files that are bundled with releases and introduces tools/commands for generating documentation files from changelog sources. 
 
 It comes with several commands that aid developer on setting up automatic package publishing logic in CI.
 
@@ -155,6 +155,9 @@ composer changelog:generate
 
 # Report latest valid version from changelog (skip over the ones that are yet to be released)
 composer changelog:version
+
+# Report latest valid version for release/1.X
+composer changelog:version --branch release/1.X
 
 # Report latest release record from changelog (might be same as last valid)
 composer changelog:version --tip
