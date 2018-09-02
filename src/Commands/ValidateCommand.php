@@ -41,16 +41,14 @@ class ValidateCommand extends \Composer\Command\BaseCommand
 
         $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composer);
         $changelogLoaderFactory = new Factories\Changelog\LoaderFactory($composer);
-
-        $errorExtractor = new \Vaimo\ComposerChangelogs\Extractors\ErrorExtractor();
-
+        
         $packageRepository = $packageRepositoryFactory->create();
         $changelogLoader = $changelogLoaderFactory->create($fromSource);
 
-        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader, [
+        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader, array(
             'failure' => '<error>%s</error>',
             'success' => '<info>%s</info>'
-        ]);
+        ));
 
         try {
             $package = $packageRepository->getByName($packageName);
@@ -64,7 +62,7 @@ class ValidateCommand extends \Composer\Command\BaseCommand
 
         $result = $validator->validateForPackage($package, $output->getVerbosity());
 
-        array_map([$output, 'writeln'], $result->getMessages());
+        array_map(array($output, 'writeln'), $result->getMessages());
 
         if (!$result()) {
             exit(1);

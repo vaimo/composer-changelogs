@@ -97,15 +97,16 @@ class InfoCommand extends \Composer\Command\BaseCommand
             exit(1);
         }
 
-        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader, [
+        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader, array(
             'failure' => '<error>%s</error>',
             'success' => '<info>%s</info>'
-        ]);
+        ));
 
         $result = $validator->validateForPackage($package, $output->getVerbosity());
 
         if (!$result()) {
-            array_map([$output, 'writeln'], $result->getMessages());
+            array_map(array($output, 'writeln'), $result->getMessages());
+            
             exit(1);
         }
 

@@ -59,15 +59,16 @@ class GenerateCommand extends \Composer\Command\BaseCommand
 
         $changelogLoader = new \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader($configResolver);
 
-        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader, [
+        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader, array(
             'failure' => '<error>%s</error>',
             'success' => '<info>%s</info>'
-        ]);
+        ));
 
         $result = $validator->validateForPackage($package, $output->getVerbosity());
 
         if (!$result()) {
-            array_map([$output, 'writeln'], $result->getMessages());
+            array_map(array($output, 'writeln'), $result->getMessages());
+            
             exit(1);
         }
 

@@ -1,4 +1,9 @@
 {
+    "0.6.4": {
+        "fix": [
+            "removed code that was incompatible with 5.3"
+        ]
+    },
     "0.6.3": {
         "fix": [
             "composer run crashes when changelog plugin gets uninstalled while running (when defined under require-dev and running with --no-dev)"

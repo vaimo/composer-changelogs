@@ -43,10 +43,10 @@ class ChangelogValidator
 
     public function validateForPackage(Package $package, $vebosity = Output::VERBOSITY_NORMAL)
     {
-        $formats = array_replace([
+        $formats = array_replace(array(
             'failure' => '%s',
             'success' => '%s'
-        ], $this->messageFormats);
+        ), $this->messageFormats);
 
         try {
             $this->changelogLoader->load($package);
