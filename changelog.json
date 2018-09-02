@@ -1,4 +1,9 @@
 {
+    "0.6.3": {
+        "fix": [
+            "composer run crashes when changelog plugin gets uninstalled while running (when defined under require-dev and running with --no-dev)"
+        ]
+    },
     "0.6.2": {
         "fix": [
             "url-decoded branch names not dealt with correctly when provided as branch variables"

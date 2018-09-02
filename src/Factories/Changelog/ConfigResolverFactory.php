@@ -15,12 +15,19 @@ class ConfigResolverFactory
     private $composerRuntime;
 
     /**
+     * @var 
+     */
+    private $packageResolver;
+
+    /**
      * @param \Composer\Composer $composerRuntime
      */
     public function __construct(
         \Composer\Composer $composerRuntime
     ) {
         $this->composerRuntime = $composerRuntime;
+        
+        $this->packageResolver = new \Vaimo\ComposerChangelogs\Resolvers\PluginPackageResolver();
     }
 
     /**
@@ -30,7 +37,10 @@ class ConfigResolverFactory
      */
     public function create($fromSource = false)
     {
-        $packageResolver = new \Vaimo\ComposerChangelogs\Resolvers\PluginPackageResolver();
+        $packageRepository = $this->composerRuntime->getRepositoryManager()->getLocalRepository();
+        
+        $pluginPackage = $this->packageResolver->resolveForNamespace($packageRepository, __NAMESPACE__);
+        
         $packageInfoResolver = new \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver(
             $this->composerRuntime->getInstallationManager()
         );
@@ -40,11 +50,9 @@ class ConfigResolverFactory
         } else {
             $infoExtractor = new Extractors\InstalledConfigExtractor();
         }
-
-        $packageRepository = $this->composerRuntime->getRepositoryManager()->getLocalRepository();
-
+        
         return new \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver(
-            $packageResolver->resolveForNamespace($packageRepository, __NAMESPACE__),
+            $pluginPackage,
             $packageInfoResolver,
             $infoExtractor
         );

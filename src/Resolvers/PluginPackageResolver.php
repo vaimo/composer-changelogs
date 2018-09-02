@@ -11,6 +11,16 @@ use Vaimo\ComposerChangelogs\Composer\Config as ComposerConfig;
 class PluginPackageResolver
 {
     /**
+     * @var \Vaimo\ComposerChangelogs\Analysers\PackageAnalyser
+     */
+    private $packageAnalyser;
+    
+    public function __construct()
+    {
+        $this->packageAnalyser = new \Vaimo\ComposerChangelogs\Analysers\PackageAnalyser();
+    }
+
+    /**
      * @param WritableRepositoryInterface $repository
      * @param string $namespace
      * @return \Composer\Package\PackageInterface
@@ -23,26 +33,15 @@ class PluginPackageResolver
                 continue;
             }
 
-            $autoload = $package->getAutoload();
-
-            if (!isset($autoload[ComposerConfig::PSR4_CONFIG])) {
-                continue;
-            }
-
-            $matches = array_filter(
-                array_keys($autoload[ComposerConfig::PSR4_CONFIG]),
-                function ($item) use ($namespace) {
-                    return strpos($namespace, rtrim($item, '\\')) === 0;
-                }
-            );
-
-            if (!$matches) {
+            if (!$this->packageAnalyser->ownsNamespace($package, $namespace)) {
                 continue;
             }
 
             return $package;
         }
 
-        throw new \Exception('Failed to detect the plugin package');
+        throw new \Vaimo\ComposerChangelogs\Exceptions\PackageResolverException(
+            'Failed to detect the plugin package'
+        );
     }
 }

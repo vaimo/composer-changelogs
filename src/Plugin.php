@@ -13,22 +13,29 @@ class Plugin implements \Composer\Plugin\PluginInterface,
      */
     private $changelogManager;
 
+    /**
+     * @var \Vaimo\ComposerChangelogs\Analysers\ComposerOperationAnalyser
+     */
+    private $operationAnalyser;
+    
     public function activate(\Composer\Composer $composer, \Composer\IO\IOInterface $io)
     {
         $this->changelogManager = new \Vaimo\ComposerChangelogs\Managers\ChangelogManager($composer, $io);
+        
+        $this->operationAnalyser = new \Vaimo\ComposerChangelogs\Analysers\ComposerOperationAnalyser(
+            $composer
+        );
     }
 
     public static function getSubscribedEvents()
     {
         return array(
             \Composer\Script\ScriptEvents::POST_INSTALL_CMD => 'bootstrapImplementation',
-            \Composer\Script\ScriptEvents::POST_UPDATE_CMD => 'bootstrapImplementation'
+            \Composer\Script\ScriptEvents::POST_UPDATE_CMD => 'bootstrapImplementation',
+            \Composer\Installer\PackageEvents::PRE_PACKAGE_UNINSTALL => 'onPackageUninstall'
         );
     }
-
-    /**
-     * Commands
-     */
+    
     public function getCapabilities()
     {
         return array(
@@ -36,12 +43,22 @@ class Plugin implements \Composer\Plugin\PluginInterface,
                 'Vaimo\ComposerChangelogs\Composer\Plugin\CommandsProvider'
         );
     }
-
-    /**
-     * Events
-     */
+    
     public function bootstrapImplementation()
     {
+        if (!$this->changelogManager) {
+            return;
+        }
+        
         $this->changelogManager->bootstrap();
+    }
+    
+    public function onPackageUninstall(\Composer\Installer\PackageEvent $event)
+    {
+        if (!$this->operationAnalyser->isPluginUninstallOperation($event->getOperation())) {
+            return;
+        }
+
+        $this->changelogManager = null;   
     }
 }
