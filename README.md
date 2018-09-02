@@ -1,8 +1,8 @@
 # composer-changelogs
 
-Provides information about package changes based on changelog files that are bundled with releases and introduces tools/commands for generating documentation files from changelog sources.
+Provides information about package changes based on changelog files that are bundled with releases and introduces tools/commands for generating documentation files from changelog sources. 
 
-It comes with several commands that aid developer on setting up automatic package publishing logic in CI.
+It comes with several commands that aid the developer on setting up automatic package publishing logic in CI.
 
 ## Configuration: overview
 
@@ -33,7 +33,9 @@ added for the developers.
         "breaking": [
             "code: Something changed in the sourcecode",
             "data: Something changed about the data format",
-            "schema: Something changed about the database"
+            "schema: Something changed about the database",
+            "config: config path or flag renamed",
+            "logic: default/expected execution path of the application/module changed"
         ],
         "feature": [
             "short description about feature1",
@@ -45,7 +47,8 @@ added for the developers.
         ],
         "maintenance": [
             "short description about changing something about the architecture, etc"
-        ]
+        ],
+        "branch": "useful for multiple major-release branches and using 'version' and 'info' commands"
     }
 }
 ```
@@ -152,6 +155,9 @@ composer changelog:generate
 
 # Report latest valid version from changelog (skip over the ones that are yet to be released)
 composer changelog:version
+
+# Report latest valid version for release/1.X
+composer changelog:version --branch release/1.X
 
 # Report latest release record from changelog (might be same as last valid)
 composer changelog:version --tip
