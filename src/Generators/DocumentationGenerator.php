@@ -5,8 +5,6 @@
  */
 namespace Vaimo\ComposerChangelogs\Generators;
 
-use Vaimo\ComposerChangelogs\Factories;
-
 class DocumentationGenerator
 {
     /**
@@ -31,6 +29,7 @@ class DocumentationGenerator
 
     /**
      * @param \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver $configResolver
+     * @param \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader $changelogLoader
      */
     public function __construct(
         \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver $configResolver,

@@ -5,8 +5,9 @@
  */
 namespace Vaimo\ComposerChangelogs\Validators;
 
-use Symfony\Component\Console\Output\OutputInterface as Output;
 use Composer\Package\PackageInterface as Package;
+use Symfony\Component\Console\Output\OutputInterface as Output;
+
 use Vaimo\ComposerChangelogs\Results\ValidationResult as Result;
 
 class ChangelogValidator

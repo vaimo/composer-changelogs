@@ -6,7 +6,6 @@
 namespace Vaimo\ComposerChangelogs\Resolvers;
 
 use Composer\Repository\WritableRepositoryInterface;
-use Vaimo\ComposerChangelogs\Composer\Config as ComposerConfig;
 
 class PluginPackageResolver
 {
