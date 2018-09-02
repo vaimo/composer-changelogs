@@ -21,7 +21,7 @@ class PackageAnalyser
 
     public function isPluginPackage(\Composer\Package\PackageInterface $package)
     {
-        return $package->getType() !== ComposerConfig::COMPOSER_PLUGIN_TYPE;
+        return $package->getType() === ComposerConfig::COMPOSER_PLUGIN_TYPE;
     }
     
     public function ownsNamespace(\Composer\Package\PackageInterface $package, $namespace)
