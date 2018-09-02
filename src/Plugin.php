@@ -5,6 +5,9 @@
  */
 namespace Vaimo\ComposerChangelogs;
 
+use Vaimo\ComposerChangelogs\Managers;
+use Vaimo\ComposerChangelogs\Analysers;
+
 class Plugin implements \Composer\Plugin\PluginInterface,
     \Composer\EventDispatcher\EventSubscriberInterface, \Composer\Plugin\Capable
 {
@@ -20,11 +23,8 @@ class Plugin implements \Composer\Plugin\PluginInterface,
     
     public function activate(\Composer\Composer $composer, \Composer\IO\IOInterface $io)
     {
-        $this->changelogManager = new \Vaimo\ComposerChangelogs\Managers\ChangelogManager($composer, $io);
-        
-        $this->operationAnalyser = new \Vaimo\ComposerChangelogs\Analysers\ComposerOperationAnalyser(
-            $composer
-        );
+        $this->changelogManager = new Managers\ChangelogManager($composer, $io);
+        $this->operationAnalyser = new Analysers\ComposerOperationAnalyser();
     }
 
     public static function getSubscribedEvents()
