@@ -29,7 +29,7 @@ class PluginPackageResolver
     public function resolveForNamespace(WritableRepositoryInterface $repository, $namespace)
     {
         foreach ($repository->getCanonicalPackages() as $package) {
-            if ($package->getType() !== ComposerConfig::COMPOSER_PLUGIN_TYPE) {
+            if (!$this->packageAnalyser->isPluginPackage($package)) {
                 continue;
             }
 

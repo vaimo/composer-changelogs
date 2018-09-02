@@ -5,6 +5,8 @@
  */
 namespace Vaimo\ComposerChangelogs\Analysers;
 
+use Vaimo\ComposerChangelogs\Composer\Config as ComposerConfig;
+
 class PackageAnalyser
 {
     /**
@@ -17,6 +19,11 @@ class PackageAnalyser
         $this->namespacesExtractor = new \Vaimo\ComposerChangelogs\Extractors\NamespacesExtractor();
     }
 
+    public function isPluginPackage(\Composer\Package\PackageInterface $package)
+    {
+        return $package->getType() !== ComposerConfig::COMPOSER_PLUGIN_TYPE;
+    }
+    
     public function ownsNamespace(\Composer\Package\PackageInterface $package, $namespace)
     {
         return (bool)array_filter(

@@ -27,10 +27,7 @@ class ComposerOperationAnalyser
 
         $package = $operation->getPackage();
 
-        if ($package->getType() !== ComposerConfig::COMPOSER_PLUGIN_TYPE) {
-            return false;
-        }
-
-        return $this->packageAnalyser->ownsNamespace($package, __NAMESPACE__);
+        return $this->packageAnalyser->isPluginPackage($package) 
+            && $this->packageAnalyser->ownsNamespace($package, __NAMESPACE__);
     } 
 }
