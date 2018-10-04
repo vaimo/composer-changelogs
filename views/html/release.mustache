@@ -6,11 +6,11 @@
 {{/groups.length}}
 {{#groups}}
 <div>
-<b>{{name}}</b>
-<ol>
-{{#items}}
-<li>{{.}}</li>
-{{/items}}
-</ol>
+  {{#label}}<b>{{/label}}{{label}}{{#label}}</b>{{/label}}
+  {{#items.length}}<ol>{{/items.length}}
+  {{#items}}
+    <li>{{.}}</li>
+  {{/items}}
+  {{#items.length}}</ol>{{/items.length}}
 </div>
 {{/groups}}

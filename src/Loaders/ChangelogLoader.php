@@ -38,7 +38,7 @@ class ChangelogLoader
 
         if (!isset($this->cache[$packageName])) {
             if (!$sourcePath = $this->configResolver->resolveSourcePath($package)) {
-                throw new \Vaimo\ComposerChangelogs\Exceptions\GeneratorException(
+                throw new \Vaimo\ComposerChangelogs\Exceptions\LoaderException(
                     sprintf('Changelog source path not defined for: %s', $package->getName())
                 );
             }

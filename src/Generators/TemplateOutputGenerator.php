@@ -31,9 +31,9 @@ class TemplateOutputGenerator implements \Vaimo\ComposerChangelogs\Interfaces\Te
             'helpers' => array(
                 'line' => function ($context, $char) {
                     return str_pad('', strlen($context), $char);
-                }
+                },
             ),
-            'partialresolver' => function ($cx, $name) use ($templatePaths, $templateLoader) {
+            'partialresolver' => function ($context, $name) use ($templatePaths, $templateLoader) {
                 if (isset($templatePaths[$name])) {
                     try {
                         return $templateLoader->load($templatePaths[$name]);

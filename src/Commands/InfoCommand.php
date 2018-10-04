@@ -56,7 +56,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
             '--format',
             null,
             \Symfony\Component\Console\Input\InputOption::VALUE_OPTIONAL,
-            'Format of the output (json, sphinx, html)',
+            'Format of the output (json, sphinx, html, rst, md, yml)',
             'json'
         );
 
@@ -78,7 +78,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
         $format = $input->getOption('format');
         $branch = $input->getOption('branch');
         $showUpcoming = $input->getOption('upcoming');
-
+        
         $composer = $this->getComposer();
 
         $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composer);
@@ -170,6 +170,18 @@ class InfoCommand extends \Composer\Command\BaseCommand
 
             $contextData = $dataConverter->generate(array('' => $groups));
 
+            if (!isset($templates[$format])) {
+                $output->writeln(
+                    sprintf(
+                        '<error>Unknown format: %s; available options: json, %s</error>', 
+                        $format, 
+                        implode(', ', array_keys($templates))
+                    )
+                );
+                
+                return;
+            }
+            
             $result = $templateRenderer->generateOutput(
                 reset($contextData['releases']),
                 array('root' => $templates[$format]['release'])

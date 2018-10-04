@@ -71,7 +71,7 @@ class ChangelogConfigResolver
         $installPath = $this->packageInfoResolver->getSourcePath($package);
         $pluginRoot = $this->packageInfoResolver->getSourcePath($this->pluginPackage);
 
-        $types = array('sphinx', 'html');
+        $types = array('sphinx', 'html', 'md', 'yml', 'rst');
 
         $templateGroups = array_combine(
             $types,

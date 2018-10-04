@@ -1,4 +1,14 @@
 {
+    "0.7.0": {
+        "feature": [
+            "added .md, .yml and .rst format options for info command",
+            "sphinx template upgraded to take use of some it's more advanced features (overview decorated and made to stand out more)"
+        ],
+        "fix": [
+            "the reason for changelog not being valid not shown when running in non-verbose mode, leaving the user wondering what went wrong (now lists all reasons)",
+            "bug in html output template (list item tag never closed on changelog release listing level)"
+        ]
+    },
     "0.6.4": {
         "fix": [
             "removed code that was incompatible with 5.3"

@@ -1,16 +1,12 @@
 {{#overview.length}}
-.. note::
-
+overview: |
 {{#overview}}
-    {{.}}
+  {{.}}
 {{/overview}}
 {{/overview.length}}
 {{#groups}}
-
-{{label}}
-{{line label "~"}}
-
+{{#name}}{{/name}}{{name}}:
 {{#items}}
-* {{.}}
+  - {{.}}
 {{/items}}
 {{/groups}}

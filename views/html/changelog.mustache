@@ -3,17 +3,18 @@
 <p>This file has been auto-generated from the contents of changelog.json</p>
 
 <ol>
-{{#releases}}
-<li>
-<b>{{version}}</b>
-{{line version "-"}}
-{{#overview.length}}
-<br/>
-{{/overview.length}}
-{{> release}}
-<li>
-{{/releases}}
-{{^releases}}
-<li><i>There are no releases yet planned for this module</i><li>
-{{/releases}}
+  {{#releases}}
+  <li>
+
+    <b>{{version}}</b>
+    {{#overview.length}}
+    <br/>
+    {{/overview.length}}
+    {{> release}}
+
+  </li>
+  {{/releases}}
+  {{^releases}}
+  <li><i>There are no releases yet planned for this module</i><li>
+  {{/releases}}
 </ol>

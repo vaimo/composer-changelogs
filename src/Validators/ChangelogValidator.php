@@ -55,11 +55,10 @@ class ChangelogValidator
                 throw $exception;
             }
 
-            if ($vebosity > Output::VERBOSITY_NORMAL) {
-                $messages = $this->errorExtractor->extractMessages($exception, true);
-            } else {
-                $messages = array(sprintf('The changelog of %s is invalid', $package->getName()));
-            }
+            $messages = array_merge(
+                array(sprintf('The changelog of %s is invalid due to:', $package->getName())),
+                $this->errorExtractor->extractMessages($exception, true)
+            );
 
             return new Result(
                 false,

@@ -21,7 +21,8 @@ class RenderContextGenerator implements \Vaimo\ComposerChangelogs\Interfaces\Ren
             foreach ($releaseDetailsResolver->resolveChangeGroups($details) as $name => $groupItems) {
                 $group = array();
 
-                $group['name'] = ucfirst($name);
+                $group['label'] = ucfirst($name);
+                $group['name'] = $name;
                 $group['items'] = $groupItems;
 
                 $groups[] = $group;
