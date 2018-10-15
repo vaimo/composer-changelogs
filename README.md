@@ -22,9 +22,10 @@ Environment variables can be defined as key value pairs in the project's compose
 
 The module expects certain conventions to be used when declaring new changelog records, which are based
 on grouping the changes based on semantic versioning rules (+ provides some extra ones for even greater 
-detail): breaking, feature, fix (extras: overview, maintenance). The extra keys are mostly meant for dumping
-some data into the release notes about general theme of the new release or allowing some extra details to be 
-added for the developers.
+detail): breaking, feature, fix (extras: overview, maintenance). 
+
+The extra keys are mostly meant for dumping some data into the release notes about general theme of the 
+new release or allowing some extra details to be added for the developers.
 
 ```json
 {
