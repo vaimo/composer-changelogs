@@ -56,7 +56,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
             '--format',
             null,
             \Symfony\Component\Console\Input\InputOption::VALUE_OPTIONAL,
-            'Format of the output (json, sphinx, html, rst, md, yml)',
+            'Format of the output (json, sphinx, html, rst, md, yml, txt)',
             'json'
         );
 
@@ -163,7 +163,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
 
             $configResolver = $configResolverFactory->create($fromSource);
 
-            $templates = $configResolver->resolveOutputTemplates($package);
+            $templates = $configResolver->resolveOutputTemplates();
 
             $dataConverter = new \Vaimo\ComposerChangelogs\Generators\Changelog\RenderContextGenerator();
             $templateRenderer = new \Vaimo\ComposerChangelogs\Generators\TemplateOutputGenerator();
@@ -173,9 +173,9 @@ class InfoCommand extends \Composer\Command\BaseCommand
             if (!isset($templates[$format])) {
                 $output->writeln(
                     sprintf(
-                        '<error>Unknown format: %s; available options: json, %s</error>', 
+                        '<error>Unknown format: %s; available options: %s</error>', 
                         $format, 
-                        implode(', ', array_keys($templates))
+                        implode(', ', array_merge(array('json'), array_keys($templates)))
                     )
                 );
                 

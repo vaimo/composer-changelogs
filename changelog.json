@@ -1,4 +1,13 @@
 {
+    "0.8.0": {
+        "feature": [
+            "new output formats: .txt"
+        ],
+        "fix": [
+            "output format types could not be used with ':info' even when output file was not defined",
+            "removed excess whitespace from changelog output (for both ':info' and ':generate')"
+        ]
+    },
     "0.7.0": {
         "feature": [
             "added .md, .yml and .rst format options for info command",

@@ -32,6 +32,9 @@ class TemplateOutputGenerator implements \Vaimo\ComposerChangelogs\Interfaces\Te
                 'line' => function ($context, $char) {
                     return str_pad('', strlen($context), $char);
                 },
+                'title' => function ($context) {
+                    return strtoupper($context);
+                } 
             ),
             'partialresolver' => function ($context, $name) use ($templatePaths, $templateLoader) {
                 if (isset($templatePaths[$name])) {
@@ -60,6 +63,6 @@ class TemplateOutputGenerator implements \Vaimo\ComposerChangelogs\Interfaces\Te
 
         $outputGenerator = eval($generatorCode);
 
-        return $outputGenerator($data);
+        return rtrim($outputGenerator($data), "\n");
     }
 }

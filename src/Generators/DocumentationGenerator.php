@@ -47,16 +47,17 @@ class DocumentationGenerator
         $changelog = $this->changelogLoader->load($package);
 
         $outputPaths = $this->configResolver->resolveOutputTargets($package);
-        $templates = $this->configResolver->resolveOutputTemplates($package);
+        
+        $templates = array_replace_recursive(
+            $this->configResolver->resolveOutputTemplates(), 
+            $this->configResolver->resolveTemplateOverrides($package)
+        );
 
         $contextData = $this->dataConverter->generate($changelog);
 
         foreach ($outputPaths as $type => $target) {
             try {
-                file_put_contents(
-                    $target,
-                    $this->templateRenderer->generateOutput($contextData,  $templates[$type])
-                );
+                $output = $this->templateRenderer->generateOutput($contextData, $templates[$type]);
             } catch (\Vaimo\ComposerChangelogs\Exceptions\TemplateValidationException $exception) {
                 $messages = array();
 
@@ -78,6 +79,8 @@ class DocumentationGenerator
 
                 break;
             }
+
+            file_put_contents($target, $output);
         }
     }
 }

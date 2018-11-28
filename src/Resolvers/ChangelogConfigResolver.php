@@ -60,18 +60,11 @@ class ChangelogConfigResolver
         );
     }
 
-    public function resolveOutputTemplates(\Composer\Package\PackageInterface $package)
+    public function resolveOutputTemplates()
     {
-        $config = $this->getConfig($package);
-
-        if (!isset($config['output'])) {
-            return array();
-        }
-
-        $installPath = $this->packageInfoResolver->getSourcePath($package);
         $pluginRoot = $this->packageInfoResolver->getSourcePath($this->pluginPackage);
 
-        $types = array('sphinx', 'html', 'md', 'yml', 'rst');
+        $types = array('sphinx', 'html', 'md', 'yml', 'rst', 'txt');
 
         $templateGroups = array_combine(
             $types,
@@ -83,7 +76,20 @@ class ChangelogConfigResolver
             }, $types)
         );
 
-        foreach ($config['output'] as $type => $outputConfig) {
+        return $this->assembleGroupedFilePaths($templateGroups);
+    }
+
+    public function resolveTemplateOverrides(\Composer\Package\PackageInterface $package)
+    {
+        $config = $this->getConfig($package);
+
+        $installPath = $this->packageInfoResolver->getSourcePath($package);
+        
+        $outputPaths = isset($config['output']) ? $config['output'] : array();
+
+        $templateGroups = array();
+        
+        foreach ($outputPaths as $type => $outputConfig) {
             if (!is_array($outputConfig) || !isset($outputConfig['template']) || !$outputConfig['template']) {
                 continue;
             }
@@ -94,24 +100,26 @@ class ChangelogConfigResolver
                 );
             }
 
-            $templateGroups[$type] = array_replace(
-                isset($templateGroups[$type]) ? $templateGroups[$type] : array(),
-                array_map(
-                    function ($item) use ($installPath) {
-                        return array($installPath, $item['template']);
-                    },
-                    $outputConfig['template']
-                )
+            $templateGroups[$type] = array_map(
+                function ($templatePath) use ($installPath) {
+                    return array($installPath, $templatePath);
+                },
+                $outputConfig['template']
             );
         }
 
+        return $this->assembleGroupedFilePaths($templateGroups);
+    }
+
+    private function assembleGroupedFilePaths($groups)
+    {
         return array_map(function (array $group) {
             return array_map(function (array $segments) {
                 return implode(DIRECTORY_SEPARATOR, $segments);
             }, $group);
-        }, $templateGroups);
+        }, $groups);
     }
-
+    
     public function resolveSourcePath(\Composer\Package\PackageInterface $package)
     {
         $config = $this->getConfig($package);
