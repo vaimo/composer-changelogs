@@ -5,7 +5,8 @@
         ],
         "fix": [
             "output format types could not be used with ':info' even when output file was not defined",
-            "removed excess whitespace from changelog output (for both ':info' and ':generate')"
+            "removed excess whitespace from changelog output (for both ':info' and ':generate')",
+            "undefined array key crash when configuring custom templates for changelog output within the package that owns the changelog"
         ]
     },
     "0.7.0": {
