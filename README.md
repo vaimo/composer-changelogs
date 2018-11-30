@@ -1,6 +1,6 @@
 # composer-changelogs
 
-Provides information about package changes based on changelog files that are bundled with releases and introduces tools/commands for generating documentation files from changelog sources. 
+Provides information about package changes based on changelog files that are bundled with releases and introduces tools/commands for generating documentation files (in many different formats and with the option to create custom templates) from changelog sources. 
 
 It comes with several commands that aid the developer on setting up automatic package publishing logic in CI.
 
