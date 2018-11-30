@@ -52,11 +52,13 @@ class InfoCommand extends \Composer\Command\BaseCommand
             'Match release branch (if provided in changelog item)'
         );
 
+        $pluginConfig = new \Vaimo\ComposerChangelogs\Composer\Plugin\Config();
+
         $this->addOption(
             '--format',
             null,
             \Symfony\Component\Console\Input\InputOption::VALUE_OPTIONAL,
-            'Format of the output (json, sphinx, html, rst, md, yml, txt)',
+            sprintf('Format of the output (%s)', implode(', ', $pluginConfig->getAvailableFormats())),
             'json'
         );
 

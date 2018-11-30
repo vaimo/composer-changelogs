@@ -23,6 +23,11 @@ class ChangelogConfigResolver
     private $packageInfoResolver;
 
     /**
+     * @var \Vaimo\ComposerChangelogs\Composer\Plugin\Config 
+     */
+    private $pluginConfig;
+
+    /**
      * @param \Composer\Package\PackageInterface $pluginPackage
      * @param \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver $packageInfoResolver
      * @param \Vaimo\ComposerChangelogs\Interfaces\PackageConfigExtractorInterface $configExtractor
@@ -35,6 +40,8 @@ class ChangelogConfigResolver
         $this->pluginPackage = $pluginPackage;
         $this->packageInfoResolver = $packageInfoResolver;
         $this->configExtractor = $configExtractor;
+
+        $this->pluginConfig = new \Vaimo\ComposerChangelogs\Composer\Plugin\Config();
     }
 
     public function resolveOutputTargets(\Composer\Package\PackageInterface $package)
@@ -63,8 +70,8 @@ class ChangelogConfigResolver
     public function resolveOutputTemplates()
     {
         $pluginRoot = $this->packageInfoResolver->getSourcePath($this->pluginPackage);
-
-        $types = array('sphinx', 'html', 'md', 'yml', 'rst', 'txt');
+        
+        $types = $this->pluginConfig->getAvailableFormats();
 
         $templateGroups = array_combine(
             $types,
