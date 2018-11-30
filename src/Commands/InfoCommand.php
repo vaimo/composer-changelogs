@@ -143,13 +143,8 @@ class InfoCommand extends \Composer\Command\BaseCommand
             $generalInfo = $releaseDetailsResolver->resolveOverview($details);
 
             $groups = array(
-                'overview' => array_merge(
-                    $generalInfo['overview'],
-                    array_filter(array(
-                        $generalInfo['overview'] ? '----------------------' : '',
-                        'Includes: ' . implode(', ', $summary)
-                    ))
-                )
+                'overview' => $generalInfo['overview'],
+                'summary' => sprintf('Includes: %s', implode(', ', $summary))
             );
         } else if ($generalInfo['overview']) {
             $groups = array_merge(

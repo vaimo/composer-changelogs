@@ -23,7 +23,8 @@ class ReleaseDetailsResolver
             'version' => isset($release['version']) ? $release['version'] : '',
             'overview' => isset($release['overview'])
                 ? (is_array($release['overview']) ? $release['overview'] : array($release['overview']))
-                : array()
+                : array(),
+            'summary' => isset($release['summary']) ? $release['summary'] : ''
         );
     }
 
@@ -31,7 +32,7 @@ class ReleaseDetailsResolver
     {
         return array_diff_key(
             $release,
-            array('overview' => true, 'version' => true, 'branch' => true)
+            array('overview' => true, 'version' => true, 'branch' => true, 'summary' => true)
         );
     }
 }
