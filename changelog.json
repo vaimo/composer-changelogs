@@ -1,4 +1,9 @@
 {
+    "0.9.2": {
+        "fix": [
+            "minor whitespace issues with Slack changelog release info templates; too many empty lines when overview not present"
+        ]
+    },
     "0.9.1": {
         "fix": [
             "whitespace usage in certain formats (sphinx) caused generated documentation to be incorrect",
