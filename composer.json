@@ -3,14 +3,9 @@
     "type": "composer-plugin",
     "license": "MIT",
     "description": "Provide information about package changes based on changelog files that are bundled with releases; provide tools for generating documentation files from changelog sources",
-    "authors": [
-        {
-            "name": "Allan Paiste",
-            "email": "allan.paiste@vaimo.com"
-        }
-    ],
     "require": {
         "php": ">=5.4.0",
+        "ext-json": "*",
         "composer-plugin-api": "^1.0",
         "zordius/lightncandy": "^v1.2.2"
     },
@@ -19,6 +14,12 @@
         "docs": "https://github.com/vaimo/composer-changelogs",
         "issues": "https://github.com/vaimo/composer-changelogs/issues"
     },
+    "authors": [
+        {
+            "name": "Allan Paiste",
+            "email": "allan.paiste@vaimo.com"
+        }
+    ],
     "keywords": [
         "changelog files",
         "grouped changes",
