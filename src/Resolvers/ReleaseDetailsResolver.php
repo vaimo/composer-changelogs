@@ -19,12 +19,22 @@ class ReleaseDetailsResolver
 
     public function resolveOverview(array $release)
     {
+        $overviewLines = isset($release['overview'])
+            ? (is_array($release['overview']) ? $release['overview'] : array($release['overview']))
+            : array();
+
+        $reducedLines = explode(PHP_EOL, implode(
+            '', 
+            array_map(function ($line) {
+                return !trim($line) ? PHP_EOL . PHP_EOL: $line;
+            }, $overviewLines)
+        ));
+        
         return array(
             'version' => isset($release['version']) ? $release['version'] : '',
-            'overview' => isset($release['overview'])
-                ? (is_array($release['overview']) ? $release['overview'] : array($release['overview']))
-                : array(),
-            'summary' => isset($release['summary']) ? $release['summary'] : ''
+            'overview' => $overviewLines,
+            'summary' => isset($release['summary']) ? $release['summary'] : '',
+            'overview-reduced' => $reducedLines
         );
     }
 

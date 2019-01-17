@@ -1,4 +1,9 @@
 {
+    "0.9.4": {
+        "fix": [
+            "slack format to use overview info a bit differently to avoid odd line wrapping: lines are merged, only totally new lines are respected and paragraph separators"
+        ]
+    },
     "0.9.3": {
         "fix": [
             "formatting fixes to templates when used for full documentation generation (whitespace missing between certain titles in some cases)",
