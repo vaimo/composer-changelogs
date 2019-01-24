@@ -63,7 +63,7 @@ class VersionCommand extends \Composer\Command\BaseCommand
             '--tip',
             null,
             \Symfony\Component\Console\Input\InputOption::VALUE_NONE,
-            'Show upcoming version (if there is one)'
+            'Show LATEST version (might be latest release, might be upcoming)'
         );
     }
 
