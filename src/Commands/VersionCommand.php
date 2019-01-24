@@ -16,7 +16,7 @@ class VersionCommand extends \Composer\Command\BaseCommand
     {
         $this->setName('changelog:version');
 
-        $this->setDescription('Display version information from changelog. (Default: latest stable)');
+        $this->setDescription('Display version information from changelog. <comment>[default: latest stable]</comment>');
 
         $this->addArgument(
             'name',
@@ -38,6 +38,13 @@ class VersionCommand extends \Composer\Command\BaseCommand
             'Format of the output (regex)'
         );
 
+        $this->addOption(
+            '--segments',
+            null,
+            \Symfony\Component\Console\Input\InputOption::VALUE_OPTIONAL,
+            'Number of segments of the version to return. <comment>[default: all segments]</comment>'
+        );
+        
         $this->addOption(
             '--upcoming',
             null,
@@ -66,6 +73,7 @@ class VersionCommand extends \Composer\Command\BaseCommand
         $fromSource = $input->getOption('from-source');
         $format = $input->getOption('format');
         $branch = $input->getOption('branch');
+        $segmentsCount = $input->getOption('segments');
 
         $showUpcoming = $input->getOption('upcoming');
         $showTip = $input->getOption('tip');
@@ -114,6 +122,10 @@ class VersionCommand extends \Composer\Command\BaseCommand
             $version = preg_quote($version);
         }
 
+        if ($segmentsCount) {
+            $version = implode('.', array_slice(explode('.', $version), 0, $segmentsCount));
+        }
+        
         $output->writeln($version);
     }
 }

@@ -166,6 +166,9 @@ composer changelog:version --tip
 # Report upcoming release version from changelog (returns blank if there is no upcoming version)
 composer changelog:version --upcoming
 
+# Report current latest version without PATCH version
+composer changelog:version --segments 2
+
 # Report latest release details (in requested format)
 composer changelog:info
 
