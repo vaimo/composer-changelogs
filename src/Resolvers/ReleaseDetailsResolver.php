@@ -24,7 +24,7 @@ class ReleaseDetailsResolver
             : array();
 
         $reducedLines = explode(PHP_EOL, implode(
-            '', 
+            ' ', 
             array_map(function ($line) {
                 return !trim($line) ? PHP_EOL . PHP_EOL: $line;
             }, $overviewLines)
@@ -42,7 +42,13 @@ class ReleaseDetailsResolver
     {
         return array_diff_key(
             $release,
-            array('overview' => true, 'version' => true, 'branch' => true, 'summary' => true)
+            array(
+                'overview' => true, 
+                'version' => true, 
+                'branch' => true, 
+                'summary' => true,
+                'overview-reduced' => true
+            )
         );
     }
 }

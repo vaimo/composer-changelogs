@@ -1,4 +1,10 @@
 {
+    "0.10.1": {
+        "fix": [
+            "the 'overview-reduced' not considered as something that is not a changes group type",
+            "the value of overview-reduced not composed correctly: some words merged together without whitespace"
+        ]
+    },
     "0.10.0": {
         "feature": [
             "--segments argument added for changelog:version to be able to query for the latest MAJOR version from changelog"
