@@ -4,7 +4,8 @@
             "allow specifying repository url with changelog:generate command argument --url to provide custom url in cases where no other source for resolving it is available"
         ],
         "maintenance": [
-            "allow the commands that this plugin repository provides to be used on itself"
+            "allow the commands that this plugin repository provides to be used on itself",
+            "added changelog output with MD format output"
         ]
     },
     "0.11.0": {
