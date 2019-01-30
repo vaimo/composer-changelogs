@@ -162,10 +162,10 @@ class InfoCommand extends \Composer\Command\BaseCommand
 
             $templates = $configResolver->resolveOutputTemplates();
 
-            $dataConverter = new \Vaimo\ComposerChangelogs\Generators\Changelog\RenderContextGenerator();
+            $renderContextGenerator = new \Vaimo\ComposerChangelogs\Generators\Changelog\RenderContextGenerator();
             $templateRenderer = new \Vaimo\ComposerChangelogs\Generators\TemplateOutputGenerator();
 
-            $contextData = $dataConverter->generate(array('' => $groups));
+            $contextData = $renderContextGenerator->generate(array('' => $groups));
 
             if (!isset($templates[$format])) {
                 $output->writeln(

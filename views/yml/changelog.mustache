@@ -2,7 +2,15 @@
 changelog:
 {{#releases}}
   - version: {{version}}
+  {{#date}}
+    date: {{date}}
+  {{/date}}
+  {{#diff}}
+    src: {{link}}
+    diff: {{diff}}
+  {{/diff}}
     {{> release}}
+
 {{/releases}}
 {{^releases}}
     # There are no releases yet planned for this module

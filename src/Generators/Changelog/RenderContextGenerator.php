@@ -7,35 +7,71 @@ namespace Vaimo\ComposerChangelogs\Generators\Changelog;
 
 class RenderContextGenerator implements \Vaimo\ComposerChangelogs\Interfaces\RenderContextGeneratorInterface
 {
-    public function generate(array $changelog)
+    /**
+     * @var \Vaimo\ComposerChangelogs\Resolvers\ReleaseDetailsResolver
+     */
+    private $releaseDetailsResolver;
+
+    public function __construct() 
     {
+        $this->releaseDetailsResolver = new \Vaimo\ComposerChangelogs\Resolvers\ReleaseDetailsResolver();
+    }
+
+    public function generate(array $changelog, $repositoryUrl = '', $repositoryRoot = '')
+    {
+        $lastVersion = false;
+
         $contextData = array();
+        
+        foreach (array_reverse($changelog) as $version => $details) {
+            $item = $this->releaseDetailsResolver->resolveOverview($details);
 
-        $releaseDetailsResolver = new \Vaimo\ComposerChangelogs\Resolvers\ReleaseDetailsResolver();
+            $releaseLinks = $this->releaseDetailsResolver->resolveReleaseLinks(
+                $repositoryUrl,
+                $version,
+                $lastVersion
+            );
 
-        foreach ($changelog as $details) {
-            $item = $releaseDetailsResolver->resolveOverview($details);
-
-            $groups = array();
-
-            foreach ($releaseDetailsResolver->resolveChangeGroups($details) as $name => $groupItems) {
-                $group = array();
-
-                $group['label'] = ucfirst($name);
-                $group['name'] = $name;
-                $group['items'] = $groupItems;
-
-                $groups[] = $group;
-            }
+            $releaseDateTime = $this->releaseDetailsResolver->resolveReleaseTime(
+                $repositoryRoot, 
+                $version
+            );
+            
+            $changeGroups = $this->resolveChangeGroups($details);
 
             $contextData[] = array_filter(
                 array_replace(
                     $item,
-                    array('groups' => $groups)
+                    array('groups' => $changeGroups),
+                    $releaseLinks,
+                    $releaseDateTime
                 )
             );
+            
+            $lastVersion = $version; 
         }
+        
+        return array(
+            'releases' => array_reverse($contextData)
+        );
+    }
+    
+    private function resolveChangeGroups(array $details)
+    {
+        $result = array();
 
-        return array('releases' => $contextData);
+        $changeGroups = $this->releaseDetailsResolver->resolveChangeGroups($details);
+        
+        foreach ($changeGroups as $name => $groupItems) {
+            $group = array();
+
+            $group['label'] = ucfirst($name);
+            $group['name'] = $name;
+            $group['items'] = $groupItems;
+
+            $result[] = $group;
+        }
+        
+        return $result;
     }
 }

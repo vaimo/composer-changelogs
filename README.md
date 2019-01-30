@@ -77,8 +77,60 @@ achieved if the values is left blank.
  }
  ```
  
- The plugin uses composer constraints validator so anything that does not validate as version constraint
- will be skipped over.
+The plugin uses composer constraints validator so anything that does not validate as version constraint
+will be skipped over.
+
+## Feature: repository links
+
+**Note: currently this feature only supports BitBucket link.** 
+
+The changelog generator is capable of adding repository links to the changelog for each version by 
+presenting both source link for certain version as well as diff/comparison for the code when compared
+to previous release.
+
+This activates on two situations:
+
+* When composer.json of the package has support/source defined (part of standard Composer package config schema)
+* When repository with proper remote destination has been configured (with well formed URL)
+
+The variables that become available through this in templates: {{link}}, {{diff}}.
+
+This feature is enabled by default, but can be enabled by defining the following under changelog 
+configuration within the composer.json of the package:
+
+```json
+{
+  "extra": {
+    "changelog": {
+      "feature": {
+        "links": false
+      }
+    }
+  }
+}
+```
+
+## Feature: release dates
+
+**Note: currently this feature only supports BitBucket link.** 
+
+The module will try to resolve the release date of certain version from the package's repository when it's
+available. The available options to be used in output templates are: {{date}}, {{time}}.
+
+This feature is enabled by default, but can be enabled by defining the following under changelog 
+configuration within the composer.json of the package: 
+
+```json
+{
+  "extra": {
+    "changelog": {
+      "feature": {
+        "dates": false
+      }
+    }
+  }
+}
+```
 
 ## Configuration: generators
 

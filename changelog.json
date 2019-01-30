@@ -1,4 +1,16 @@
 {
+    "0.11.0": {
+        "feature": [
+            "add repository from version to version diff links when module has repository reference in composer.json or when one provided via call argument (with optional variable replacement options); Currently only features BitBucket support. See the topic 'Feature: repository links' for more information.",
+            "add repository versioned source links when module has repository reference in composer.json or when one provided via call argument (with optional variable replacement options); Currently only features BitBucket support. See the topic 'Feature: release dates' for more information.",
+            "add release date next to the version when repository present and there's a matching tag available for a changelog record."
+        ],
+        "fix": [
+            "no extra line before summary when release has no overview",
+            "yml format error when using summary due to a colon within the value with no wrapping quotes",
+            "corrupt yml format on full changelog generation where nesting level did not get correctly reset for every release but the first"
+        ]
+    },
     "0.10.1": {
         "fix": [
             "the 'overview-reduced' not considered as something that is not a changes group type",

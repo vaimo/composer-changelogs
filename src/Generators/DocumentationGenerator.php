@@ -18,9 +18,14 @@ class DocumentationGenerator
     private $changelogLoader;
 
     /**
+     * @var \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver
+     */
+    private $packageInfoResolver;
+
+    /**
      * @var \Vaimo\ComposerChangelogs\Generators\Changelog\RenderContextGenerator
      */
-    private $dataConverter;
+    private $contextGenerator;
 
     /**
      * @var \Vaimo\ComposerChangelogs\Generators\TemplateOutputGenerator
@@ -30,15 +35,18 @@ class DocumentationGenerator
     /**
      * @param \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver $configResolver
      * @param \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader $changelogLoader
+     * @param \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver $packageInfoResolver
      */
     public function __construct(
         \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver $configResolver,
-        \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader $changelogLoader
+        \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader $changelogLoader,
+        \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver $packageInfoResolver
     ) {
         $this->configResolver = $configResolver;
         $this->changelogLoader = $changelogLoader;
+        $this->packageInfoResolver = $packageInfoResolver;
 
-        $this->dataConverter = new \Vaimo\ComposerChangelogs\Generators\Changelog\RenderContextGenerator();
+        $this->contextGenerator = new \Vaimo\ComposerChangelogs\Generators\Changelog\RenderContextGenerator();
         $this->templateRenderer = new \Vaimo\ComposerChangelogs\Generators\TemplateOutputGenerator();
     }
 
@@ -53,7 +61,16 @@ class DocumentationGenerator
             $this->configResolver->resolveTemplateOverrides($package)
         );
 
-        $contextData = $this->dataConverter->generate($changelog);
+        $featureFlags = $this->configResolver->getFeatureFlags($package);
+        
+        $repositoryUrl = $this->configResolver->resolveRepositoryUrl($package);
+        $repositoryRoot = $this->packageInfoResolver->getSourcePath($package);
+        
+        $contextData = $this->contextGenerator->generate(
+            $changelog,
+            $featureFlags['links'] ? $repositoryUrl : '',
+            $featureFlags['dates'] ? $repositoryRoot : ''
+        );
 
         foreach ($outputPaths as $type => $target) {
             try {

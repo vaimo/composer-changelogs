@@ -6,12 +6,15 @@
   {{#releases}}
   <li>
 
-    <b>{{version}}</b>
+    <b>{{version}}</b>{{#date}}&nbsp;<i>({{date}})</i>{{/date}}
     {{#overview.length}}
     <br/>
     {{/overview.length}}
     {{> release}}
-
+    
+    {{#diff}}
+    <p>Links:&nbsp;<a href="{{link}}">(src)</a>&nbsp;<a href="{{diff}}">(diff)</a></p>
+    {{/diff}}
   </li>
   {{/releases}}
   {{^releases}}

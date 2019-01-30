@@ -3,9 +3,13 @@
 This file has been auto-generated from the contents of changelog.json
 
 {{#releases}}
-`{{#version}}{{/version}}{{version}}`
+`{{#version}}{{/version}}{{version}}`{{#date}} _({{date}})_{{/date}}
 
 {{> release}}
+{{#diff}}
+Src:  {{link}}
+Diff:  {{diff}}
+{{/diff}}
 
 {{/releases}}
 {{^releases}}

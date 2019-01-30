@@ -37,9 +37,9 @@ class GenerateCommand extends \Composer\Command\BaseCommand
         $packageName = $input->getArgument('name');
         $fromSource = $input->getOption('from-source');
 
-        $composer = $this->getComposer();
+        $composerRuntime = $this->getComposer();
 
-        $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composer);
+        $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composerRuntime);
 
         $packageRepository = $packageRepositoryFactory->create();
 
@@ -53,7 +53,7 @@ class GenerateCommand extends \Composer\Command\BaseCommand
             return;
         }
 
-        $configResolverFactory = new Factories\Changelog\ConfigResolverFactory($composer);
+        $configResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerRuntime);
 
         $configResolver = $configResolverFactory->create($fromSource);
 
@@ -76,9 +76,14 @@ class GenerateCommand extends \Composer\Command\BaseCommand
             sprintf('Generating changelog output for <info>%s</info>', $package->getName())
         );
 
+        $infoResolver = new \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver(
+            $composerRuntime->getInstallationManager()
+        );
+        
         $docsGenerator = new \Vaimo\ComposerChangelogs\Generators\DocumentationGenerator(
             $configResolver,
-            $changelogLoader
+            $changelogLoader,
+            $infoResolver
         );
 
         try {

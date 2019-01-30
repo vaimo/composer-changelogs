@@ -60,9 +60,14 @@ class ChangelogManager
             return;
         }
 
+        $infoResolver = new \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver(
+            $this->composerRuntime->getInstallationManager()
+        );
+        
         $docsGenerator = new \Vaimo\ComposerChangelogs\Generators\DocumentationGenerator(
             $configResolver,
-            $changelogLoader
+            $changelogLoader,
+            $infoResolver
         );
 
         try {

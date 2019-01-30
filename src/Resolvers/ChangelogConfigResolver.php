@@ -5,6 +5,8 @@
  */
 namespace Vaimo\ComposerChangelogs\Resolvers;
 
+use Composer\Package\PackageInterface;
+
 class ChangelogConfigResolver
 {
     /**
@@ -44,7 +46,7 @@ class ChangelogConfigResolver
         $this->pluginConfig = new \Vaimo\ComposerChangelogs\Composer\Plugin\Config();
     }
 
-    public function resolveOutputTargets(\Composer\Package\PackageInterface $package)
+    public function resolveOutputTargets(PackageInterface $package)
     {
         $config = $this->getConfig($package);
 
@@ -85,8 +87,51 @@ class ChangelogConfigResolver
 
         return $this->assembleGroupedFilePaths($templateGroups);
     }
+    
+    public function resolveRepositoryUrl(PackageInterface $package)
+    {
+        if (!$package instanceof \Composer\Package\CompletePackageInterface) {
+            return '';
+        }
 
-    public function resolveTemplateOverrides(\Composer\Package\PackageInterface $package)
+        $support = $package->getSupport();
+
+        if (!isset($support['source'])) {
+            $sourcePath = $this->packageInfoResolver->getSourcePath($package);
+            
+            if (file_exists($this->composePath($sourcePath, '.hg'))) {
+                $process = new \Symfony\Component\Process\Process(
+                    'hg path default',
+                    $sourcePath
+                );
+
+                $process->setTimeout(null);
+
+                try {
+                    $process->mustRun();
+
+                    $result = $process->getOutput();
+                } catch (\Symfony\Component\Process\Exception\ProcessFailedException $exception) {
+                    return '';
+                }
+                
+                preg_match('/.*@(.*)/s', $result, $matches);
+                
+                if (!isset($matches[1])) {
+                    return '';
+                }
+                
+                return 'https://' . trim($matches[1]);
+            }
+            
+            return '';
+        }
+        
+
+        return $support['source'];
+    }
+    
+    public function resolveTemplateOverrides(PackageInterface $package)
     {
         $config = $this->getConfig($package);
 
@@ -118,7 +163,7 @@ class ChangelogConfigResolver
         return $this->assembleGroupedFilePaths($templateGroups);
     }
 
-    private function assembleGroupedFilePaths($groups)
+    private function assembleGroupedFilePaths(array $groups)
     {
         return array_map(function (array $group) {
             return array_map(function (array $segments) {
@@ -127,7 +172,7 @@ class ChangelogConfigResolver
         }, $groups);
     }
     
-    public function resolveSourcePath(\Composer\Package\PackageInterface $package)
+    public function resolveSourcePath(PackageInterface $package)
     {
         $config = $this->getConfig($package);
 
@@ -135,19 +180,30 @@ class ChangelogConfigResolver
             return false;
         }
 
-        return $this->packageInfoResolver->getSourcePath($package)
-            . DIRECTORY_SEPARATOR
-            . $config['source'];
+        return $this->composePath(
+            $this->packageInfoResolver->getSourcePath($package),
+            $config['source']
+        );
     }
-
-    public function hasConfig(\Composer\Package\PackageInterface $package)
+    
+    public function hasConfig(PackageInterface $package)
     {
         $packageExtraConfig = $this->configExtractor->getConfig($package);
 
         return isset($packageExtraConfig['changelog']) && is_array($packageExtraConfig['changelog']);
     }
 
-    private function getConfig(\Composer\Package\PackageInterface $package)
+    public function getFeatureFlags(PackageInterface $package)
+    {
+        $config = $this->getConfig($package);
+        
+        return array_replace(
+            array_fill_keys(array('links', 'dates'), true),
+            isset($config['features']) ? $config['features'] : array()
+        );
+    }
+    
+    private function getConfig(PackageInterface $package)
     {
         $packageExtraConfig = $this->configExtractor->getConfig($package);
 
@@ -156,5 +212,17 @@ class ChangelogConfigResolver
         }
 
         return $packageExtraConfig['changelog'];
+    }
+
+    private function composePath()
+    {
+        $pathSegments = array_map(function ($item) {
+            return rtrim($item, DIRECTORY_SEPARATOR);
+        }, func_get_args());
+
+        return implode(
+            DIRECTORY_SEPARATOR,
+            array_filter($pathSegments)
+        );
     }
 }
