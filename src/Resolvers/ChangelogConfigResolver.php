@@ -88,49 +88,6 @@ class ChangelogConfigResolver
         return $this->assembleGroupedFilePaths($templateGroups);
     }
     
-    public function resolveRepositoryUrl(PackageInterface $package)
-    {
-        if (!$package instanceof \Composer\Package\CompletePackageInterface) {
-            return '';
-        }
-
-        $support = $package->getSupport();
-
-        if (!isset($support['source'])) {
-            $sourcePath = $this->packageInfoResolver->getSourcePath($package);
-            
-            if (file_exists($this->composePath($sourcePath, '.hg'))) {
-                $process = new \Symfony\Component\Process\Process(
-                    'hg path default',
-                    $sourcePath
-                );
-
-                $process->setTimeout(null);
-
-                try {
-                    $process->mustRun();
-
-                    $result = $process->getOutput();
-                } catch (\Symfony\Component\Process\Exception\ProcessFailedException $exception) {
-                    return '';
-                }
-                
-                preg_match('/.*@(.*)/s', $result, $matches);
-                
-                if (!isset($matches[1])) {
-                    return '';
-                }
-                
-                return 'https://' . trim($matches[1]);
-            }
-            
-            return '';
-        }
-        
-
-        return $support['source'];
-    }
-    
     public function resolveTemplateOverrides(PackageInterface $package)
     {
         $config = $this->getConfig($package);

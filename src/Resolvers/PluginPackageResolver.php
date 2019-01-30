@@ -10,12 +10,23 @@ use Composer\Repository\WritableRepositoryInterface;
 class PluginPackageResolver
 {
     /**
+     * @var \Composer\Package\PackageInterface[]
+     */
+    private $additionalPackages;
+    
+    /**
      * @var \Vaimo\ComposerChangelogs\Analysers\PackageAnalyser
      */
     private $packageAnalyser;
-    
-    public function __construct()
-    {
+
+    /**
+     * @param \Composer\Package\PackageInterface[] $additionalPackages
+     */
+    public function __construct(
+        array $additionalPackages = []
+    ) {
+        $this->additionalPackages = $additionalPackages;
+
         $this->packageAnalyser = new \Vaimo\ComposerChangelogs\Analysers\PackageAnalyser();
     }
 
@@ -27,7 +38,12 @@ class PluginPackageResolver
      */
     public function resolveForNamespace(WritableRepositoryInterface $repository, $namespace)
     {
-        foreach ($repository->getCanonicalPackages() as $package) {
+        $packages = array_merge(
+            $this->additionalPackages, 
+            $repository->getCanonicalPackages()
+        );
+        
+        foreach ($packages as $package) {
             if (!$this->packageAnalyser->isPluginPackage($package)) {
                 continue;
             }

@@ -110,6 +110,13 @@ configuration within the composer.json of the package:
 }
 ```
 
+The links can be disabled for a single generator run as well by overriding the URL configuration with a 
+specific command argument:
+
+```shell
+composer changelog:generate --url=false
+``` 
+
 ## Feature: release dates
 
 **Note: currently this feature only supports BitBucket link.** 
@@ -205,6 +212,10 @@ The reserved names for partials in this plugin are:
 ```shell
 # Generate documentation pages from changelog configuration
 composer changelog:generate 
+
+# Generate changelog with version-bound (src) and (diff) links for each release
+# Will override the default setting configured for the module
+changelog:generate --url ssh://hg@bitbucket.org/some/repository
 
 # Report latest valid version from changelog (skip over the ones that are yet to be released)
 composer changelog:version

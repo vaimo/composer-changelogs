@@ -33,18 +33,26 @@ class DocumentationGenerator
     private $templateRenderer;
 
     /**
+     * @var \Vaimo\ComposerChangelogs\Interfaces\UrlResolverInterface
+     */
+    private $urlResolver;
+
+    /**
      * @param \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver $configResolver
      * @param \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader $changelogLoader
      * @param \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver $packageInfoResolver
+     * @param \Vaimo\ComposerChangelogs\Interfaces\UrlResolverInterface $urlResolver
      */
     public function __construct(
         \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver $configResolver,
         \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader $changelogLoader,
-        \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver $packageInfoResolver
+        \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver $packageInfoResolver,
+        \Vaimo\ComposerChangelogs\Interfaces\UrlResolverInterface $urlResolver = null
     ) {
         $this->configResolver = $configResolver;
         $this->changelogLoader = $changelogLoader;
         $this->packageInfoResolver = $packageInfoResolver;
+        $this->urlResolver = $urlResolver;
 
         $this->contextGenerator = new \Vaimo\ComposerChangelogs\Generators\Changelog\RenderContextGenerator();
         $this->templateRenderer = new \Vaimo\ComposerChangelogs\Generators\TemplateOutputGenerator();
@@ -63,12 +71,12 @@ class DocumentationGenerator
 
         $featureFlags = $this->configResolver->getFeatureFlags($package);
         
-        $repositoryUrl = $this->configResolver->resolveRepositoryUrl($package);
+        $repositoryUrl = $this->urlResolver->resolveForPackage($package);
         $repositoryRoot = $this->packageInfoResolver->getSourcePath($package);
         
         $contextData = $this->contextGenerator->generate(
             $changelog,
-            $featureFlags['links'] ? $repositoryUrl : '',
+            $repositoryUrl,
             $featureFlags['dates'] ? $repositoryRoot : ''
         );
 

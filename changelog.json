@@ -1,4 +1,12 @@
 {
+    "0.12.0": {
+        "feature": [
+            "allow specifying repository url with changelog:generate command argument --url to provide custom url in cases where no other source for resolving it is available"
+        ],
+        "maintenance": [
+            "allow the commands that this plugin repository provides to be used on itself"
+        ]
+    },
     "0.11.0": {
         "feature": [
             "add repository from version to version diff links when module has repository reference in composer.json or when one provided via call argument (with optional variable replacement options); Currently only features BitBucket support. See the topic 'Feature: repository links' for more information.",

@@ -30,12 +30,21 @@ class GenerateCommand extends \Composer\Command\BaseCommand
             \Symfony\Component\Console\Input\InputOption::VALUE_NONE,
             'Extract configuration from vendor package instead of using global installation data'
         );
+
+        $this->addOption(
+            '--url',
+            null,
+            \Symfony\Component\Console\Input\InputOption::VALUE_OPTIONAL,
+            'Repository URL to use for generating version-bound links for sources and comparisons'
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $packageName = $input->getArgument('name');
+        
         $fromSource = $input->getOption('from-source');
+        $repositoryUrl = $input->getOption('url');
 
         $composerRuntime = $this->getComposer();
 
@@ -79,11 +88,20 @@ class GenerateCommand extends \Composer\Command\BaseCommand
         $infoResolver = new \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver(
             $composerRuntime->getInstallationManager()
         );
+
+        $featureFlags = $configResolver->getFeatureFlags($package);
+        
+        if ($repositoryUrl !== null || !$featureFlags['links']) {
+            $urlResolver = new \Vaimo\ComposerChangelogs\Resolvers\Url\CustomSourceResolver($repositoryUrl);            
+        } else {
+            $urlResolver = new \Vaimo\ComposerChangelogs\Resolvers\Url\RemoteSourceResolver($infoResolver);
+        }
         
         $docsGenerator = new \Vaimo\ComposerChangelogs\Generators\DocumentationGenerator(
             $configResolver,
             $changelogLoader,
-            $infoResolver
+            $infoResolver,
+            $urlResolver
         );
 
         try {

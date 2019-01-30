@@ -8,8 +8,8 @@ namespace Vaimo\ComposerChangelogs\Interfaces;
 interface TemplateOutputGeneratorInterface
 {
     /**
-     * @param array $changelog
-     * @param array $templatePaths
+     * @param string[][] $changelog
+     * @param string[] $templatePaths
      */
     public function generateOutput(array $changelog, array $templatePaths);
 }

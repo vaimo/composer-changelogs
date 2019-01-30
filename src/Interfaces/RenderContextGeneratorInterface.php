@@ -8,7 +8,7 @@ namespace Vaimo\ComposerChangelogs\Interfaces;
 interface RenderContextGeneratorInterface
 {
     /**
-     * @param array $changelog
+     * @param string[][] $changelog
      * @return array
      */
     public function generate(array $changelog);

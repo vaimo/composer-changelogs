@@ -9,6 +9,10 @@
         "composer-plugin-api": "^1.0",
         "zordius/lightncandy": "^v1.2.2"
     },
+    "require-dev": {
+        "composer/composer": "^1.0.0",
+        "vaimo/composer-changelogs-proxy": "dev-default"
+    },
     "support": {
         "source": "https://github.com/vaimo/composer-changelogs",
         "docs": "https://github.com/vaimo/composer-changelogs",
@@ -31,12 +35,25 @@
     "extra": {
         "class": "Vaimo\\ComposerChangelogs\\Plugin",
         "changelog": {
-            "source": "changelog.json"
+            "source": "changelog.json",
+            "output": {
+                "md": "CHANGELOG.md",
+                "features": {
+                    "dates": false,
+                    "links": false
+                }
+            }
         }
     },
     "autoload": {
         "psr-4": {
             "Vaimo\\ComposerChangelogs\\": "src"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "modules/proxy-plugin"
+        }
+    ]
 }
