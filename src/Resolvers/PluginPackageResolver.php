@@ -23,7 +23,7 @@ class PluginPackageResolver
      * @param \Composer\Package\PackageInterface[] $additionalPackages
      */
     public function __construct(
-        array $additionalPackages = []
+        array $additionalPackages = array()
     ) {
         $this->additionalPackages = $additionalPackages;
 

@@ -14,8 +14,6 @@ class Plugin extends \Vaimo\ComposerChangelogs\Plugin
 {
     public function activate(\Composer\Composer $composer, \Composer\IO\IOInterface $io)
     {
-        parent::activate($composer, $io);
-
         $namespacePrefix = implode('\\', array_slice(explode('\\', get_parent_class($this)), 0, 2)) . '\\';
 
         $config = $this->loadJson('composer.json');
@@ -28,6 +26,8 @@ class Plugin extends \Vaimo\ComposerChangelogs\Plugin
 
         $this->bootstrapAutoloader($srcRoot, $namespacePrefix);
         $this->bootstrapFileTree($composer, $namespacePrefix);
+
+        parent::activate($composer, $io);
     }
 
     private function loadJson($filePath)
@@ -42,6 +42,7 @@ class Plugin extends \Vaimo\ComposerChangelogs\Plugin
     {
         $composerConfig = $composer->getConfig();
         $repositoryManager = $composer->getRepositoryManager();
+        
         $localRepository = $repositoryManager->getLocalRepository();
 
         $vendorDir = $composerConfig->get(\Vaimo\ComposerChangelogs\Composer\Config::VENDOR_DIR);
@@ -81,6 +82,10 @@ class Plugin extends \Vaimo\ComposerChangelogs\Plugin
 
     private function createSymlink($fromPath, $toPath, $graceful = false)
     {
+        if (is_link($toPath)) {
+            unlink($toPath);
+        }
+        
         if ($graceful && (file_exists($toPath) || !file_exists($fromPath))) {
             return;
         }

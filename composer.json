@@ -31,7 +31,6 @@
         "changelog json",
         "documentation generators"
     ],
-    "minimum-stability": "dev",
     "extra": {
         "class": "Vaimo\\ComposerChangelogs\\Plugin",
         "changelog": {

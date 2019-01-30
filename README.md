@@ -250,7 +250,3 @@ classes from the new version.
 
 It is safe to ignore errors like these when running the `composer update` command again does not produce 
 any side-effects.
-
-## Changelog 
-
-_Changelog included in the composer.json of the package_

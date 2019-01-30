@@ -27,7 +27,9 @@ class ConfigResolverFactory
     ) {
         $this->composerRuntime = $composerRuntime;
         
-        $this->packageResolver = new \Vaimo\ComposerChangelogs\Resolvers\PluginPackageResolver();
+        $this->packageResolver = new \Vaimo\ComposerChangelogs\Resolvers\PluginPackageResolver(
+            [$this->composerRuntime->getPackage()]
+        );
     }
 
     /**

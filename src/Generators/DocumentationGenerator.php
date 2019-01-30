@@ -47,7 +47,7 @@ class DocumentationGenerator
         \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver $configResolver,
         \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader $changelogLoader,
         \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver $packageInfoResolver,
-        \Vaimo\ComposerChangelogs\Interfaces\UrlResolverInterface $urlResolver = null
+        \Vaimo\ComposerChangelogs\Interfaces\UrlResolverInterface $urlResolver
     ) {
         $this->configResolver = $configResolver;
         $this->changelogLoader = $changelogLoader;

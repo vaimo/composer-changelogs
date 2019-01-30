@@ -63,11 +63,14 @@ class ChangelogManager
         $infoResolver = new \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver(
             $this->composerRuntime->getInstallationManager()
         );
+
+        $urlResolver = new \Vaimo\ComposerChangelogs\Resolvers\Url\RemoteSourceResolver($infoResolver);
         
         $docsGenerator = new \Vaimo\ComposerChangelogs\Generators\DocumentationGenerator(
             $configResolver,
             $changelogLoader,
-            $infoResolver
+            $infoResolver,
+            $urlResolver
         );
 
         try {
