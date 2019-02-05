@@ -59,6 +59,14 @@ class PackageRepository
 
         $matches = array_reduce($matchesGroups, 'array_merge', array());
 
+        $exactMatches = array_filter($matches, function (array $match) use ($query) {
+            return $match['name'] === $query;
+        });
+        
+        if ($exactMatches) {
+            $matches = $exactMatches; 
+        }
+        
         if (count($matches) > 1) {
             $exception = new PackageResolverException(
                 sprintf('Multiple packages found for query %s:', $query)

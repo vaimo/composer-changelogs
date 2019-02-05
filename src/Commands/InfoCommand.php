@@ -86,6 +86,10 @@ class InfoCommand extends \Composer\Command\BaseCommand
 
         $errorOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
         $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composerRuntime);
+
+        if (!$packageName) {
+            $packageName = $composerRuntime->getPackage()->getName();
+        }
         
         $packageRepository = $packageRepositoryFactory->create();
         

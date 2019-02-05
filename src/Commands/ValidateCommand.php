@@ -42,6 +42,10 @@ class ValidateCommand extends \Composer\Command\BaseCommand
 
         $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composerRuntime);
         $errorOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
+
+        if (!$packageName) {
+            $packageName = $composerRuntime->getPackage()->getName();
+        }
         
         $packageRepository = $packageRepositoryFactory->create();
         

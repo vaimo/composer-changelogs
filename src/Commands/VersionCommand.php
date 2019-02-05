@@ -79,10 +79,14 @@ class VersionCommand extends \Composer\Command\BaseCommand
         $showUpcoming = $input->getOption('upcoming');
         $showTip = $input->getOption('tip');
 
-        $composer = $this->getComposer();
+        $composerRuntime = $this->getComposer();
 
-        $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composer);
+        $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composerRuntime);
         $errorOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
+
+        if (!$packageName) {
+            $packageName = $composerRuntime->getPackage()->getName();
+        }
         
         $packageRepository = $packageRepositoryFactory->create();
         
@@ -99,7 +103,7 @@ class VersionCommand extends \Composer\Command\BaseCommand
 
         $versionResolver = new \Vaimo\ComposerChangelogs\Resolvers\VersionResolver();
         
-        $changelogLoaderFactory = new Factories\Changelog\LoaderFactory($composer);
+        $changelogLoaderFactory = new Factories\Changelog\LoaderFactory($composerRuntime);
         $changelogLoader = $changelogLoaderFactory->create($fromSource);
 
         $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader);

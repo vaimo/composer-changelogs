@@ -2,7 +2,16 @@
 
 _This file has been auto-generated from the contents of changelog.json_
 
-## 0.13.0
+## 0.13.1
+
+### Fix
+
+* package repository resolver: fuzzy query used when package query not provided (resulting in failure that proposes all packages as potential matches): should have used root package
+* package repository resolver: exact package name match not prioritized over partial match
+
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.13.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.13.0...0.13.1)
+
+## 0.13.0 (2019-02-05)
 
 ### Feature
 
@@ -12,6 +21,7 @@ _This file has been auto-generated from the contents of changelog.json_
 ### Fix
 
 * potentially confusing anchors for releases in Sphinx changelog format (where releases got anchors like #id1, #id2, etc)
+* upcoming version had DEV marker in it; should be valid version instead (made no sense otherwise when used with --segments, etc)
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.13.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.12.0...0.13.0)
 
