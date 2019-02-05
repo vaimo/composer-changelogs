@@ -28,6 +28,8 @@ class UrlNormalizer
             $urlComponents['scheme'] = 'https';
         }
 
+        $urlComponents['path'] = strtok($urlComponents['path'], '.');
+
         return (isset($urlComponents['scheme']) ? sprintf('%s:', $urlComponents['scheme']) : '') .
             ((isset($urlComponents['user']) || isset($urlComponents['host'])) ? '//' : '') .
             (isset($urlComponents['user']) ? $urlComponents['user'] : '') .

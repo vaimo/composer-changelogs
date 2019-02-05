@@ -38,7 +38,6 @@
             "output": {
                 "md": "CHANGELOG.md",
                 "features": {
-                    "dates": false,
                     "links": false
                 }
             }

@@ -1,4 +1,12 @@
 {
+    "0.13.0": {
+        "feature": [
+            "added GIT support for diff links and date resolver"
+        ],
+        "fix": [
+            "potentially confusing anchors for releases in Sphinx changelog format (where releases got anchors like #id1, #id2, etc)"
+        ]
+    },
     "0.12.0": {
         "feature": [
             "allow specifying repository url with changelog:generate command argument --url to provide custom url in cases where no other source for resolving it is available"

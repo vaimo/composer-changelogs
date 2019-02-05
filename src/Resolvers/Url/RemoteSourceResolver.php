@@ -36,33 +36,37 @@ class RemoteSourceResolver implements \Vaimo\ComposerChangelogs\Interfaces\UrlRe
 
         $support = $package->getSupport();
 
+        $queryCommands = [
+            '.hg' => 'hg path default',
+            '.git' => 'git remote get-url origin'
+        ];
+        
         if (!isset($support['source'])) {
-            $sourcePath = $this->packageInfoResolver->getSourcePath($package);
+            foreach ($queryCommands as $folder => $command) {
+                $sourcePath = $this->packageInfoResolver->getSourcePath($package);
 
-            if (!file_exists($this->composePath($sourcePath, '.hg'))) {
-                return '';
+                if (!file_exists($this->composePath($sourcePath, $folder))) {
+                    continue;
+                }
+
+                $process = new \Symfony\Component\Process\Process($command, $sourcePath);
+
+                $process->setTimeout(null);
+
+                try {
+                    $process->mustRun();
+
+                    $result = $process->getOutput();
+                } catch (\Symfony\Component\Process\Exception\ProcessFailedException $exception) {
+                    return '';
+                }
+
+                return $this->urlNormalizer->assureHttpAccessibility($result);   
             }
-
-            $process = new \Symfony\Component\Process\Process(
-                'hg path default',
-                $sourcePath
-            );
-
-            $process->setTimeout(null);
-
-            try {
-                $process->mustRun();
-
-                $result = $process->getOutput();
-            } catch (\Symfony\Component\Process\Exception\ProcessFailedException $exception) {
-                return '';
-            }
-
-            return $this->urlNormalizer->assureHttpAccessibility($result);
         }
 
 
-        return $support['source'];
+        return isset($support['source']) ? $support['source'] : '';
     }
 
     private function composePath()

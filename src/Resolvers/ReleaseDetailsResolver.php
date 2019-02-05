@@ -16,9 +16,13 @@ class ReleaseDetailsResolver
      * @var string[][]
      */
     private $linkTemplates = array(
-        'bitbucket.org' => array(
+        'bitbucket' => array(
             'link' => '{base}/src/{higher}',
-            'diff' => '{base}/branches/compare/{higher}..{lower}#commits'
+            'diff' => '{base}/branches/compare/{higher}..{lower}#diff'
+        ),
+        'github' => array(
+            'link' => '{base}/tree/{higher}',
+            'diff' => '{base}/compare/{lower}...{higher}'
         )
     );
 
@@ -26,7 +30,13 @@ class ReleaseDetailsResolver
      * @var string[] 
      */
     private $dateQueryTemplates = array(
-        '.hg' => 'hg log --rev \'{version}\' --template=\'{date|isodate}\''
+        '.hg' => 'hg log --rev \'{version}\' --template=\'{date|isodate}\'',
+        '.git' => 'git log {version}~1..{version} --simplify-by-decoration --pretty="format:%ai"',
+    );
+    
+    private $initialQueryTemplates = array(
+        '.hg' => 'hg log -r "branch(default) and 0:" -l 1 --template "{node}"',
+        '.git' => 'git rev-list --max-parents=0 HEAD'
     );
     
     public function __construct()
@@ -55,6 +65,21 @@ class ReleaseDetailsResolver
         );
     }
 
+    public function resolveInitialCommitReference($repositoryRoot)
+    {
+        $result = '0';
+
+        foreach ($this->initialQueryTemplates as $folder => $command) {
+            if (!file_exists($this->composePath($repositoryRoot, $folder))) {
+                continue;
+            }
+
+            $result = $this->getCommandStdIn($command, $repositoryRoot, '0');
+        }
+        
+        return trim($result);
+    }
+    
     public function resolveReleaseLinks($repositoryUrl, $version, $lastVersion = false)
     {
         if (!$repositoryUrl) {
@@ -66,26 +91,39 @@ class ReleaseDetailsResolver
         if (!isset($urlComponents['host'])) {
             return array();
         }
-        
-        foreach ($this->linkTemplates as $urlKey => $templates) {
-            if (strstr($urlComponents['host'], $urlKey) === false) {
-                continue;
-            }
-            
-            $data = array();
-            
-            foreach ($templates as $code => $template) {
-                $data[$code] = str_replace(
-                    array('{base}', '{higher}', '{lower}'),
-                    array($repositoryUrl, $version, $lastVersion ? $lastVersion : '0'),
-                    $template
-                );
-            }
-            
-            return $data;
+
+        $hostCode = strtok($urlComponents['host'], '.');
+
+        if (!isset($this->linkTemplates[$hostCode])) {
+            return array();
         }
         
-        return array();
+        $data = array();
+
+        foreach ($this->linkTemplates[$hostCode] as $code => $template) {
+            $data[$code] = str_replace(
+                array('{base}', '{higher}', '{lower}'),
+                array($repositoryUrl, $version, $lastVersion ? $lastVersion : '0'),
+                $template
+            );
+        }
+
+        return $data;
+    }
+    
+    private function getCommandStdIn($command, $cwd, $default = '')
+    {
+        $process = new \Symfony\Component\Process\Process($command, $cwd);
+
+        $process->setTimeout(null);
+
+        try {
+            $process->mustRun();
+
+            return $process->getOutput();
+        } catch (\Symfony\Component\Process\Exception\ProcessFailedException $exception) {
+            return $default;
+        }
     }
     
     public function resolveReleaseTime($repositoryRoot, $version)
@@ -95,30 +133,21 @@ class ReleaseDetailsResolver
         }
         
         foreach ($this->dateQueryTemplates as $folder => $commandTemplate) {
-            if (!file_exists($this->composePath($repositoryRoot, '.hg'))) {
+            if (!file_exists($this->composePath($repositoryRoot, $folder))) {
                 continue;
             }
-            
-            $process = new \Symfony\Component\Process\Process(
-                str_replace('{version}', $version, $commandTemplate),
-                $repositoryRoot
+
+            $result = $this->getCommandStdIn(
+                str_replace('{version}', $version, $commandTemplate), 
+                $repositoryRoot,
+                array()
             );
-
-            $process->setTimeout(null);
-
-            try {
-                $process->mustRun();
-
-                $result = $process->getOutput();
-            } catch (\Symfony\Component\Process\Exception\ProcessFailedException $exception) {
-                return array();
-            }
 
             if (!isset($result[1])) {
                 return array();
             }
             
-            $segments = explode(' ', $result);
+            $segments = explode(' ', trim($result));
 
             return array(
                 'date' => array_shift($segments),

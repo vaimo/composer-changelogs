@@ -19,13 +19,13 @@ class RenderContextGenerator implements \Vaimo\ComposerChangelogs\Interfaces\Ren
 
     public function generate(array $changelog, $repositoryUrl = '', $repositoryRoot = '')
     {
-        $lastVersion = false;
+        $lastVersion = $this->releaseDetailsResolver->resolveInitialCommitReference($repositoryRoot);
 
         $contextData = array();
         
         foreach (array_reverse($changelog) as $version => $details) {
             $item = $this->releaseDetailsResolver->resolveOverview($details);
-
+            
             $releaseLinks = $this->releaseDetailsResolver->resolveReleaseLinks(
                 $repositoryUrl,
                 $version,
