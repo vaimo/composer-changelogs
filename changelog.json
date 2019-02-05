@@ -1,10 +1,12 @@
 {
     "0.13.0": {
         "feature": [
-            "added GIT support for diff links and date resolver"
+            "added GIT support for diff links and date resolver",
+            "allow fuzzy package names when generating changelog for sub-repository"
         ],
         "fix": [
-            "potentially confusing anchors for releases in Sphinx changelog format (where releases got anchors like #id1, #id2, etc)"
+            "potentially confusing anchors for releases in Sphinx changelog format (where releases got anchors like #id1, #id2, etc)",
+            "upcoming version had DEV marker in it; should be valid version instead (made no sense otherwise when used with --segments, etc)"
         ]
     },
     "0.12.0": {

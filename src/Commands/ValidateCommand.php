@@ -7,6 +7,7 @@ namespace Vaimo\ComposerChangelogs\Commands;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Vaimo\ComposerChangelogs\Exceptions\PackageResolverException;
 
 use Vaimo\ComposerChangelogs\Factories;
 
@@ -37,35 +38,37 @@ class ValidateCommand extends \Composer\Command\BaseCommand
         $packageName = $input->getArgument('name');
         $fromSource = $input->getOption('from-source');
 
-        $composer = $this->getComposer();
+        $composerRuntime = $this->getComposer();
 
-        $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composer);
-        $changelogLoaderFactory = new Factories\Changelog\LoaderFactory($composer);
+        $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composerRuntime);
+        $errorOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
         
         $packageRepository = $packageRepositoryFactory->create();
+        
+        try {
+            $package = $packageRepository->getByName($packageName);
+        } catch (PackageResolverException $exception) {
+            \array_map(
+                [$output, 'writeln'],
+                $errorOutputGenerator->generateForResolverException($exception)
+            );
+            
+            return 1;
+        }
+
+        $changelogLoaderFactory = new Factories\Changelog\LoaderFactory($composerRuntime);
+
         $changelogLoader = $changelogLoaderFactory->create($fromSource);
 
         $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader, array(
             'failure' => '<error>%s</error>',
             'success' => '<info>%s</info>'
         ));
-
-        try {
-            $package = $packageRepository->getByName($packageName);
-        } catch (\Exception $e) {
-            $output->writeln(
-                sprintf('<error>%s</error>', $e->getMessage())
-            );
-
-            exit(1);
-        }
-
+        
         $result = $validator->validateForPackage($package, $output->getVerbosity());
 
         array_map(array($output, 'writeln'), $result->getMessages());
-
-        if (!$result()) {
-            exit(1);
-        }
+        
+        return (int)!$result();
     }
 }

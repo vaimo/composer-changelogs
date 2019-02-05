@@ -7,6 +7,7 @@ _This file has been auto-generated from the contents of changelog.json_
 ### Feature
 
 * added GIT support for diff links and date resolver
+* allow fuzzy package names when generating changelog for sub-repository
 
 ### Fix
 

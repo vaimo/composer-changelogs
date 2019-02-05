@@ -7,6 +7,7 @@ namespace Vaimo\ComposerChangelogs\Commands;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Vaimo\ComposerChangelogs\Exceptions\PackageResolverException;
 
 use Vaimo\ComposerChangelogs\Factories;
 
@@ -49,17 +50,19 @@ class GenerateCommand extends \Composer\Command\BaseCommand
         $composerRuntime = $this->getComposer();
 
         $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composerRuntime);
+        $errorOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
 
         $packageRepository = $packageRepositoryFactory->create();
-
+        
         try {
             $package = $packageRepository->getByName($packageName);
-        } catch (\Exception $e) {
-            $output->writeln(
-                sprintf('<error>%s</error>', $e->getMessage())
+        } catch (PackageResolverException $exception) {
+            \array_map(
+                [$output, 'writeln'],
+                $errorOutputGenerator->generateForResolverException($exception)
             );
 
-            return;
+            return 1;
         }
 
         $configResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerRuntime);
@@ -78,7 +81,7 @@ class GenerateCommand extends \Composer\Command\BaseCommand
         if (!$result()) {
             array_map(array($output, 'writeln'), $result->getMessages());
             
-            exit(1);
+            return 1;
         }
 
         $output->writeln(
@@ -111,9 +114,11 @@ class GenerateCommand extends \Composer\Command\BaseCommand
                 sprintf('<error>%s</error>', $exception->getMessage())
             );
 
-            return;
+            return 1;
         }
 
         $output->writeln('<info>Done</info>');
+        
+        return 0;
     }
 }

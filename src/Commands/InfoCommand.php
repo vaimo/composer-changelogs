@@ -7,6 +7,7 @@ namespace Vaimo\ComposerChangelogs\Commands;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Vaimo\ComposerChangelogs\Exceptions\PackageResolverException;
 
 use Vaimo\ComposerChangelogs\Factories;
 
@@ -81,23 +82,26 @@ class InfoCommand extends \Composer\Command\BaseCommand
         $branch = $input->getOption('branch');
         $showUpcoming = $input->getOption('upcoming');
         
-        $composer = $this->getComposer();
+        $composerRuntime = $this->getComposer();
 
-        $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composer);
-        $changelogLoaderFactory = new Factories\Changelog\LoaderFactory($composer);
-
+        $errorOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
+        $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composerRuntime);
+        
         $packageRepository = $packageRepositoryFactory->create();
-        $changelogLoader = $changelogLoaderFactory->create($fromSource);
-
+        
         try {
             $package = $packageRepository->getByName($packageName);
-        } catch (\Exception $e) {
-            $output->writeln(
-                sprintf('<error>%s</error>', $e->getMessage())
+        } catch (PackageResolverException $exception) {
+            \array_map(
+                [$output, 'writeln'],
+                $errorOutputGenerator->generateForResolverException($exception)
             );
 
-            exit(1);
+            return 1;
         }
+
+        $changelogLoaderFactory = new Factories\Changelog\LoaderFactory($composerRuntime);
+        $changelogLoader = $changelogLoaderFactory->create($fromSource);
 
         $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader, array(
             'failure' => '<error>%s</error>',
@@ -109,7 +113,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
         if (!$result()) {
             array_map(array($output, 'writeln'), $result->getMessages());
             
-            exit(1);
+            return 1;
         }
 
         $changelog = $changelogLoader->load($package);
@@ -125,7 +129,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
         }
 
         if (!$version || !isset($changelog[$version])) {
-            return;
+            return 0;
         }
 
         $details = $changelog[$version];
@@ -156,7 +160,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
         if ($format === 'json') {
             $result = json_encode($groups, JSON_PRETTY_PRINT);
         } else {
-            $configResolverFactory = new Factories\Changelog\ConfigResolverFactory($composer);
+            $configResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerRuntime);
 
             $configResolver = $configResolverFactory->create($fromSource);
 
@@ -176,7 +180,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
                     )
                 );
                 
-                return;
+                return 1;
             }
             
             $result = $templateRenderer->generateOutput(
@@ -186,5 +190,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
         }
 
         $output->writeln($result);
+        
+        return 0;
     }
 }

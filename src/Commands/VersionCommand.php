@@ -7,6 +7,7 @@ namespace Vaimo\ComposerChangelogs\Commands;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Vaimo\ComposerChangelogs\Exceptions\PackageResolverException;
 
 use Vaimo\ComposerChangelogs\Factories;
 
@@ -81,23 +82,32 @@ class VersionCommand extends \Composer\Command\BaseCommand
         $composer = $this->getComposer();
 
         $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composer);
-        $changelogLoaderFactory = new Factories\Changelog\LoaderFactory($composer);
-
+        $errorOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
+        
         $packageRepository = $packageRepositoryFactory->create();
-        $changelogLoader = $changelogLoaderFactory->create($fromSource);
-
+        
         try {
             $package = $packageRepository->getByName($packageName);
-        } catch (\Exception $e) {
-            return;
+        } catch (PackageResolverException $exception) {
+            \array_map(
+                [$output, 'writeln'],
+                $errorOutputGenerator->generateForResolverException($exception)
+            );
+
+            return 1;
         }
+
+        $versionResolver = new \Vaimo\ComposerChangelogs\Resolvers\VersionResolver();
+        
+        $changelogLoaderFactory = new Factories\Changelog\LoaderFactory($composer);
+        $changelogLoader = $changelogLoaderFactory->create($fromSource);
 
         $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader);
 
         $result = $validator->validateForPackage($package, $output->getVerbosity());
 
         if (!$result()) {
-            return;
+            return 1;
         }
 
         $changelog = $changelogLoader->load($package);
@@ -115,17 +125,21 @@ class VersionCommand extends \Composer\Command\BaseCommand
         }
 
         if (!$version) {
-            return;
+            return 0;
         }
 
+        $version = $versionResolver->resolveValidVersion($version);
+            
         if ($format == 'regex') {
             $version = preg_quote($version);
         }
-
+        
         if ($segmentsCount) {
             $version = implode('.', array_slice(explode('.', $version), 0, $segmentsCount));
         }
         
         $output->writeln($version);
+        
+        return 0;
     }
 }

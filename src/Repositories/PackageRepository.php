@@ -5,6 +5,8 @@
  */
 namespace Vaimo\ComposerChangelogs\Repositories;
 
+use Vaimo\ComposerChangelogs\Exceptions\PackageResolverException;
+
 class PackageRepository
 {
     /**
@@ -36,22 +38,44 @@ class PackageRepository
         $this->realPackageResolver = new \Vaimo\ComposerChangelogs\Resolvers\RealPackageResolver();
     }
 
-    public function getByName($packageName)
+    public function getByName($query)
     {
-        if (!$packageName) {
-            $package = $this->rootPackage;
-        } else {
-            $matches = $this->packageRepository->findPackages($packageName, '*');
+        $repositories = array(
+            new \Composer\Repository\ArrayRepository([$this->rootPackage]),
+            $this->packageRepository
+        );
 
-            $package = reset($matches);
+        $matchesGroups = array();
+        
+        foreach ($repositories as $repositoryId => $item) {
+            $matchesGroups[$repositoryId] = $item->search($query);
         }
 
-        if (!$package) {
-            throw new \Vaimo\ComposerChangelogs\Exceptions\PackageNotFoundException(
-                sprintf('Failed to locate the package: %s', $packageName)
+        if (!array_filter($matchesGroups)) {
+            throw new PackageResolverException(
+                sprintf('No packages for query %s', $query)
             );
         }
 
-        return $this->realPackageResolver->resolve($package);
+        $matches = array_reduce($matchesGroups, 'array_merge', array());
+
+        if (count($matches) > 1) {
+            $exception = new PackageResolverException(
+                sprintf('Multiple packages found for query %s:', $query)
+            );
+
+            $exception->setExtraInfo(array_map(function ($match) {
+                return $match['name'];
+            }, $matches));
+
+            throw $exception;
+        }
+
+        $repositoryKey = key(array_filter($matchesGroups));
+
+        $repository = $repositories[$repositoryKey];
+        $firstMatch = reset($matches);
+
+        return $repository->findPackage($firstMatch['name'], '*');
     }
 }
