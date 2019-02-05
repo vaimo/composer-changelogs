@@ -82,8 +82,6 @@ will be skipped over.
 
 ## Feature: repository links
 
-**Note: currently this feature only supports BitBucket link.** 
-
 The changelog generator is capable of adding repository links to the changelog for each version by 
 presenting both source link for certain version as well as diff/comparison for the code when compared
 to previous release.
@@ -118,8 +116,6 @@ composer changelog:generate --url=false
 ``` 
 
 ## Feature: release dates
-
-**Note: currently this feature only supports BitBucket link.** 
 
 The module will try to resolve the release date of certain version from the package's repository when it's
 available. The available options to be used in output templates are: {{date}}, {{time}}.
