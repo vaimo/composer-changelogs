@@ -4,6 +4,8 @@ Provides information about package changes based on changelog files that are bun
 
 It comes with several commands that aid the developer on setting up automatic package publishing logic in CI.
 
+More information on recent changes [HERE](./CHANGELOG.md).
+
 ## Configuration: overview
 
 Environment variables can be defined as key value pairs in the project's composer.json
