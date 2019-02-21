@@ -69,6 +69,10 @@ To make sure that all the commands of the plugin work as intended, upcoming rele
 the changelog as "DEV.1.2.3", which will cause latest version reporter command to skip over it. Same could be
 achieved if the values is left blank.
 
+This is useful in situations where multiple people are working on the upcoming release and you want to 
+postpone the release of that version (in case you have some CI logic build around the changelog version command). 
+As long as the 'DEV.' is there, the developers can stack their changes together under the same changelog record.
+
  ```json
  {
      "DEV.1.2.3": {
