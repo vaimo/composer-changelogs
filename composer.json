@@ -36,10 +36,7 @@
         "changelog": {
             "source": "changelog.json",
             "output": {
-                "md": "CHANGELOG.md",
-                "features": {
-                    "links": false
-                }
+                "md": "CHANGELOG.md"
             }
         }
     },
