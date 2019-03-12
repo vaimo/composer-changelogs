@@ -73,18 +73,38 @@ This is useful in situations where multiple people are working on the upcoming r
 postpone the release of that version (in case you have some CI logic build around the changelog version command). 
 As long as the 'DEV.' is there, the developers can stack their changes together under the same changelog record.
 
- ```json
- {
-     "DEV.1.2.3": {
-         "feature": [
-             "some upcoming, yet to be released feature"
-         ]
-     }
- }
- ```
+```json
+{
+    "DEV.1.2.3": {
+        "feature": [
+            "some upcoming, yet to be released feature"
+        ]
+    }
+}
+```
  
 The plugin uses composer constraints validator so anything that does not validate as version constraint
 will be skipped over.
+
+## Feature: comments in changelog
+
+Useful in situations when there's a specific guideline within a team on how changelog should be maintained and 
+filled per release and what kind of groups should be used.
+
+```json
+{
+    "_readme": "Make sure to follow the conventions: http://some.url/changelog-conventions.html",
+    "_guide": "Some tips on how the changelog for this specific package is maintained and updated",
+    "1.2.3": {
+       "feature": [
+           "some feature"
+       ]
+    }
+}
+```
+
+Note that comments can be added on any level of the change-log and will always be ignored by the changelog 
+reader/generator.
 
 ## Feature: repository links
 

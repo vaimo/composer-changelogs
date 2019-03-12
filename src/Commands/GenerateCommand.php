@@ -8,6 +8,7 @@ namespace Vaimo\ComposerChangelogs\Commands;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Vaimo\ComposerChangelogs\Exceptions\PackageResolverException;
+use Vaimo\ComposerChangelogs\Resolvers;
 
 use Vaimo\ComposerChangelogs\Factories;
 
@@ -92,16 +93,16 @@ class GenerateCommand extends \Composer\Command\BaseCommand
             sprintf('Generating changelog output for <info>%s</info>', $package->getName())
         );
 
-        $infoResolver = new \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver(
+        $infoResolver = new Resolvers\PackageInfoResolver(
             $composerRuntime->getInstallationManager()
         );
 
         $featureFlags = $configResolver->getFeatureFlags($package);
         
         if ($repositoryUrl !== null || !$featureFlags['links']) {
-            $urlResolver = new \Vaimo\ComposerChangelogs\Resolvers\Url\CustomSourceResolver($repositoryUrl);            
+            $urlResolver = new Resolvers\Url\CustomSourceResolver($repositoryUrl);            
         } else {
-            $urlResolver = new \Vaimo\ComposerChangelogs\Resolvers\Url\RemoteSourceResolver($infoResolver);
+            $urlResolver = new Resolvers\Url\RemoteSourceResolver($infoResolver);
         }
         
         $docsGenerator = new \Vaimo\ComposerChangelogs\Generators\DocumentationGenerator(

@@ -1,6 +1,6 @@
 {
-    "0.13.2": {
-        "fix": [
+    "0.14.0": {
+        "feature": [
             "allow comment blocks in JSON (anything that starts with underscore) to allow embedded guides or references to schemas to be part of the changelog"
         ],
         "maintenance": [
