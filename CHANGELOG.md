@@ -2,9 +2,9 @@
 
 _This file has been auto-generated from the contents of changelog.json_
 
-## 0.13.2
+## 0.14.0
 
-### Fix
+### Feature
 
 * allow comment blocks in JSON (anything that starts with underscore) to allow embedded guides or references to schemas to be part of the changelog
 
@@ -12,7 +12,7 @@ _This file has been auto-generated from the contents of changelog.json_
 
 * make sure that the proxy-plugin does not crash due to some dependency not loading properly on startup
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.13.2) [diff](https://github.com/vaimo/composer-changelogs/compare/0.13.1...0.13.2)
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.14.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.13.1...0.14.0)
 
 ## 0.13.1 (2019-02-05)
 
