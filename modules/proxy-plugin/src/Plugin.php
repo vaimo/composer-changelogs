@@ -15,16 +15,16 @@ class Plugin extends \Vaimo\ComposerChangelogs\Plugin
     public function activate(\Composer\Composer $composer, \Composer\IO\IOInterface $io)
     {
         $namespacePrefix = implode('\\', array_slice(explode('\\', get_parent_class($this)), 0, 2)) . '\\';
+        
+        $composerConfig = $composer->getConfig();
 
-        $config = $this->loadJson('composer.json');
-
-        $srcRoot = $config['autoload']['psr-4'][$namespacePrefix];
-
-        if (!$srcRoot) {
-            return;
-        }
-
-        $this->bootstrapAutoloader($srcRoot, $namespacePrefix);
+        $vendorDir = $composerConfig->get('vendor-dir');
+        
+        $autoloadConfig = include(
+            $this->composePath($vendorDir, 'composer', 'autoload_psr4.php')
+        );
+        
+        $this->bootstrapAutoloader($autoloadConfig);
         $this->bootstrapFileTree($composer, $namespacePrefix);
 
         parent::activate($composer, $io);
@@ -60,23 +60,33 @@ class Plugin extends \Vaimo\ComposerChangelogs\Plugin
         );
     }
 
-    private function bootstrapAutoloader($srcRoot, $namespacePrefix)
+    private function bootstrapAutoloader($namespaceConfig)
     {
-        spl_autoload_register(function ($class) use ($namespacePrefix, $srcRoot) {
-            if (strstr($class, $namespacePrefix) === false) {
-                return false;
+        spl_autoload_register(function ($class) use ($namespaceConfig) {
+            foreach ($namespaceConfig as $classPathPrefix => $sources) {
+                if (strpos($class, $classPathPrefix) === false) {
+                    continue;
+                }
+
+                $classPath = str_replace('\\', DIRECTORY_SEPARATOR, substr($class, strlen($classPathPrefix)));
+
+                foreach ($sources as $source) {
+                    $classSourcePath = $this->composePath(
+                        $source,
+                        sprintf('%s.php', $classPath)
+                    );
+                    
+                    if (!file_exists($classSourcePath)) {
+                        continue;
+                    }
+
+                    include $classSourcePath;
+                    
+                    return true;
+                }
             }
 
-            $classPath = str_replace('\\', DIRECTORY_SEPARATOR, substr($class, strlen($namespacePrefix)));
-
-            $classSourcePath = $this->composePath(
-                $srcRoot,
-                sprintf('%s.php', $classPath)
-            );
-
-            include $classSourcePath;
-
-            return true;
+            return false;
         });
     }
 

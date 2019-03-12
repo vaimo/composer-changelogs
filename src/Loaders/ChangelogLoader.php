@@ -16,7 +16,7 @@ class ChangelogLoader
      * @var \Vaimo\ComposerChangelogs\Readers\JsonFileReader
      */
     private $jsonFileReader;
-
+    
     /**
      * @var array
      */
@@ -42,9 +42,16 @@ class ChangelogLoader
                     sprintf('Changelog source path not defined for: %s', $package->getName())
                 );
             }
-
-            $groups = $this->jsonFileReader->readToArray($sourcePath);
-
+            
+            $dataUtils = new \Vaimo\ComposerChangelogs\Utils\DataUtils();
+            
+            $groups = $dataUtils->walkArrayNodes(
+                $this->jsonFileReader->readToArray($sourcePath),
+                function (array $value) use ($dataUtils) {
+                    return $dataUtils->removeKeysByPrefix($value, '_');
+                }
+            );
+            
             foreach ($groups as $version => $group) {
                 $groups[$version]['version'] = $version;
             }
@@ -53,5 +60,17 @@ class ChangelogLoader
         }
 
         return $this->cache[$packageName];
+    }
+
+    function walkRecursiveRemove(array $array, callable $callback) {
+        foreach ($array as $k => $v) {
+            if (is_array($v)) {
+                $array[$k] = $this->walkRecursiveRemove($v, $callback);
+            } else if ($callback($v, $k)) {
+                unset($array[$k]);
+            }
+        }
+
+        return $array;
     }
 }

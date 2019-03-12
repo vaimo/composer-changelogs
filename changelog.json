@@ -1,4 +1,12 @@
 {
+    "0.13.2": {
+        "fix": [
+            "allow comment blocks in JSON (anything that starts with underscore) to allow embedded guides or references to schemas to be part of the changelog"
+        ],
+        "maintenance": [
+            "make sure that the proxy-plugin does not crash due to some dependency not loading properly on startup"
+        ]
+    },
     "0.13.1": {
         "fix": [
             "package repository resolver: fuzzy query used when package query not provided (resulting in failure that proposes all packages as potential matches): should have used root package",
