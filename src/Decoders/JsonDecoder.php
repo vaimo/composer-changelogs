@@ -7,11 +7,27 @@ namespace Vaimo\ComposerChangelogs\Decoders;
 
 class JsonDecoder
 {
+    /**
+     * @var \Seld\JsonLint\JsonParser 
+     */
+    private $jsonLinter;
+    
+    public function __construct() 
+    {
+        $this->jsonLinter = new \Seld\JsonLint\JsonParser();
+    }
+
     public function decode($json)
     {
+        $error = $this->jsonLinter->lint($json);
+        
+        if ($error) {
+            throw $error;
+        }
+        
         $decodedJson = json_decode($json, true);
         $errorCode = json_last_error();
-
+        
         if ($errorCode != 0) {
             $errorMessage = 'Unknown error';
 

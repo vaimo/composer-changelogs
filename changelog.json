@@ -1,4 +1,9 @@
 {
+    "0.15.0": {
+        "feature": [
+            "added better JSON validation to provide user with proper error messages rather than just obscure 'something is wrong' ones"
+        ]
+    },
     "0.14.0": {
         "feature": [
             "allow comment blocks in JSON (anything that starts with underscore) to allow embedded guides or references to schemas to be part of the changelog"

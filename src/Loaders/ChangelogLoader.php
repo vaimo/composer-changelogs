@@ -44,9 +44,11 @@ class ChangelogLoader
             }
             
             $dataUtils = new \Vaimo\ComposerChangelogs\Utils\DataUtils();
+
+            $changelogData = $this->jsonFileReader->readToArray($sourcePath);
             
             $groups = $dataUtils->walkArrayNodes(
-                $this->jsonFileReader->readToArray($sourcePath),
+                $changelogData,
                 function (array $value) use ($dataUtils) {
                     return $dataUtils->removeKeysByPrefix($value, '_');
                 }
