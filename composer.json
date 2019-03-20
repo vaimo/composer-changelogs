@@ -7,7 +7,8 @@
         "php": ">=5.4.0",
         "ext-json": "*",
         "composer-plugin-api": "^1.0",
-        "zordius/lightncandy": "^v1.2.2"
+        "zordius/lightncandy": "^v1.2.2",
+        "seld/jsonlint": "^1.7.1"
     },
     "require-dev": {
         "composer/composer": "^1.0.0",
