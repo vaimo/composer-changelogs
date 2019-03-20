@@ -19,23 +19,25 @@ class Plugin extends \Vaimo\ComposerChangelogs\Plugin
         $composerConfig = $composer->getConfig();
 
         $vendorDir = $composerConfig->get('vendor-dir');
+
+        $autoloadFilePath = $this->composePath($vendorDir, 'composer', 'autoload_psr4.php');
+
+        /**
+         * When running through the initial installation, make sure that installing the proxy 
+         * command (to get the changelog commands) does not result in crashing the whole 
+         * installation process.
+         */
+        if (!file_exists($autoloadFilePath)) {
+            return;
+        }
         
-        $autoloadConfig = include(
-            $this->composePath($vendorDir, 'composer', 'autoload_psr4.php')
+        $this->bootstrapAutoloader(
+            include($autoloadFilePath)
         );
         
-        $this->bootstrapAutoloader($autoloadConfig);
         $this->bootstrapFileTree($composer, $namespacePrefix);
 
         parent::activate($composer, $io);
-    }
-
-    private function loadJson($filePath)
-    {
-        return json_decode(
-            file_get_contents($filePath),
-            true
-        );
     }
 
     private function bootstrapFileTree(\Composer\Composer $composer, $namespacePrefix)

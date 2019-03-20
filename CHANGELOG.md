@@ -2,7 +2,15 @@
 
 _This file has been auto-generated from the contents of changelog.json_
 
-## 0.14.0
+## 0.15.0
+
+### Feature
+
+* added better JSON validation to provide user with proper error messages rather than just obscure 'something is wrong' ones
+
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.14.0...0.15.0)
+
+## 0.14.0 (2019-03-12)
 
 ### Feature
 
