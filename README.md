@@ -1,6 +1,6 @@
 # Vaimo Composer Changelogs
 
-[![Latest Stable Version](https://poser.pugx.org/vaimo/composer-patches/v/stable)](https://packagist.org/packages/vaimo/composer-patches)
+[![Latest Stable Version](https://poser.pugx.org/vaimo/composer-changelogs/v/stable)](https://packagist.org/packages/vaimo/composer-changelogs)
 [![Total Downloads](https://poser.pugx.org/vaimo/composer-changelogs/downloads)](https://packagist.org/packages/vaimo/composer-changelogs)
 [![Daily Downloads](https://poser.pugx.org/vaimo/composer-changelogs/d/daily)](https://packagist.org/packages/vaimo/composer-changelogs)
 [![Minimum PHP Version](https://img.shields.io/packagist/php-v/vaimo/composer-changelogs.svg)](https://php.net/)
