@@ -1,4 +1,10 @@
-# composer-changelogs
+# Vaimo Composer Changelogs
+
+[![GitHub release](https://img.shields.io/github/release/vaimo/composer-changelogs.svg)](https://github.com/vaimo/composer-changelogs/releases/latest)
+[![Total Downloads](https://poser.pugx.org/vaimo/composer-changelogs/downloads)](https://packagist.org/packages/vaimo/composer-changelogs)
+[![Daily Downloads](https://poser.pugx.org/vaimo/composer-changelogs/d/daily)](https://packagist.org/packages/vaimo/composer-changelogs)
+[![Minimum PHP Version](https://img.shields.io/packagist/php-v/vaimo/composer-changelogs.svg)](https://php.net/)
+[![License](https://poser.pugx.org/vaimo/composer-changelogs/license)](https://packagist.org/packages/vaimo/composer-changelogs)
 
 Provides information about package changes based on changelog files that are bundled with releases and introduces tools/commands for generating documentation files (in many different formats and with the option to create custom templates) from changelog sources. 
 
