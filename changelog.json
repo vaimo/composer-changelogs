@@ -1,4 +1,9 @@
 {
+    "_readme": [
+        "The contents of this file are used to generate CHANGELOG.md; It's kept in JSON/parsable format to make it",
+        "possible to generate change-logs in other formats as well (when needed) and to do automatic releases based on",
+        "added change-log records. More on how to use it: https://github.com/vaimo/composer-changelogs"
+    ],
     "0.15.1": {
         "fix": [
             "load every class on plugin startup to make sure that there is no version clash when upgrading the plugin (upgrade run would end with using old version's code)"
