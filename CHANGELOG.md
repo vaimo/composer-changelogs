@@ -12,7 +12,7 @@ _This file has been auto-generated from the contents of changelog.json_
 
 * switch to Mustache template engine that's referred to on the official Mustache page (it also comes with lower PHP version expectation)
 * lowered PHP version requirement (possible due to dependency switch)
-* added php compatibility check and code static analysis
+* added php compatibility check (starting from 5.3) and code static analysis
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.15.0...0.15.1)
 

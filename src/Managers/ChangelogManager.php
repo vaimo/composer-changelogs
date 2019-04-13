@@ -39,7 +39,7 @@ class ChangelogManager
             $this->composerRuntime
         );
     }
-
+    
     public function bootstrap()
     {
         $configResolver = $this->configResolverFactory->create();

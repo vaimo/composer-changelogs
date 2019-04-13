@@ -25,6 +25,10 @@ class Plugin implements
     
     public function activate(\Composer\Composer $composer, \Composer\IO\IOInterface $cliIO)
     {
+        $pluginBootstrap = new \Vaimo\ComposerChangelogs\Composer\Plugin\Bootstrap($composer);
+
+        $pluginBootstrap->preloadPluginClasses();
+        
         $this->changelogManager = new Managers\ChangelogManager($composer, $cliIO);
         $this->operationAnalyser = new Analysers\ComposerOperationAnalyser();
     }

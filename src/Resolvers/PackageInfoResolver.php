@@ -5,6 +5,10 @@
  */
 namespace Vaimo\ComposerChangelogs\Resolvers;
 
+use Composer\Package\PackageInterface;
+
+use Vaimo\ComposerChangelogs\Composer\Config as ConfigKeys;
+
 class PackageInfoResolver
 {
     const DEFAULT_PATH = '.';
@@ -63,5 +67,25 @@ class PackageInfoResolver
         }
 
         return $names;
+    }
+
+    public function getAutoLoadPaths(PackageInterface $package)
+    {
+        $autoloadConfig = $package->getAutoload();
+
+        if (!isset($autoloadConfig[ConfigKeys::PSR4_CONFIG])) {
+            return array();
+        }
+
+        $installPath = $this->getSourcePath($package);
+
+        $sourcePaths = array_map(
+            function ($path) use ($installPath) {
+                return $installPath . DIRECTORY_SEPARATOR . $path;
+            },
+            $autoloadConfig[ConfigKeys::PSR4_CONFIG]
+        );
+
+        return array_values($sourcePaths);
     }
 }
