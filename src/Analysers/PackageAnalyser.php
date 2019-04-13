@@ -10,11 +10,11 @@ use Vaimo\ComposerChangelogs\Composer\Config as ComposerConfig;
 class PackageAnalyser
 {
     /**
-     * @var \Vaimo\ComposerChangelogs\Extractors\NamespacesExtractor 
+     * @var \Vaimo\ComposerChangelogs\Extractors\NamespacesExtractor
      */
     private $namespacesExtractor;
     
-    public function __construct() 
+    public function __construct()
     {
         $this->namespacesExtractor = new \Vaimo\ComposerChangelogs\Extractors\NamespacesExtractor();
     }

@@ -17,7 +17,9 @@ class VersionCommand extends \Composer\Command\BaseCommand
     {
         $this->setName('changelog:version');
 
-        $this->setDescription('Display version information from changelog. <comment>[default: latest stable]</comment>');
+        $this->setDescription(
+            'Display version information from changelog. <comment>[default: latest stable]</comment>'
+        );
 
         $this->addArgument(
             'name',
@@ -81,21 +83,21 @@ class VersionCommand extends \Composer\Command\BaseCommand
 
         $composerRuntime = $this->getComposer();
 
-        $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composerRuntime);
-        $errorOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
+        $packageRepoFactory = new Factories\PackageRepositoryFactory($composerRuntime);
+        $errOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
 
         if (!$packageName) {
             $packageName = $composerRuntime->getPackage()->getName();
         }
         
-        $packageRepository = $packageRepositoryFactory->create();
+        $packageRepository = $packageRepoFactory->create();
         
         try {
             $package = $packageRepository->getByName($packageName);
         } catch (PackageResolverException $exception) {
             \array_map(
-                [$output, 'writeln'],
-                $errorOutputGenerator->generateForResolverException($exception)
+                array($output, 'writeln'),
+                $errOutputGenerator->generateForResolverException($exception)
             );
 
             return 1;
@@ -103,10 +105,10 @@ class VersionCommand extends \Composer\Command\BaseCommand
 
         $versionResolver = new \Vaimo\ComposerChangelogs\Resolvers\VersionResolver();
         
-        $changelogLoaderFactory = new Factories\Changelog\LoaderFactory($composerRuntime);
-        $changelogLoader = $changelogLoaderFactory->create($fromSource);
+        $chLogLoaderFactory = new Factories\Changelog\LoaderFactory($composerRuntime);
+        $chLogLoader = $chLogLoaderFactory->create($fromSource);
 
-        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader);
+        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($chLogLoader);
 
         $result = $validator->validateForPackage($package, $output->getVerbosity());
 
@@ -114,18 +116,18 @@ class VersionCommand extends \Composer\Command\BaseCommand
             return 1;
         }
 
-        $changelog = $changelogLoader->load($package);
+        $changelog = $chLogLoader->load($package);
 
-        $changelogReleaseResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogReleaseResolver();
+        $releaseResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogReleaseResolver();
+
+        $version = key($changelog);
 
         if (!$showTip) {
-            $version = $changelogReleaseResolver->resolveLatestVersionedRelease($changelog, $branch);
+            $version = $releaseResolver->resolveLatestVersionedRelease($changelog, $branch);
 
             if ($showUpcoming) {
-                $version = $changelogReleaseResolver->resolveUpcomingRelease($changelog, $branch);
+                $version = $releaseResolver->resolveUpcomingRelease($changelog, $branch);
             }
-        } else {
-            $version = key($changelog);
         }
 
         if (!$version) {

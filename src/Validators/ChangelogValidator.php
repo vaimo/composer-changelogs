@@ -57,7 +57,7 @@ class ChangelogValidator
 
             $messages = array_merge(
                 array(sprintf('The changelog of %s is invalid due to:', $package->getName())),
-                $this->errorExtractor->extractMessages($exception, true)
+                $this->errorExtractor->extractMessages($exception)
             );
 
             return new Result(

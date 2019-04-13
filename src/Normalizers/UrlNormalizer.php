@@ -30,15 +30,25 @@ class UrlNormalizer
 
         $urlComponents['path'] = strtok($urlComponents['path'], '.');
 
-        return (isset($urlComponents['scheme']) ? sprintf('%s:', $urlComponents['scheme']) : '') .
+        return
+            $this->renderValue($urlComponents, 'scheme', '%s:') .
             ((isset($urlComponents['user']) || isset($urlComponents['host'])) ? '//' : '') .
-            (isset($urlComponents['user']) ? $urlComponents['user'] : '') .
-            (isset($urlComponents['pass']) ? sprintf(':%s', $urlComponents['pass']) : '') .
+            $this->renderValue($urlComponents, 'user', '%s') .
+            $this->renderValue($urlComponents, 'pass', ':%s') .
             (isset($urlComponents['user']) ? '@' : '') .
-            (isset($urlComponents['host']) ? $urlComponents['host'] : '') .
-            (isset($urlComponents['port']) ? sprintf(':%s', $urlComponents['port']) : '') .
-            (isset($urlComponents['path']) ? $urlComponents['path'] : '') .
-            (isset($urlComponents['query']) ? sprintf('?%s', $urlComponents['query']) : '') .
-            (isset($urlComponents['fragment']) ? sprintf('#%s', $urlComponents['fragment']) : '');
+            $this->renderValue($urlComponents, 'host', '%s') .
+            $this->renderValue($urlComponents, 'port', ':%s') .
+            $this->renderValue($urlComponents, 'path', '%s') .
+            $this->renderValue($urlComponents, 'query', '?%s') .
+            $this->renderValue($urlComponents, 'fragment', '#%s');
+    }
+    
+    private function renderValue($data, $key, $format, $default = '')
+    {
+        if (!isset($data[$key])) {
+            return $default;
+        }
+
+        return sprintf($format, $data[$key]);
     }
 }

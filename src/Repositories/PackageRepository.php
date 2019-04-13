@@ -41,7 +41,7 @@ class PackageRepository
     public function getByName($query)
     {
         $repositories = array(
-            new \Composer\Repository\ArrayRepository([$this->rootPackage]),
+            new \Composer\Repository\ArrayRepository(array($this->rootPackage)),
             $this->packageRepository
         );
 
@@ -64,7 +64,7 @@ class PackageRepository
         });
         
         if ($exactMatches) {
-            $matches = $exactMatches; 
+            $matches = $exactMatches;
         }
         
         if (count($matches) > 1) {

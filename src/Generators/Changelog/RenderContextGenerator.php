@@ -12,7 +12,7 @@ class RenderContextGenerator implements \Vaimo\ComposerChangelogs\Interfaces\Ren
      */
     private $releaseDetailsResolver;
 
-    public function __construct() 
+    public function __construct()
     {
         $this->releaseDetailsResolver = new \Vaimo\ComposerChangelogs\Resolvers\ReleaseDetailsResolver();
     }
@@ -33,7 +33,7 @@ class RenderContextGenerator implements \Vaimo\ComposerChangelogs\Interfaces\Ren
             );
 
             $releaseDateTime = $this->releaseDetailsResolver->resolveReleaseTime(
-                $repositoryRoot, 
+                $repositoryRoot,
                 $version
             );
             
@@ -48,7 +48,7 @@ class RenderContextGenerator implements \Vaimo\ComposerChangelogs\Interfaces\Ren
                 )
             );
             
-            $lastVersion = $version; 
+            $lastVersion = $version;
         }
         
         return array(

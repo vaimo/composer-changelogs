@@ -23,12 +23,19 @@ class LoaderFactory
         $this->composerRuntime = $composerRuntime;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     *
+     * @param bool $fromSource
+     * @return \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader
+     * @throws \Exception
+     */
     public function create($fromSource = false)
     {
-        $configResolverFactory = new Factories\Changelog\ConfigResolverFactory($this->composerRuntime);
+        $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($this->composerRuntime);
 
         return new \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader(
-            $configResolverFactory->create($fromSource)
+            $confResolverFactory->create($fromSource)
         );
     }
 }

@@ -11,6 +11,9 @@ use Vaimo\ComposerChangelogs\Exceptions\PackageResolverException;
 
 use Vaimo\ComposerChangelogs\Factories;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class InfoCommand extends \Composer\Command\BaseCommand
 {
     protected function configure()
@@ -83,31 +86,19 @@ class InfoCommand extends \Composer\Command\BaseCommand
         $showUpcoming = $input->getOption('upcoming');
         
         $composerRuntime = $this->getComposer();
-
-        $errorOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
-        $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composerRuntime);
-
-        if (!$packageName) {
-            $packageName = $composerRuntime->getPackage()->getName();
-        }
-        
-        $packageRepository = $packageRepositoryFactory->create();
         
         try {
-            $package = $packageRepository->getByName($packageName);
+            $package = $this->resolvePackage($packageName);
         } catch (PackageResolverException $exception) {
-            \array_map(
-                [$output, 'writeln'],
-                $errorOutputGenerator->generateForResolverException($exception)
-            );
+            $this->printException($exception, $output);
 
             return 1;
         }
 
-        $changelogLoaderFactory = new Factories\Changelog\LoaderFactory($composerRuntime);
-        $changelogLoader = $changelogLoaderFactory->create($fromSource);
+        $chLogLoaderFactory = new Factories\Changelog\LoaderFactory($composerRuntime);
+        $chLogLoader = $chLogLoaderFactory->create($fromSource);
 
-        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader, array(
+        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($chLogLoader, array(
             'failure' => '<error>%s</error>',
             'success' => '<info>%s</info>'
         ));
@@ -120,16 +111,10 @@ class InfoCommand extends \Composer\Command\BaseCommand
             return 1;
         }
 
-        $changelog = $changelogLoader->load($package);
+        $changelog = $chLogLoader->load($package);
 
         if (!$version) {
-            $changelogReleaseResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogReleaseResolver();
-
-            if (!$showUpcoming) {
-                $version = $changelogReleaseResolver->resolveLatestVersionedRelease($changelog, $branch);
-            } else {
-                $version = $changelogReleaseResolver->resolveUpcomingRelease($changelog, $branch);
-            }
+            $version = $this->resolveVersion($changelog, $branch, $showUpcoming);
         }
 
         if (!$version || !isset($changelog[$version])) {
@@ -138,63 +123,119 @@ class InfoCommand extends \Composer\Command\BaseCommand
 
         $details = $changelog[$version];
 
-        $releaseDetailsResolver = new \Vaimo\ComposerChangelogs\Resolvers\ReleaseDetailsResolver();
+        $detailsResolver = new \Vaimo\ComposerChangelogs\Resolvers\ReleaseDetailsResolver();
 
-        $generalInfo = $releaseDetailsResolver->resolveOverview($details);
-        $groups = $releaseDetailsResolver->resolveChangeGroups($details);
+        $generalInfo = $detailsResolver->resolveOverview($details);
+        $groups = $detailsResolver->resolveChangeGroups($details);
 
         if ($briefMode) {
             $summary = array_map(function ($key, $group) {
                 return sprintf('%s (%s)', $key, count($group));
             }, array_keys($groups), $groups);
 
-            $generalInfo = $releaseDetailsResolver->resolveOverview($details);
+            $generalInfo = $detailsResolver->resolveOverview($details);
 
             $groups = array(
                 'overview' => $generalInfo['overview'],
                 'summary' => sprintf('Includes: %s', implode(', ', $summary))
             );
-        } else if ($generalInfo['overview']) {
+        } elseif ($generalInfo['overview']) {
             $groups = array_merge(
                 $groups,
                 array('overview' => $generalInfo['overview'])
             );
         }
 
-        if ($format === 'json') {
-            $result = json_encode($groups, JSON_PRETTY_PRINT);
-        } else {
-            $configResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerRuntime);
-
-            $configResolver = $configResolverFactory->create($fromSource);
-
-            $templates = $configResolver->resolveOutputTemplates();
-
-            $renderContextGenerator = new \Vaimo\ComposerChangelogs\Generators\Changelog\RenderContextGenerator();
-            $templateRenderer = new \Vaimo\ComposerChangelogs\Generators\TemplateOutputGenerator();
-
-            $contextData = $renderContextGenerator->generate(array('' => $groups));
-
-            if (!isset($templates[$format])) {
-                $output->writeln(
-                    sprintf(
-                        '<error>Unknown format: %s; available options: %s</error>', 
-                        $format, 
-                        implode(', ', array_merge(array('json'), array_keys($templates)))
-                    )
-                );
-                
-                return 1;
-            }
-            
-            $result = $templateRenderer->generateOutput(
-                reset($contextData['releases']),
-                array('root' => $templates[$format]['release'])
+        try {
+            $result = $this->generateOutput($groups, $format, $fromSource);
+        } catch (\Exception $exception) {
+            $output->writeln(
+                sprintf('<error>%s</error>', $exception->getMessage())
             );
+
+            return 1;
         }
 
         $output->writeln($result);
         
         return 0;
+    }
+    
+    private function generateOutput($groups, $format, $fromSource)
+    {
+        $composerRuntime = $this->getComposer();
+        
+        if ($format === 'json') {
+            $jsonEncoder = new \Camspiers\JsonPretty\JsonPretty();
+
+            return $jsonEncoder->prettify($groups, null, '    ');
+        }
+
+        $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerRuntime);
+
+        $confResolver = $confResolverFactory->create($fromSource);
+
+        $templates = $confResolver->resolveOutputTemplates();
+
+        $renderCtxGenerator = new \Vaimo\ComposerChangelogs\Generators\Changelog\RenderContextGenerator();
+        $templateRenderer = new \Vaimo\ComposerChangelogs\Generators\TemplateOutputGenerator();
+
+        $ctxData = $renderCtxGenerator->generate(
+            array('' => $groups)
+        );
+
+        if (!isset($templates[$format])) {
+            throw new \Vaimo\ComposerChangelogs\Exceptions\GeneratorException(sprintf(
+                'Unknown format: %s; available options: %s',
+                $format,
+                implode(', ', array_merge(array('json'), array_keys($templates)))
+            ));
+        }
+
+        return $templateRenderer->generateOutput(
+            reset($ctxData['releases']),
+            array('root' => $templates[$format]['release'])
+        );
+    }
+    
+    private function printException($exception, OutputInterface $output)
+    {
+        $errorOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
+
+        \array_map(
+            array($output, 'writeln'),
+            $errorOutputGenerator->generateForResolverException($exception)
+        );
+    }
+
+    /**
+     * @param string $packageName
+     * @return \Composer\Package\PackageInterface
+     * @throws PackageResolverException
+     */
+    private function resolvePackage($packageName)
+    {
+        $composerRuntime = $this->getComposer();
+        
+        if (!$packageName) {
+            $packageName = $composerRuntime->getPackage()->getName();
+        }
+
+        $packageRepoFactory = new Factories\PackageRepositoryFactory($composerRuntime);
+
+        $packageRepository = $packageRepoFactory->create();
+
+        return $packageRepository->getByName($packageName);
+    }
+    
+    private function resolveVersion($changelog, $branch, $showUpcoming)
+    {
+        $releaseResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogReleaseResolver();
+
+        if (!$showUpcoming) {
+            return $releaseResolver->resolveLatestVersionedRelease($changelog, $branch);
+        }
+
+        return $releaseResolver->resolveUpcomingRelease($changelog, $branch);
     }
 }

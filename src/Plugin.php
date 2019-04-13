@@ -8,8 +8,10 @@ namespace Vaimo\ComposerChangelogs;
 use Vaimo\ComposerChangelogs\Managers;
 use Vaimo\ComposerChangelogs\Analysers;
 
-class Plugin implements \Composer\Plugin\PluginInterface,
-    \Composer\EventDispatcher\EventSubscriberInterface, \Composer\Plugin\Capable
+class Plugin implements
+    \Composer\Plugin\PluginInterface,
+    \Composer\EventDispatcher\EventSubscriberInterface,
+    \Composer\Plugin\Capable
 {
     /**
      * @var \Vaimo\ComposerChangelogs\Managers\ChangelogManager
@@ -21,9 +23,9 @@ class Plugin implements \Composer\Plugin\PluginInterface,
      */
     private $operationAnalyser;
     
-    public function activate(\Composer\Composer $composer, \Composer\IO\IOInterface $io)
+    public function activate(\Composer\Composer $composer, \Composer\IO\IOInterface $cliIO)
     {
-        $this->changelogManager = new Managers\ChangelogManager($composer, $io);
+        $this->changelogManager = new Managers\ChangelogManager($composer, $cliIO);
         $this->operationAnalyser = new Analysers\ComposerOperationAnalyser();
     }
 
@@ -59,6 +61,6 @@ class Plugin implements \Composer\Plugin\PluginInterface,
             return;
         }
 
-        $this->changelogManager = null;   
+        $this->changelogManager = null;
     }
 }

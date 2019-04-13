@@ -54,7 +54,7 @@ class ChangelogLoader
                 }
             );
             
-            foreach ($groups as $version => $group) {
+            foreach (array_keys($groups) as $version) {
                 $groups[$version]['version'] = $version;
             }
 
@@ -64,12 +64,13 @@ class ChangelogLoader
         return $this->cache[$packageName];
     }
 
-    function walkRecursiveRemove(array $array, callable $callback) {
-        foreach ($array as $k => $v) {
-            if (is_array($v)) {
-                $array[$k] = $this->walkRecursiveRemove($v, $callback);
-            } else if ($callback($v, $k)) {
-                unset($array[$k]);
+    public function walkRecursiveRemove(array $array, $callback)
+    {
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $array[$key] = $this->walkRecursiveRemove($value, $callback);
+            } elseif ($callback($value, $key)) {
+                unset($array[$key]);
             }
         }
 

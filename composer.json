@@ -4,15 +4,24 @@
     "license": "MIT",
     "description": "Provide information about package changes based on changelog files that are bundled with releases; provide tools for generating documentation files from changelog sources",
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.3.0",
         "ext-json": "*",
         "composer-plugin-api": "^1.0",
-        "zordius/lightncandy": "^v1.2.2",
-        "seld/jsonlint": "^1.7.1"
+        "mustache/mustache": "^v2.12.0",
+        "seld/jsonlint": "^1.7.1",
+        "camspiers/json-pretty": "^1.0.2"
     },
     "require-dev": {
         "composer/composer": "^1.0.0",
-        "vaimo/composer-changelogs-proxy": "dev-default"
+        "vaimo/composer-changelogs-proxy": "dev-default",
+        "squizlabs/php_codesniffer": "^2.9.2",
+        "phpcompatibility/php-compatibility": "^9.1.1",
+        "phpmd/phpmd": "^2.6.0"
+    },
+    "config": {
+        "platform": {
+            "php": "5.3.9"
+        }
     },
     "support": {
         "source": "https://github.com/vaimo/composer-changelogs",
@@ -40,6 +49,18 @@
                 "md": "CHANGELOG.md"
             }
         }
+    },
+    "scripts-descriptions": {
+        "test": "Run tests",
+        "code:analyse": "Run static code analysis for the source code",
+        "code:normalise": "Apply automatic fixes to the code based on the static code analysis (where applicable)"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "code:analyse": "bin/analyse",
+        "code:normalise": "bin/normalise",
+        "post-install-cmd": "bin/bootstrap",
+        "post-update-cmd" : "bin/bootstrap"
     },
     "autoload": {
         "psr-4": {

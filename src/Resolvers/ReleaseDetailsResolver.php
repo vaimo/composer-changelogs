@@ -27,7 +27,7 @@ class ReleaseDetailsResolver
     );
 
     /**
-     * @var string[] 
+     * @var string[]
      */
     private $dateQueryTemplates = array(
         '.hg' => 'hg log --rev \'{version}\' --template=\'{date|isodate}\'',
@@ -51,7 +51,7 @@ class ReleaseDetailsResolver
             : array();
 
         $reducedLines = explode(PHP_EOL, implode(
-            ' ', 
+            ' ',
             array_map(function ($line) {
                 return !trim($line) ? PHP_EOL . PHP_EOL: $line;
             }, $overviewLines)
@@ -80,7 +80,7 @@ class ReleaseDetailsResolver
         return trim($result);
     }
     
-    public function resolveReleaseLinks($repositoryUrl, $version, $lastVersion = false)
+    public function resolveReleaseLinks($repositoryUrl, $version, $lastVersion = '')
     {
         if (!$repositoryUrl) {
             return array();
@@ -138,7 +138,7 @@ class ReleaseDetailsResolver
             }
 
             $result = $this->getCommandStdIn(
-                str_replace('{version}', $version, $commandTemplate), 
+                str_replace('{version}', $version, $commandTemplate),
                 $repositoryRoot,
                 array()
             );

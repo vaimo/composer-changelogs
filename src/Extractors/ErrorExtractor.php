@@ -7,7 +7,7 @@ namespace Vaimo\ComposerChangelogs\Extractors;
 
 class ErrorExtractor
 {
-    public function extractMessages(\Exception $exception, $addIndexes = false)
+    public function extractMessages(\Exception $exception)
     {
         $messages = array();
 
@@ -15,11 +15,9 @@ class ErrorExtractor
             $messages[] = $exception->getMessage();
         } while ($exception = $exception->getPrevious());
 
-        if ($addIndexes) {
-            array_walk($messages, function (&$message, $index) {
-                $message = sprintf('#%s %s', $index, $message);
-            });
-        }
+        array_walk($messages, function (&$message, $index) {
+            $message = sprintf('#%s %s', $index, $message);
+        });
 
         return $messages;
     }

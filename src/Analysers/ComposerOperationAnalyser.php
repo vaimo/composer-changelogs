@@ -10,11 +10,11 @@ use Composer\DependencyResolver\Operation\OperationInterface;
 class ComposerOperationAnalyser
 {
     /**
-     * @var \Vaimo\ComposerChangelogs\Analysers\PackageAnalyser 
+     * @var \Vaimo\ComposerChangelogs\Analysers\PackageAnalyser
      */
     private $packageAnalyser;
     
-    public function __construct() 
+    public function __construct()
     {
         $this->packageAnalyser = new \Vaimo\ComposerChangelogs\Analysers\PackageAnalyser();
     }
@@ -27,7 +27,7 @@ class ComposerOperationAnalyser
 
         $package = $operation->getPackage();
 
-        return $this->packageAnalyser->isPluginPackage($package) 
+        return $this->packageAnalyser->isPluginPackage($package)
             && $this->packageAnalyser->ownsNamespace($package, __NAMESPACE__);
-    } 
+    }
 }

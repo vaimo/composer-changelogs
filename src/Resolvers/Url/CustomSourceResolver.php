@@ -13,7 +13,7 @@ class CustomSourceResolver implements \Vaimo\ComposerChangelogs\Interfaces\UrlRe
     private $customUrl;
 
     /**
-     * @var \Vaimo\ComposerChangelogs\Normalizers\UrlNormalizer 
+     * @var \Vaimo\ComposerChangelogs\Normalizers\UrlNormalizer
      */
     private $urlNormalizer;
 

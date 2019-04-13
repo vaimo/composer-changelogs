@@ -65,7 +65,7 @@ class DocumentationGenerator
         $outputPaths = $this->configResolver->resolveOutputTargets($package);
         
         $templates = array_replace_recursive(
-            $this->configResolver->resolveOutputTemplates(), 
+            $this->configResolver->resolveOutputTemplates(),
             $this->configResolver->resolveTemplateOverrides($package)
         );
 

@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php
 /**
  * Copyright © Vaimo Group. All rights reserved.
  * See LICENSE_VAIMO.txt for license details.
@@ -12,7 +12,7 @@ class OutputGenerator
     public function generateForResolverException(PackageResolverException $exception)
     {
         return array_merge(
-            [sprintf('<error>%s</error>', $exception->getMessage())],
+            array(sprintf('<error>%s</error>', $exception->getMessage())),
             array_filter((array)$exception->getExtraInfo())
         );
     }

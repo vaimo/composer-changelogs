@@ -1,4 +1,14 @@
 {
+    "0.15.1": {
+        "fix": [
+            "load every class on plugin startup to make sure that there is no version clash when upgrading the plugin (upgrade run would end with using old version's code)"
+        ],
+        "maintenance": [
+            "switch to Mustache template engine that's referred to on the official Mustache page (it also comes with lower PHP version expectation)",
+            "lowered PHP version requirement (possible due to dependency switch)",
+            "added php compatibility check (starting from 5.3) and code static analysis"
+        ]
+    },
     "0.15.0": {
         "feature": [
             "added better JSON validation to provide user with proper error messages rather than just obscure 'something is wrong' ones"

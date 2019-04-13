@@ -7,7 +7,7 @@ Changelog
 .. _release-{{version}}:
 
 {{version}}{{#date}} *({{date}})*{{/date}}
-{{line version "-"}}{{#date}}-----{{line date "-"}}{{/date}}
+{{#line}}{{version}}-{{/line}}{{line version "-"}}{{#date}}-----{{#line}}{{date}}-{{/line}}{{/date}}
 
 {{> release}}
 {{#diff}}

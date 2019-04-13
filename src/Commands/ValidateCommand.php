@@ -40,31 +40,31 @@ class ValidateCommand extends \Composer\Command\BaseCommand
 
         $composerRuntime = $this->getComposer();
 
-        $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composerRuntime);
-        $errorOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
+        $packageRepoFactory = new Factories\PackageRepositoryFactory($composerRuntime);
+        $errOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
 
         if (!$packageName) {
             $packageName = $composerRuntime->getPackage()->getName();
         }
         
-        $packageRepository = $packageRepositoryFactory->create();
+        $packageRepo = $packageRepoFactory->create();
         
         try {
-            $package = $packageRepository->getByName($packageName);
+            $package = $packageRepo->getByName($packageName);
         } catch (PackageResolverException $exception) {
             \array_map(
-                [$output, 'writeln'],
-                $errorOutputGenerator->generateForResolverException($exception)
+                array($output, 'writeln'),
+                $errOutputGenerator->generateForResolverException($exception)
             );
             
             return 1;
         }
 
-        $changelogLoaderFactory = new Factories\Changelog\LoaderFactory($composerRuntime);
+        $chLogLoaderFactory = new Factories\Changelog\LoaderFactory($composerRuntime);
 
-        $changelogLoader = $changelogLoaderFactory->create($fromSource);
+        $chLogLoader = $chLogLoaderFactory->create($fromSource);
 
-        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader, array(
+        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($chLogLoader, array(
             'failure' => '<error>%s</error>',
             'success' => '<info>%s</info>'
         ));

@@ -12,6 +12,9 @@ use Vaimo\ComposerChangelogs\Resolvers;
 
 use Vaimo\ComposerChangelogs\Factories;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class GenerateCommand extends \Composer\Command\BaseCommand
 {
     protected function configure()
@@ -50,31 +53,31 @@ class GenerateCommand extends \Composer\Command\BaseCommand
 
         $composerRuntime = $this->getComposer();
 
-        $packageRepositoryFactory = new Factories\PackageRepositoryFactory($composerRuntime);
-        $errorOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
+        $packageRepoFactory = new Factories\PackageRepositoryFactory($composerRuntime);
+        $errOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
 
         if (!$packageName) {
             $packageName = $composerRuntime->getPackage()->getName();
         }
         
-        $packageRepository = $packageRepositoryFactory->create();
+        $packageRepo = $packageRepoFactory->create();
         
         try {
-            $package = $packageRepository->getByName($packageName);
+            $package = $packageRepo->getByName($packageName);
         } catch (PackageResolverException $exception) {
             \array_map(
-                [$output, 'writeln'],
-                $errorOutputGenerator->generateForResolverException($exception)
+                array($output, 'writeln'),
+                $errOutputGenerator->generateForResolverException($exception)
             );
 
             return 1;
         }
 
-        $configResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerRuntime);
+        $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerRuntime);
 
-        $configResolver = $configResolverFactory->create($fromSource);
+        $confResolver = $confResolverFactory->create($fromSource);
 
-        $changelogLoader = new \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader($configResolver);
+        $changelogLoader = new \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader($confResolver);
 
         $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader, array(
             'failure' => '<error>%s</error>',
@@ -97,16 +100,12 @@ class GenerateCommand extends \Composer\Command\BaseCommand
             $composerRuntime->getInstallationManager()
         );
 
-        $featureFlags = $configResolver->getFeatureFlags($package);
-        
-        if ($repositoryUrl !== null || !$featureFlags['links']) {
-            $urlResolver = new Resolvers\Url\CustomSourceResolver($repositoryUrl);            
-        } else {
-            $urlResolver = new Resolvers\Url\RemoteSourceResolver($infoResolver);
-        }
+        $featureFlags = $confResolver->getFeatureFlags($package);
+
+        $urlResolver = $this->createUrlResolver($repositoryUrl, $featureFlags);
         
         $docsGenerator = new \Vaimo\ComposerChangelogs\Generators\DocumentationGenerator(
-            $configResolver,
+            $confResolver,
             $changelogLoader,
             $infoResolver,
             $urlResolver
@@ -125,5 +124,20 @@ class GenerateCommand extends \Composer\Command\BaseCommand
         $output->writeln('<info>Done</info>');
         
         return 0;
+    }
+    
+    private function createUrlResolver($repositoryUrl, array $featureFlags)
+    {
+        if ($repositoryUrl !== null || !$featureFlags['links']) {
+            return new Resolvers\Url\CustomSourceResolver($repositoryUrl);
+        }
+
+        $composerRuntime = $this->getComposer();
+        
+        $infoResolver = new Resolvers\PackageInfoResolver(
+            $composerRuntime->getInstallationManager()
+        );
+
+        return new Resolvers\Url\RemoteSourceResolver($infoResolver);
     }
 }

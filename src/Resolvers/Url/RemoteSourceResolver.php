@@ -36,10 +36,10 @@ class RemoteSourceResolver implements \Vaimo\ComposerChangelogs\Interfaces\UrlRe
 
         $support = $package->getSupport();
 
-        $queryCommands = [
+        $queryCommands = array(
             '.hg' => 'hg path default',
             '.git' => 'git remote get-url origin'
-        ];
+        );
         
         if (!isset($support['source'])) {
             foreach ($queryCommands as $folder => $command) {
@@ -61,7 +61,7 @@ class RemoteSourceResolver implements \Vaimo\ComposerChangelogs\Interfaces\UrlRe
                     return '';
                 }
 
-                return $this->urlNormalizer->assureHttpAccessibility($result);   
+                return $this->urlNormalizer->assureHttpAccessibility($result);
             }
         }
 

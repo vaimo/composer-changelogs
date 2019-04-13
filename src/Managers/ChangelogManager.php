@@ -17,23 +17,23 @@ class ChangelogManager
     /**
      * @var \Composer\IO\IOInterface
      */
-    private $io;
+    private $cliIO;
 
     /**
-     * @var Factories\Changelog\ConfigResolverFactory 
+     * @var Factories\Changelog\ConfigResolverFactory
      */
     private $configResolverFactory;
     
     /**
      * @param \Composer\Composer $composerRuntime
-     * @param \Composer\IO\IOInterface $io
+     * @param \Composer\IO\IOInterface $cliIO
      */
     public function __construct(
         \Composer\Composer $composerRuntime,
-        \Composer\IO\IOInterface $io
+        \Composer\IO\IOInterface $cliIO
     ) {
         $this->composerRuntime = $composerRuntime;
-        $this->io = $io;
+        $this->cliIO = $cliIO;
 
         $this->configResolverFactory = new Factories\Changelog\ConfigResolverFactory(
             $this->composerRuntime

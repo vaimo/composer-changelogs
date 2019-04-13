@@ -2,7 +2,21 @@
 
 _This file has been auto-generated from the contents of changelog.json_
 
-## 0.15.0
+## 0.15.1
+
+### Fix
+
+* load every class on plugin startup to make sure that there is no version clash when upgrading the plugin (upgrade run would end with using old version's code)
+
+### Maintenance
+
+* switch to Mustache template engine that's referred to on the official Mustache page (it also comes with lower PHP version expectation)
+* lowered PHP version requirement (possible due to dependency switch)
+* added php compatibility check and code static analysis
+
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.15.0...0.15.1)
+
+## 0.15.0 (2019-03-20)
 
 ### Feature
 

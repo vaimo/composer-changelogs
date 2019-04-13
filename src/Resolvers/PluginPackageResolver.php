@@ -39,7 +39,7 @@ class PluginPackageResolver
     public function resolveForNamespace(WritableRepositoryInterface $repository, $namespace)
     {
         $packages = array_merge(
-            $this->additionalPackages, 
+            $this->additionalPackages,
             $repository->getCanonicalPackages()
         );
         

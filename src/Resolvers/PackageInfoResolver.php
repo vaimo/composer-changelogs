@@ -23,6 +23,12 @@ class PackageInfoResolver
         $this->installationManager = $installationManager;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     *
+     * @param \Composer\Package\PackageInterface $package
+     * @return bool|string
+     */
     public function getSourcePath(\Composer\Package\PackageInterface $package)
     {
         return !$package instanceof \Composer\Package\RootPackage

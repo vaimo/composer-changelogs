@@ -5,64 +5,51 @@
  */
 namespace Vaimo\ComposerChangelogs\Generators;
 
-use LightnCandy\LightnCandy;
-use Vaimo\ComposerChangelogs\Exceptions\TemplateValidationException;
+use Vaimo\ComposerChangelogs\Loaders\TemplateLoader;
 
 class TemplateOutputGenerator implements \Vaimo\ComposerChangelogs\Interfaces\TemplateOutputGeneratorInterface
 {
     /**
-     * @var \Vaimo\ComposerChangelogs\Loaders\TemplateLoader
+     * @var TemplateLoader
      */
     private $templateLoader;
 
     public function __construct()
     {
-        $this->templateLoader = new \Vaimo\ComposerChangelogs\Loaders\TemplateLoader();
+        $this->templateLoader = new TemplateLoader();
     }
 
     public function generateOutput(array $data, array $templatePaths)
     {
-        $templateLoader = $this->templateLoader;
-
         $options = array(
-            'flags' => LightnCandy::FLAG_MUSTACHE
-                | LightnCandy::FLAG_NOESCAPE
-                | LightnCandy::FLAG_ERROR_EXCEPTION,
-            'helpers' => array(
-                'line' => function ($context, $char) {
-                    return str_pad('', strlen($context), $char);
-                },
-                'title' => function ($context) {
-                    return strtoupper($context);
+            'loader' => new \Mustache_Loader_FilesystemLoader(DIRECTORY_SEPARATOR),
+            'partials_loader' => new TemplateLoader(
+                function ($name) use ($templatePaths) {
+                    return $templatePaths[$name];
                 }
             ),
-            'partialresolver' => function ($context, $name) use ($templatePaths, $templateLoader) {
-                if (isset($templatePaths[$name])) {
-                    try {
-                        return $templateLoader->load($templatePaths[$name]);
-                    } catch (\Exception $e) {
-                        return sprintf('Missing template: %s', $templatePaths[$name]);
-                    }
+            'strict_callables' => true,
+            'helpers' => array(
+                'line' => function ($template, $renderer) {
+                    $character = substr($template, -1);
+                    
+                    $content = $renderer(substr($template, 0, -1));
+                    
+                    return str_pad('', strlen($content), $character);
+                },
+                'title' => function ($text) {
+                    return strtoupper($text);
                 }
-
-                return sprintf('Unknown partial: %s', $name);
-            }
+            )
         );
 
-        $rootTemplate = $this->templateLoader->load($templatePaths['root']);
-
-        try {
-            $generatorCode = LightnCandy::compile($rootTemplate, $options);
-        } catch (\Exception $exception) {
-            throw new TemplateValidationException(
-                sprintf('Failed to parse %s', $rootTemplate),
-                null,
-                $exception
-            );
-        }
-
-        $outputGenerator = eval($generatorCode);
-
-        return rtrim($outputGenerator($data), "\n");
+        $mustacheEngine = new \Mustache_Engine($options);
+        
+        $templateInstance = $mustacheEngine->loadTemplate($templatePaths['root']);
+        
+        return rtrim(
+            $templateInstance->render($data),
+            PHP_EOL
+        );
     }
 }

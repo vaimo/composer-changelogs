@@ -8,7 +8,7 @@ namespace Vaimo\ComposerChangelogs\Resolvers;
 class VersionResolver
 {
     /**
-     * @var \Vaimo\ComposerChangelogs\Validators\ConstraintValidator 
+     * @var \Vaimo\ComposerChangelogs\Validators\ConstraintValidator
      */
     private $constraintValidator;
     

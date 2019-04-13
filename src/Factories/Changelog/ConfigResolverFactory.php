@@ -15,7 +15,7 @@ class ConfigResolverFactory
     private $composerRuntime;
 
     /**
-     * @var 
+     * @var
      */
     private $packageResolver;
 
@@ -33,6 +33,8 @@ class ConfigResolverFactory
     }
 
     /**
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     *
      * @param bool $fromSource
      * @return \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver
      * @throws \Exception
@@ -47,16 +49,21 @@ class ConfigResolverFactory
             $this->composerRuntime->getInstallationManager()
         );
 
-        if ($fromSource) {
-            $infoExtractor = new Extractors\VendorConfigExtractor($packageInfoResolver);
-        } else {
-            $infoExtractor = new Extractors\InstalledConfigExtractor();
-        }
+        $infoExtractor = $this->createInfoExtractor($packageInfoResolver, $fromSource);
         
         return new \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver(
             $pluginPackage,
             $packageInfoResolver,
             $infoExtractor
         );
+    }
+    
+    private function createInfoExtractor($packageInfoResolver, $fromSource)
+    {
+        if ($fromSource) {
+            return new Extractors\VendorConfigExtractor($packageInfoResolver);
+        }
+
+        return new Extractors\InstalledConfigExtractor();
     }
 }
