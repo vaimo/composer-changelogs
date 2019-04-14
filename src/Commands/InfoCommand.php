@@ -88,7 +88,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
         $composerRuntime = $this->getComposer();
         
         try {
-            $package = $this->resolvePackage($packageName);
+            $package = $this->resolvePackage(is_string($packageName) ? $packageName : '');
         } catch (PackageResolverException $exception) {
             $this->printException($exception, $output);
 

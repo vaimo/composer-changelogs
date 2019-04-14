@@ -35,6 +35,10 @@ class JsonFileReader
             throw new \Vaimo\ComposerChangelogs\Exceptions\ReaderException($message, 0, $exception);
         }
 
+        if (!is_array($fileContents)) {
+            return array();
+        }
+        
         return $fileContents;
     }
 }
