@@ -15,7 +15,7 @@ class ChangelogConfigResolver
     private $pluginPackage;
 
     /**
-     * @var \Vaimo\ComposerChangelogs\Composer\Plugin\Config 
+     * @var \Vaimo\ComposerChangelogs\Composer\Plugin\Config
      */
     private $pluginConfig;
 

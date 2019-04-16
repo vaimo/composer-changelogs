@@ -18,7 +18,7 @@ class DocumentationGenerator
     private $packageInfoResolver;
 
     /**
-     * @var \Vaimo\ComposerChangelogs\Resolvers\ChangelogTemplateResolver 
+     * @var \Vaimo\ComposerChangelogs\Resolvers\ChangelogTemplateResolver
      */
     private $templateResolver;
     

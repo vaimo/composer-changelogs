@@ -121,10 +121,10 @@ class VersionCommand extends \Composer\Command\BaseCommand
         
         if ($segmentsCount) {
             $version = implode(
-                '.', 
+                '.',
                 array_slice(
-                    explode('.', $version), 
-                    0, 
+                    explode('.', $version),
+                    0,
                     $segmentsCount
                 )
             );
