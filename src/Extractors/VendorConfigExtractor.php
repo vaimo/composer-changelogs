@@ -13,7 +13,7 @@ class VendorConfigExtractor implements \Vaimo\ComposerChangelogs\Interfaces\Pack
     private $packageInfoResolver;
 
     /**
-     * @var \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver
+     * @var \Vaimo\ComposerChangelogs\Readers\JsonFileReader
      */
     private $configLoader;
 

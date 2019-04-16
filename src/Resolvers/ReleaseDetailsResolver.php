@@ -117,21 +117,6 @@ class ReleaseDetailsResolver
         return $data;
     }
     
-    private function getCommandStdIn($command, $cwd, $default = '')
-    {
-        $process = new \Symfony\Component\Process\Process($command, $cwd);
-
-        $process->setTimeout(null);
-
-        try {
-            $process->mustRun();
-
-            return $process->getOutput();
-        } catch (\Symfony\Component\Process\Exception\ProcessFailedException $exception) {
-            return $default;
-        }
-    }
-    
     public function resolveReleaseTime($repositoryRoot, $version)
     {
         if (!$repositoryRoot) {
@@ -145,11 +130,10 @@ class ReleaseDetailsResolver
 
             $result = $this->getCommandStdIn(
                 str_replace('{version}', $version, $commandTemplate),
-                $repositoryRoot,
-                array()
+                $repositoryRoot
             );
 
-            if (!isset($result[1])) {
+            if (!$result) {
                 return array();
             }
             
@@ -162,6 +146,21 @@ class ReleaseDetailsResolver
         }
         
         return array();
+    }
+
+    private function getCommandStdIn($command, $cwd, $default = '')
+    {
+        $process = new \Symfony\Component\Process\Process($command, $cwd);
+
+        $process->setTimeout(null);
+
+        try {
+            $process->mustRun();
+
+            return $process->getOutput();
+        } catch (\Symfony\Component\Process\Exception\ProcessFailedException $exception) {
+            return $default;
+        }
     }
     
     public function resolveChangeGroups(array $release)

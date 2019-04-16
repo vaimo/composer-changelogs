@@ -29,8 +29,6 @@ class ChangelogReleaseResolver
             }
 
             return $version;
-
-            break;
         }
 
         return false;
@@ -48,8 +46,6 @@ class ChangelogReleaseResolver
             }
 
             return $version;
-
-            break;
         }
 
         return false;
