@@ -11,4 +11,19 @@ class Config
     {
         return array('sphinx', 'html', 'md', 'yml', 'rst', 'txt', 'slack');
     }
+    
+    public function getEscapers()
+    {
+        
+        return array(
+            'sphinx' => array(
+                '^.. ' => '\\.\\. '
+            ),
+            'html' => array(
+                '*' => array(
+                    'htmlentities'
+                )
+            )
+        );
+    }
 }

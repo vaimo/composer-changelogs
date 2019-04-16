@@ -88,6 +88,17 @@ class ChangelogConfigResolver
         return $this->assembleGroupedFilePaths($templateGroups);
     }
     
+    public function resolveOutputEscapersForType($type)
+    {
+        $escapers = $this->pluginConfig->getEscapers();
+
+        if (isset($escapers[$type])) {
+            return $escapers[$type];
+        }
+
+        return array();
+    }
+    
     public function resolveTemplateOverrides(PackageInterface $package)
     {
         $config = $this->getConfig($package);

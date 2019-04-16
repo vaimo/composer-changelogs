@@ -79,10 +79,16 @@ class DocumentationGenerator
             $repositoryUrl,
             $featureFlags['dates'] ? $repositoryRoot : ''
         );
-
+        
         foreach ($outputPaths as $type => $target) {
+            $escapers = $this->configResolver->resolveOutputEscapersForType($type);
+
             try {
-                $output = $this->templateRenderer->generateOutput($contextData, $templates[$type]);
+                $output = $this->templateRenderer->generateOutput(
+                    $contextData, 
+                    $templates[$type],
+                    $escapers
+                );
             } catch (\Vaimo\ComposerChangelogs\Exceptions\TemplateValidationException $exception) {
                 $messages = array();
 

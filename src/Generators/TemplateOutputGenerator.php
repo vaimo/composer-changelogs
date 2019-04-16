@@ -19,7 +19,7 @@ class TemplateOutputGenerator implements \Vaimo\ComposerChangelogs\Interfaces\Te
         $this->templateLoader = new TemplateLoader();
     }
 
-    public function generateOutput(array $data, array $templatePaths)
+    public function generateOutput(array $data, array $templatePaths, array $escapedValues = array())
     {
         $options = array(
             'loader' => new \Mustache_Loader_FilesystemLoader(DIRECTORY_SEPARATOR),
@@ -40,7 +40,26 @@ class TemplateOutputGenerator implements \Vaimo\ComposerChangelogs\Interfaces\Te
                 'title' => function ($text) {
                     return strtoupper($text);
                 }
-            )
+            ),
+            'escape' => function ($value) use ($escapedValues) {
+                foreach ($escapedValues as $pattern => $replacement) {
+                    if ($pattern === '*') {
+                        foreach ($replacement as $replacer) {
+                            $value = call_user_func($replacer, $value);
+                        }
+                        
+                        continue;
+                    }
+                    
+                    $value = preg_replace(
+                        sprintf('/%s/', $pattern), 
+                        $replacement, 
+                        $value
+                    );
+                }
+                
+                return $value;
+            }
         );
 
         $mustacheEngine = new \Mustache_Engine($options);

@@ -4,6 +4,12 @@
         "possible to generate change-logs in other formats as well (when needed) and to do automatic releases based on",
         "added change-log records. More on how to use it: https://github.com/vaimo/composer-changelogs"
     ],
+    "0.15.2": {
+        "fix": [
+            "fix to generate command where it was url-encoding certain characters even when output was not HTML",
+            "allow the usage of '..' in front of changelog changes-group item when generating output for Sphinx (previously those items were rendered invisible)"
+        ]
+    },
     "0.15.1": {
         "fix": [
             "load every class on plugin startup to make sure that there is no version clash when upgrading the plugin (upgrade run would end with using old version's code)"

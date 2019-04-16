@@ -10,6 +10,7 @@ interface TemplateOutputGeneratorInterface
     /**
      * @param string[][] $changelog
      * @param string[] $templatePaths
+     * @param string[] $escapedValues
      */
-    public function generateOutput(array $changelog, array $templatePaths);
+    public function generateOutput(array $changelog, array $templatePaths, array $escapedValues = array());
 }
