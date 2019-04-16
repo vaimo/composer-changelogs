@@ -53,7 +53,7 @@ class ReleaseDetailsResolver
     public function resolveBranch(array $release)
     {
         if (!isset($release['branch'])) {
-            return true;
+            return '';
         }
 
         return $release['branch'];

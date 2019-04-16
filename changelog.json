@@ -7,7 +7,8 @@
     "0.15.3": {
         "fix": [
             "reduced overview added odd extra space in front of a new line when new lines used (blank line in the middle of overview)",
-            "changelog:info did not work correctly when used on ROOT package"
+            "changelog:info did not work correctly when used on ROOT package",
+            "certain templates did not render wrapper elements correctly (issue introduced after switching to new, 5.3-compatible output generator)"
         ],
         "maintenance": [
             "code repetition reduced within command classes"

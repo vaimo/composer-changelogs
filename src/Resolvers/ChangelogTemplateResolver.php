@@ -65,7 +65,7 @@ class ChangelogTemplateResolver
         $templateGroups = array();
 
         foreach ($outputPaths as $type => $outputConfig) {
-            if (!is_array($outputConfig) || !isset($outputConfig['template']) || !$outputConfig['template']) {
+            if (!$this->hasTemplate($outputConfig)) {
                 continue;
             }
 
@@ -84,6 +84,11 @@ class ChangelogTemplateResolver
         }
 
         return $this->assembleGroupedFilePaths($templateGroups);
+    }
+    
+    private function hasTemplate($config)
+    {
+        return is_array($config) && isset($config['template']) && !$config['template'];
     }
 
     private function assembleGroupedFilePaths(array $groups)

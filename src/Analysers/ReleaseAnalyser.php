@@ -11,7 +11,12 @@ class ReleaseAnalyser
      * @var \Vaimo\ComposerChangelogs\Resolvers\ReleaseDetailsResolver
      */
     private $detailsResolver;
-    
+
+    /**
+     * @var string[]
+     */
+    private $mainBranches = array('master', 'default'); 
+        
     public function __construct()
     {
         $this->detailsResolver = new \Vaimo\ComposerChangelogs\Resolvers\ReleaseDetailsResolver();
@@ -22,14 +27,12 @@ class ReleaseAnalyser
         $branch = urldecode($branch);
 
         $itemBranch = $this->detailsResolver->resolveBranch($item);
-        
+
         if (!$itemBranch && !$branch) {
             return true;
         }
-
-        $isMainBranch = $branch === 'master' || $branch === 'default';
         
-        if (!$itemBranch && $isMainBranch) {
+        if (!$itemBranch && in_array($branch, $this->mainBranches, true)) {
             return true;
         }
 
