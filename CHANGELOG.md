@@ -9,7 +9,6 @@ _This file has been auto-generated from the contents of changelog.json_
 * fix to generate command where it was url-encoding certain characters even when output was not HTML
 * allow the usage of '..' in front of changelog changes-group item when generating output for Sphinx (previously those items were rendered invisible)
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.2) [diff](https://github.com/vaimo/composer-changelogs/compare/0.15.1...0.15.2)
 
 ## 0.15.1 (2019-04-14)
 
@@ -23,7 +22,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.2) [diff](ht
 * lowered PHP version requirement (possible due to dependency switch)
 * added php compatibility check (starting from 5.3) and code static analysis
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.15.0...0.15.1)
 
 ## 0.15.0 (2019-03-20)
 
@@ -31,7 +29,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.1) [diff](ht
 
 * added better JSON validation to provide user with proper error messages rather than just obscure 'something is wrong' ones
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.14.0...0.15.0)
 
 ## 0.14.0 (2019-03-12)
 
@@ -43,7 +40,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.0) [diff](ht
 
 * make sure that the proxy-plugin does not crash due to some dependency not loading properly on startup
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.14.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.13.1...0.14.0)
 
 ## 0.13.1 (2019-02-05)
 
@@ -52,7 +48,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.14.0) [diff](ht
 * package repository resolver: fuzzy query used when package query not provided (resulting in failure that proposes all packages as potential matches): should have used root package
 * package repository resolver: exact package name match not prioritized over partial match
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.13.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.13.0...0.13.1)
 
 ## 0.13.0 (2019-02-05)
 
@@ -66,7 +61,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.13.1) [diff](ht
 * potentially confusing anchors for releases in Sphinx changelog format (where releases got anchors like #id1, #id2, etc)
 * upcoming version had DEV marker in it; should be valid version instead (made no sense otherwise when used with --segments, etc)
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.13.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.12.0...0.13.0)
 
 ## 0.12.0 (2019-01-30)
 
@@ -79,7 +73,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.13.0) [diff](ht
 * allow the commands that this plugin repository provides to be used on itself
 * added changelog output with MD format output
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.12.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.11.0...0.12.0)
 
 ## 0.11.0 (2019-01-30)
 
@@ -95,7 +88,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.12.0) [diff](ht
 * yml format error when using summary due to a colon within the value with no wrapping quotes
 * corrupt yml format on full changelog generation where nesting level did not get correctly reset for every release but the first
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.11.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.10.1...0.11.0)
 
 ## 0.10.1 (2019-01-28)
 
@@ -104,7 +96,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.11.0) [diff](ht
 * the 'overview-reduced' not considered as something that is not a changes group type
 * the value of overview-reduced not composed correctly: some words merged together without whitespace
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.10.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.10.0...0.10.1)
 
 ## 0.10.0 (2019-01-24)
 
@@ -112,7 +103,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.10.1) [diff](ht
 
 * --segments argument added for changelog:version to be able to query for the latest MAJOR version from changelog
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.10.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.9.4...0.10.0)
 
 ## 0.9.4 (2019-01-17)
 
@@ -120,7 +110,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.10.0) [diff](ht
 
 * slack format to use overview info a bit differently to avoid odd line wrapping: lines are merged, only totally new lines are respected and paragraph separators
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.4) [diff](https://github.com/vaimo/composer-changelogs/compare/0.9.3...0.9.4)
 
 ## 0.9.3 (2018-12-10)
 
@@ -129,7 +118,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.4) [diff](htt
 * formatting fixes to templates when used for full documentation generation (whitespace missing between certain titles in some cases)
 * version wrapper for TXT changelog template
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.3) [diff](https://github.com/vaimo/composer-changelogs/compare/0.9.2...0.9.3)
 
 ## 0.9.2 (2018-12-03)
 
@@ -137,7 +125,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.3) [diff](htt
 
 * minor whitespace issues with Slack changelog release info templates; too many empty lines when overview not present
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.2) [diff](https://github.com/vaimo/composer-changelogs/compare/0.9.1...0.9.2)
 
 ## 0.9.1 (2018-11-30)
 
@@ -146,7 +133,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.2) [diff](htt
 * whitespace usage in certain formats (sphinx) caused generated documentation to be incorrect
 * summary merged into overview, which made it impossible to properly format summarized version changelog output
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.9.0...0.9.1)
 
 ## 0.9.0 (2018-11-30)
 
@@ -154,7 +140,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.1) [diff](htt
 
 * new output format: slack (formatting markup for Slack)
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.8.0...0.9.0)
 
 ## 0.8.0 (2018-11-28)
 
@@ -168,7 +153,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.0) [diff](htt
 * removed excess whitespace from changelog output (for both ':info' and ':generate')
 * undefined array key crash when configuring custom templates for changelog output within the package that owns the changelog
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.8.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.7.0...0.8.0)
 
 ## 0.7.0 (2018-10-04)
 
@@ -182,7 +166,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.8.0) [diff](htt
 * the reason for changelog not being valid not shown when running in non-verbose mode, leaving the user wondering what went wrong (now lists all reasons)
 * bug in html output template (list item tag never closed on changelog release listing level)
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.7.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.6.4...0.7.0)
 
 ## 0.6.4 (2018-09-02)
 
@@ -190,7 +173,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.7.0) [diff](htt
 
 * removed code that was incompatible with 5.3
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.4) [diff](https://github.com/vaimo/composer-changelogs/compare/0.6.3...0.6.4)
 
 ## 0.6.3 (2018-09-02)
 
@@ -198,7 +180,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.4) [diff](htt
 
 * composer run crashes when changelog plugin gets uninstalled while running (when defined under require-dev and running with --no-dev)
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.3) [diff](https://github.com/vaimo/composer-changelogs/compare/0.6.2...0.6.3)
 
 ## 0.6.2 (2018-08-15)
 
@@ -206,7 +187,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.3) [diff](htt
 
 * url-decoded branch names not dealt with correctly when provided as branch variables
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.2) [diff](https://github.com/vaimo/composer-changelogs/compare/0.6.1...0.6.2)
 
 ## 0.6.1 (2018-08-15)
 
@@ -215,7 +195,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.2) [diff](htt
 * treat 'master' and 'default' branches also match with changelog records that don't have branch specified (these branch names CAN still be used on changelog items)
 * changelog:version --upcoming not taking --branch config into account
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.6.0...0.6.1)
 
 ## 0.6.0 (2018-08-15)
 
@@ -224,7 +203,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.1) [diff](htt
 * support for using changelog-based releases on multiple branches (--branch option added, version command now return version that either has no branch or matches branch)
 * added 'upcoming' support for changelog:info command
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.5.2...0.6.0)
 
 ## 0.5.2 (2018-08-08)
 
@@ -232,7 +210,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.0) [diff](htt
 
 * avoid loud crash when changelog file has syntax errors; proper error handling and validation introduced instead
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.5.2) [diff](https://github.com/vaimo/composer-changelogs/compare/0.5.1...0.5.2)
 
 ## 0.5.1 (2018-08-07)
 
@@ -240,7 +217,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.5.2) [diff](htt
 
 * validation exited with wrong exit code on failure
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.5.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.5.0...0.5.1)
 
 ## 0.5.0 (2018-08-07)
 
@@ -248,7 +224,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.5.1) [diff](htt
 
 * added new command to validate the changelog's contents
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.5.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.4.0...0.5.0)
 
 ## 0.4.0 (2018-08-07)
 
@@ -262,7 +237,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.5.0) [diff](htt
 * info command was missing one formatting option
 * improved error management
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.4.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.3.1...0.4.0)
 
 ## 0.3.1 (2018-08-06)
 
@@ -270,7 +244,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.4.0) [diff](htt
 
 * brief changelog info mode added overview separator even when there was no overview set
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.3.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.3.0...0.3.1)
 
 ## 0.3.0 (2018-08-06)
 
@@ -287,7 +260,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.3.1) [diff](htt
 
 * output templating changed to be more granular to allow same templates to be used for both changelog:info output and for documentation generation
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.3.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.2.0...0.3.0)
 
 ## 0.2.0 (2018-08-03)
 
@@ -295,7 +267,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.3.0) [diff](htt
 
 * new command added for reporting latest valid version tag from changelog: changelog:version
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.2.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.1.2...0.2.0)
 
 ## 0.1.2 (2018-08-02)
 
@@ -304,7 +275,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.2.0) [diff](htt
 * wrong path resolved for root package (causing event handler to fail and no docs to be generated)
 * generate command failure printed out whole exception rather than just it's message
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.1.2) [diff](https://github.com/vaimo/composer-changelogs/compare/0.1.1...0.1.2)
 
 ## 0.1.1 (2018-08-02)
 
@@ -312,7 +282,6 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.1.2) [diff](htt
 
 * fixed a typo in plugin's event observer name (changelog bot generated when package installed as root package)
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.1.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.1.0...0.1.1)
 
 ## 0.1.0 (2018-08-02)
 
@@ -320,5 +289,3 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.1.1) [diff](htt
 
 * allow Sphinx documentation file to be generated from changelog contents ('changelog:generate' command)
 * generate changelog for root package on install/update
-
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.1.0) [diff](https://github.com/vaimo/composer-changelogs/compare/451d290bfed9a87b59afc6f980827bf307d38e6e...0.1.0)
