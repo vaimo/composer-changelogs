@@ -50,7 +50,7 @@ class RemoteSourceResolver implements \Vaimo\ComposerChangelogs\Interfaces\UrlRe
         
         if (!isset($support['source'])) {
             foreach ($queryCommands as $folder => $command) {
-                $sourcePath = $this->packageInfoResolver->getSourcePath($package);
+                $sourcePath = $this->packageInfoResolver->getInstallPath($package);
 
                 if (!file_exists($this->pathUtils->composePath($sourcePath, $folder))) {
                     continue;

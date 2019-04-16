@@ -33,7 +33,7 @@ class PackageInfoResolver
      * @param PackageInterface $package
      * @return bool|string
      */
-    public function getSourcePath(PackageInterface $package)
+    public function getInstallPath(PackageInterface $package)
     {
         return !$package instanceof \Composer\Package\RootPackage
             ? $this->installationManager->getInstallPath($package)
@@ -77,7 +77,7 @@ class PackageInfoResolver
             return array();
         }
 
-        $installPath = $this->getSourcePath($package);
+        $installPath = $this->getInstallPath($package);
 
         $sourcePaths = array_map(
             function ($path) use ($installPath) {

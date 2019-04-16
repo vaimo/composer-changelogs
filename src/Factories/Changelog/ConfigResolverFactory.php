@@ -50,9 +50,12 @@ class ConfigResolverFactory
         );
 
         $infoExtractor = $this->createInfoExtractor($packageInfoResolver, $fromSource);
+
+        $pluginConfig = new \Vaimo\ComposerChangelogs\Composer\Plugin\Config();
         
         return new \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver(
             $pluginPackage,
+            $pluginConfig,
             $packageInfoResolver,
             $infoExtractor
         );

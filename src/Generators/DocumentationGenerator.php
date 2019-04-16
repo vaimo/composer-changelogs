@@ -18,6 +18,11 @@ class DocumentationGenerator
     private $packageInfoResolver;
 
     /**
+     * @var \Vaimo\ComposerChangelogs\Resolvers\ChangelogTemplateResolver 
+     */
+    private $templateResolver;
+    
+    /**
      * @var \Vaimo\ComposerChangelogs\Generators\Changelog\RenderContextGenerator
      */
     private $contextGenerator;
@@ -46,6 +51,10 @@ class DocumentationGenerator
         $this->packageInfoResolver = $packageInfoResolver;
         $this->urlResolver = $urlResolver;
 
+        $this->templateResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogTemplateResolver(
+            $this->configResolver
+        );
+        
         $this->contextGenerator = new \Vaimo\ComposerChangelogs\Generators\Changelog\RenderContextGenerator();
         $this->templateRenderer = new \Vaimo\ComposerChangelogs\Generators\TemplateOutputGenerator();
     }
@@ -53,16 +62,13 @@ class DocumentationGenerator
     public function generate(\Composer\Package\PackageInterface $package, array $changelog)
     {
         $outputPaths = $this->configResolver->resolveOutputTargets($package);
-        
-        $templates = array_replace_recursive(
-            $this->configResolver->resolveOutputTemplates(),
-            $this->configResolver->resolveTemplateOverrides($package)
-        );
+
+        $templates = $this->templateResolver->getTemplates($package);
 
         $featureFlags = $this->configResolver->getFeatureFlags($package);
         
         $repositoryUrl = $this->urlResolver->resolveForPackage($package);
-        $repositoryRoot = $this->packageInfoResolver->getSourcePath($package);
+        $repositoryRoot = $this->packageInfoResolver->getInstallPath($package);
         
         $contextData = $this->contextGenerator->generate(
             $changelog,

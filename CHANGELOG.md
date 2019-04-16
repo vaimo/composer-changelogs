@@ -2,6 +2,19 @@
 
 _This file has been auto-generated from the contents of changelog.json_
 
+## 0.15.3
+
+### Fix
+
+* reduced overview added odd extra space in front of a new line when new lines used (blank line in the middle of overview)
+* changelog:info did not work correctly when used on ROOT package
+
+### Maintenance
+
+* code repetition reduced within command classes
+
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.3) [diff](https://github.com/vaimo/composer-changelogs/compare/0.15.2...0.15.3)
+
 ## 0.15.2 (2019-04-16)
 
 ### Fix

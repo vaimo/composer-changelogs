@@ -228,4 +228,4 @@
             "generate changelog for root package on install/update"
         ]
     }
-},
+}

@@ -178,7 +178,9 @@ class InfoCommand extends \Composer\Command\BaseCommand
 
         $confResolver = $confResolverFactory->create($fromSource);
 
-        $templates = $confResolver->resolveOutputTemplates();
+        $templateResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogTemplateResolver($confResolver);
+        
+        $templates = $templateResolver->getTemplates($package);
 
         $renderCtxGenerator = new \Vaimo\ComposerChangelogs\Generators\Changelog\RenderContextGenerator();
         $templateRenderer = new \Vaimo\ComposerChangelogs\Generators\TemplateOutputGenerator();
@@ -187,7 +189,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
             $composerRuntime->getInstallationManager()
         );
         
-        $repositoryRoot = $infoResolver->getSourcePath($package);
+        $repositoryRoot = $infoResolver->getInstallPath($package);
         
         $ctxData = $renderCtxGenerator->generate(
             array('' => $groups),

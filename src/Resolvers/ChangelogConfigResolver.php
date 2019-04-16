@@ -15,6 +15,11 @@ class ChangelogConfigResolver
     private $pluginPackage;
 
     /**
+     * @var \Vaimo\ComposerChangelogs\Composer\Plugin\Config 
+     */
+    private $pluginConfig;
+
+    /**
      * @var \Vaimo\ComposerChangelogs\Interfaces\PackageConfigExtractorInterface
      */
     private $configExtractor;
@@ -25,31 +30,27 @@ class ChangelogConfigResolver
     private $packageInfoResolver;
 
     /**
-     * @var \Vaimo\ComposerChangelogs\Composer\Plugin\Config
-     */
-    private $pluginConfig;
-
-    /**
      * @var \Vaimo\ComposerChangelogs\Utils\PathUtils
      */
     private $pathUtils;
 
     /**
      * @param \Composer\Package\PackageInterface $pluginPackage
+     * @param \Vaimo\ComposerChangelogs\Composer\Plugin\Config $pluginConfig
      * @param \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver $packageInfoResolver
      * @param \Vaimo\ComposerChangelogs\Interfaces\PackageConfigExtractorInterface $configExtractor
      */
     public function __construct(
         \Composer\Package\PackageInterface $pluginPackage,
+        \Vaimo\ComposerChangelogs\Composer\Plugin\Config $pluginConfig,
         \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver $packageInfoResolver,
         \Vaimo\ComposerChangelogs\Interfaces\PackageConfigExtractorInterface $configExtractor
     ) {
         $this->pluginPackage = $pluginPackage;
+        $this->pluginConfig = $pluginConfig;
         $this->packageInfoResolver = $packageInfoResolver;
         $this->configExtractor = $configExtractor;
-
-        $this->pluginConfig = new \Vaimo\ComposerChangelogs\Composer\Plugin\Config();
-
+        
         $this->pathUtils = new \Vaimo\ComposerChangelogs\Utils\PathUtils();
     }
 
@@ -61,7 +62,7 @@ class ChangelogConfigResolver
             return array();
         }
 
-        $installPath = $this->packageInfoResolver->getSourcePath($package);
+        $installPath = $this->packageInfoResolver->getInstallPath($package);
 
         return array_filter(
             array_map(function ($config) use ($installPath) {
@@ -75,29 +76,6 @@ class ChangelogConfigResolver
             }, $config['output'])
         );
     }
-
-    public function resolveOutputTemplates()
-    {
-        $pluginRoot = $this->packageInfoResolver->getSourcePath($this->pluginPackage);
-        
-        $types = $this->pluginConfig->getAvailableFormats();
-
-        $templateGroups = array_combine(
-            $types,
-            array_map(function ($type) use ($pluginRoot) {
-                return array(
-                    'root' => array($pluginRoot, 'views', $type, 'changelog.mustache'),
-                    'release' => array($pluginRoot, 'views', $type, 'release.mustache')
-                );
-            }, $types)
-        );
-        
-        if ($templateGroups === false) {
-            return array();
-        }
-
-        return $this->assembleGroupedFilePaths($templateGroups);
-    }
     
     public function resolveOutputEscapersForType($type)
     {
@@ -110,45 +88,19 @@ class ChangelogConfigResolver
         return array();
     }
     
-    public function resolveTemplateOverrides(PackageInterface $package)
+    public function resolveRunnerInstallPath()
     {
-        $config = $this->getConfig($package);
-
-        $installPath = $this->packageInfoResolver->getSourcePath($package);
-        
-        $outputPaths = isset($config['output']) ? $config['output'] : array();
-
-        $templateGroups = array();
-        
-        foreach ($outputPaths as $type => $outputConfig) {
-            if (!is_array($outputConfig) || !isset($outputConfig['template']) || !$outputConfig['template']) {
-                continue;
-            }
-
-            if (!is_array($outputConfig['template'])) {
-                $outputConfig['template'] = array(
-                    'root' => $outputConfig['template']
-                );
-            }
-
-            $templateGroups[$type] = array_map(
-                function ($templatePath) use ($installPath) {
-                    return array($installPath, $templatePath);
-                },
-                $outputConfig['template']
-            );
-        }
-
-        return $this->assembleGroupedFilePaths($templateGroups);
+        return $this->resolveInstallPath($this->pluginPackage);
     }
 
-    private function assembleGroupedFilePaths(array $groups)
+    public function resolveInstallPath(PackageInterface $package)
     {
-        return array_map(function (array $group) {
-            return array_map(function (array $segments) {
-                return implode(DIRECTORY_SEPARATOR, $segments);
-            }, $group);
-        }, $groups);
+        return $this->packageInfoResolver->getInstallPath($package);
+    }
+    
+    public function resolveAvailableOutputFormats()
+    {
+        return $this->pluginConfig->getAvailableFormats();
     }
     
     public function resolveSourcePath(PackageInterface $package)
@@ -160,7 +112,7 @@ class ChangelogConfigResolver
         }
 
         return $this->pathUtils->composePath(
-            $this->packageInfoResolver->getSourcePath($package),
+            $this->packageInfoResolver->getInstallPath($package),
             $config['source']
         );
     }
@@ -182,7 +134,7 @@ class ChangelogConfigResolver
         );
     }
     
-    private function getConfig(PackageInterface $package)
+    public function getConfig(PackageInterface $package)
     {
         $packageExtraConfig = $this->configExtractor->getConfig($package);
 
