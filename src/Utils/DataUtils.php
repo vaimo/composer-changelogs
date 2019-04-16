@@ -36,4 +36,22 @@ class DataUtils
 
         return $list;
     }
+
+    public function renderConstant(array $data, array $keys, $constant, $default = '')
+    {
+        if (!array_intersect_key($data, array_flip($keys))) {
+            return $default;
+        }
+
+        return $constant;
+    }
+
+    public function renderValue(array $data, $key, $format, $default = '')
+    {
+        if (!isset($data[$key])) {
+            return $default;
+        }
+
+        return sprintf($format, $data[$key]);
+    }
 }

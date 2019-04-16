@@ -7,7 +7,7 @@ namespace Vaimo\ComposerChangelogs\Utils;
 
 class SystemUtils
 {
-    public function getCommandStdIn($command, $cwd, $default = '')
+    public function getCommandStdOut($command, $cwd, $default = '')
     {
         $process = new \Symfony\Component\Process\Process($command, $cwd);
 

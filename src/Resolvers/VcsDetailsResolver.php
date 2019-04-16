@@ -59,7 +59,7 @@ class VcsDetailsResolver
                 continue;
             }
 
-            $result = $this->systemUtils->getCommandStdIn($command, $repositoryRoot, '0');
+            $result = $this->systemUtils->getCommandStdOut($command, $repositoryRoot, '0');
         }
         
         return trim($result);
@@ -107,7 +107,7 @@ class VcsDetailsResolver
                 continue;
             }
 
-            $result = $this->systemUtils->getCommandStdIn(
+            $result = $this->systemUtils->getCommandStdOut(
                 str_replace('{version}', $version, $commandTemplate),
                 $repositoryRoot
             );

@@ -7,48 +7,56 @@ namespace Vaimo\ComposerChangelogs\Normalizers;
 
 class UrlNormalizer
 {
+    /**
+     * @var \Vaimo\ComposerChangelogs\Utils\DataUtils 
+     */
+    private $dataUtils;
+    
+    public function __construct() 
+    {
+        $this->dataUtils = new \Vaimo\ComposerChangelogs\Utils\DataUtils();
+    }
+
     public function assureHttpAccessibility($url)
     {
-        $urlComponents = parse_url(
+        $components = parse_url(
             trim($url)
         );
 
-        if (!isset($urlComponents['host'])) {
+        if (!isset($components['host'])) {
             return '';
         }
 
-        if (!isset($urlComponents['scheme'])) {
-            $urlComponents['scheme'] = 'https';
-        }
-
-        if ($urlComponents['scheme'] === 'ssh') {
-            unset($urlComponents['user']);
-            unset($urlComponents['pass']);
-
-            $urlComponents['scheme'] = 'https';
-        }
-
-        $urlComponents['path'] = strtok($urlComponents['path'], '.');
-
+        $components = $this->normalizeComponentValues($components);
+        
         return
-            $this->renderValue($urlComponents, 'scheme', '%s:') .
-            ((isset($urlComponents['user']) || isset($urlComponents['host'])) ? '//' : '') .
-            $this->renderValue($urlComponents, 'user', '%s') .
-            $this->renderValue($urlComponents, 'pass', ':%s') .
-            (isset($urlComponents['user']) ? '@' : '') .
-            $this->renderValue($urlComponents, 'host', '%s') .
-            $this->renderValue($urlComponents, 'port', ':%s') .
-            $this->renderValue($urlComponents, 'path', '%s') .
-            $this->renderValue($urlComponents, 'query', '?%s') .
-            $this->renderValue($urlComponents, 'fragment', '#%s');
+            $this->dataUtils->renderValue($components, 'scheme', '%s:') .
+            $this->dataUtils->renderConstant($components, array('user', 'host'), '//') .
+            $this->dataUtils->renderValue($components, 'user', '%s') .
+            $this->dataUtils->renderValue($components, 'pass', ':%s') .
+            $this->dataUtils->renderConstant($components, array('user'), '@') .
+            $this->dataUtils->renderValue($components, 'host', '%s') .
+            $this->dataUtils->renderValue($components, 'port', ':%s') .
+            $this->dataUtils->renderValue($components, 'path', '%s') .
+            $this->dataUtils->renderValue($components, 'query', '?%s') .
+            $this->dataUtils->renderValue($components, 'fragment', '#%s');
     }
     
-    private function renderValue($data, $key, $format, $default = '')
+    private function normalizeComponentValues(array $components)
     {
-        if (!isset($data[$key])) {
-            return $default;
+        if (!isset($components['scheme'])) {
+            $components['scheme'] = 'https';
         }
 
-        return sprintf($format, $data[$key]);
+        if ($components['scheme'] === 'ssh') {
+            unset($components['user']);
+            unset($components['pass']);
+
+            $components['scheme'] = 'https';
+        }
+
+        $components['path'] = strtok($components['path'], '.');
+        
+        return $components;
     }
 }

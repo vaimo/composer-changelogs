@@ -5,6 +5,8 @@
  */
 namespace Vaimo\ComposerChangelogs\Resolvers\Url;
 
+use Composer\Package\PackageInterface;
+
 class RemoteSourceResolver implements \Vaimo\ComposerChangelogs\Interfaces\UrlResolverInterface
 {
     /**
@@ -23,6 +25,19 @@ class RemoteSourceResolver implements \Vaimo\ComposerChangelogs\Interfaces\UrlRe
     private $pathUtils;
     
     /**
+     * @var \Vaimo\ComposerChangelogs\Utils\SystemUtils 
+     */
+    private $systemUtils;
+
+    /**
+     * @var string[]
+     */
+    private $queryCommands = array(
+        '.hg' => 'hg path default',
+        '.git' => 'git remote get-url origin'
+    );
+    
+    /**
      * @param \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver $packageInfoResolver,
      */
     public function __construct(
@@ -33,46 +48,50 @@ class RemoteSourceResolver implements \Vaimo\ComposerChangelogs\Interfaces\UrlRe
         $this->urlNormalizer = new \Vaimo\ComposerChangelogs\Normalizers\UrlNormalizer();
         
         $this->pathUtils = new \Vaimo\ComposerChangelogs\Utils\PathUtils();
+        $this->systemUtils = new \Vaimo\ComposerChangelogs\Utils\SystemUtils();
     }
 
-    public function resolveForPackage(\Composer\Package\PackageInterface $package)
+    public function resolveForPackage(PackageInterface $package)
     {
         if (!$package instanceof \Composer\Package\CompletePackageInterface) {
             return '';
         }
 
         $support = $package->getSupport();
-
-        $queryCommands = array(
-            '.hg' => 'hg path default',
-            '.git' => 'git remote get-url origin'
-        );
         
-        if (!isset($support['source'])) {
-            foreach ($queryCommands as $folder => $command) {
-                $sourcePath = $this->packageInfoResolver->getInstallPath($package);
-
-                if (!file_exists($this->pathUtils->composePath($sourcePath, $folder))) {
+        $source = isset($support['source']) ? $support['source'] : '';
+        
+        if (!$source) {
+            $commandsConfig = $this->getVcsCommandsConfig($package);
+            
+            foreach ($commandsConfig as $command => $sourcePath) {
+                $result = $this->systemUtils->getCommandStdOut($command, $sourcePath);
+                
+                if (!$result) {
                     continue;
                 }
 
-                $process = new \Symfony\Component\Process\Process($command, $sourcePath);
-
-                $process->setTimeout(null);
-
-                try {
-                    $process->mustRun();
-
-                    $result = $process->getOutput();
-                } catch (\Symfony\Component\Process\Exception\ProcessFailedException $exception) {
-                    return '';
-                }
-
-                return $this->urlNormalizer->assureHttpAccessibility($result);
+                return $this->urlNormalizer->assureHttpAccessibility($result);   
             }
         }
 
+        return $source;
+    }
+    
+    private function getVcsCommandsConfig(PackageInterface $package)
+    {
+        $result = array();
 
-        return isset($support['source']) ? $support['source'] : '';
+        foreach ($this->queryCommands as $folder => $command) {
+            $sourcePath = $this->packageInfoResolver->getInstallPath($package);
+
+            if (!file_exists($this->pathUtils->composePath($sourcePath, $folder))) {
+                continue;
+            }
+
+            $result[$command] = $sourcePath;
+        }
+        
+        return $result;
     }
 }
