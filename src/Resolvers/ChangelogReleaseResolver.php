@@ -12,9 +12,15 @@ class ChangelogReleaseResolver
      */
     private $constraintValidator;
 
+    /**
+     * @var \Vaimo\ComposerChangelogs\Analysers\ReleaseAnalyser
+     */
+    private $releaseAnalyser;
+
     public function __construct()
     {
         $this->constraintValidator = new \Vaimo\ComposerChangelogs\Validators\ConstraintValidator();
+        $this->releaseAnalyser = new \Vaimo\ComposerChangelogs\Analysers\ReleaseAnalyser();
     }
 
     public function resolveLatestVersionedRelease(array $changelog, $branch = '')
@@ -24,7 +30,7 @@ class ChangelogReleaseResolver
                 continue;
             }
 
-            if (!$this->matchBranch($item, $branch)) {
+            if (!$this->releaseAnalyser->isSameBranch($item, $branch)) {
                 continue;
             }
 
@@ -41,30 +47,11 @@ class ChangelogReleaseResolver
                 break;
             }
 
-            if (!$this->matchBranch($item, $branch)) {
+            if (!$this->releaseAnalyser->isSameBranch($item, $branch)) {
                 continue;
             }
 
             return $version;
-        }
-
-        return false;
-    }
-
-    private function matchBranch(array $item, $branch)
-    {
-        $branch = urldecode($branch);
-
-        if (!isset($item['branch']) && !$branch) {
-            return true;
-        }
-
-        if (!isset($item['branch']) && ($branch === 'master' || $branch === 'default')) {
-            return true;
-        }
-
-        if (isset($item['branch']) && $item['branch'] === $branch) {
-            return true;
         }
 
         return false;

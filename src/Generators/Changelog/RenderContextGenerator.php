@@ -8,31 +8,37 @@ namespace Vaimo\ComposerChangelogs\Generators\Changelog;
 class RenderContextGenerator implements \Vaimo\ComposerChangelogs\Interfaces\RenderContextGeneratorInterface
 {
     /**
+     * @var \Vaimo\ComposerChangelogs\Resolvers\VcsDetailsResolver
+     */
+    private $vcsDetailsResolver;
+    
+    /**
      * @var \Vaimo\ComposerChangelogs\Resolvers\ReleaseDetailsResolver
      */
     private $releaseDetailsResolver;
 
     public function __construct()
     {
+        $this->vcsDetailsResolver = new \Vaimo\ComposerChangelogs\Resolvers\VcsDetailsResolver();
         $this->releaseDetailsResolver = new \Vaimo\ComposerChangelogs\Resolvers\ReleaseDetailsResolver();
     }
 
     public function generate(array $changelog, $repositoryUrl = '', $repositoryRoot = '')
     {
-        $lastVersion = $this->releaseDetailsResolver->resolveInitialCommitReference($repositoryRoot);
+        $lastVersion = $this->vcsDetailsResolver->resolveInitialCommitReference($repositoryRoot);
 
         $contextData = array();
         
         foreach (array_reverse($changelog) as $version => $details) {
             $item = $this->releaseDetailsResolver->resolveOverview($details);
             
-            $releaseLinks = $this->releaseDetailsResolver->resolveReleaseLinks(
+            $releaseLinks = $this->vcsDetailsResolver->resolveReleaseLinks(
                 $repositoryUrl,
                 $version,
                 $lastVersion
             );
 
-            $releaseDateTime = $this->releaseDetailsResolver->resolveReleaseTime(
+            $releaseDateTime = $this->vcsDetailsResolver->resolveReleaseTime(
                 $repositoryRoot,
                 $version
             );
