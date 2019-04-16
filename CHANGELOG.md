@@ -2,6 +2,15 @@
 
 _This file has been auto-generated from the contents of changelog.json_
 
+## 0.15.2
+
+### Fix
+
+* fix to generate command where it was url-encoding certain characters even when output was not HTML
+* allow the usage of '..' in front of changelog changes-group item when generating output for Sphinx (previously those items were rendered invisible)
+
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.2) [diff](https://github.com/vaimo/composer-changelogs/compare/0.15.1...0.15.2)
+
 ## 0.15.1 (2019-04-14)
 
 ### Fix

@@ -30,6 +30,11 @@ class ChangelogConfigResolver
     private $pluginConfig;
 
     /**
+     * @var \Vaimo\ComposerChangelogs\Utils\PathUtils
+     */
+    private $pathUtils;
+
+    /**
      * @param \Composer\Package\PackageInterface $pluginPackage
      * @param \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver $packageInfoResolver
      * @param \Vaimo\ComposerChangelogs\Interfaces\PackageConfigExtractorInterface $configExtractor
@@ -44,6 +49,8 @@ class ChangelogConfigResolver
         $this->configExtractor = $configExtractor;
 
         $this->pluginConfig = new \Vaimo\ComposerChangelogs\Composer\Plugin\Config();
+
+        $this->pathUtils = new \Vaimo\ComposerChangelogs\Utils\PathUtils();
     }
 
     public function resolveOutputTargets(PackageInterface $package)
@@ -148,7 +155,7 @@ class ChangelogConfigResolver
             return false;
         }
 
-        return $this->composePath(
+        return $this->pathUtils->composePath(
             $this->packageInfoResolver->getSourcePath($package),
             $config['source']
         );
@@ -180,17 +187,5 @@ class ChangelogConfigResolver
         }
 
         return $packageExtraConfig['changelog'];
-    }
-
-    private function composePath()
-    {
-        $pathSegments = array_map(function ($item) {
-            return rtrim($item, DIRECTORY_SEPARATOR);
-        }, func_get_args());
-
-        return implode(
-            DIRECTORY_SEPARATOR,
-            array_filter($pathSegments)
-        );
     }
 }

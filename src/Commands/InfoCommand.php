@@ -84,9 +84,9 @@ class InfoCommand extends \Composer\Command\BaseCommand
         $format = $input->getOption('format');
         $branch = $input->getOption('branch');
         $showUpcoming = $input->getOption('upcoming');
-        
+
         $composerRuntime = $this->getComposer();
-        
+
         try {
             $package = $this->resolvePackage(is_string($packageName) ? $packageName : '');
         } catch (PackageResolverException $exception) {
@@ -107,7 +107,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
 
         if (!$result()) {
             array_map(array($output, 'writeln'), $result->getMessages());
-            
+
             return 1;
         }
 
@@ -121,8 +121,35 @@ class InfoCommand extends \Composer\Command\BaseCommand
             return 0;
         }
 
-        $details = $changelog[$version];
+        $groups = $this->resolveOutputGroups(
+            $changelog[$version],
+            $briefMode
+        );
 
+        try {
+            $result = $this->generateOutput($groups, $format, $fromSource);
+        } catch (\Exception $exception) {
+            $output->writeln(
+                sprintf('<error>%s</error>', $exception->getMessage())
+            );
+
+            return 1;
+        }
+
+        $output->writeln($result);
+
+        return 0;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     *
+     * @param array $details
+     * @param bool $briefMode
+     * @return array
+     */
+    private function resolveOutputGroups(array $details, $briefMode = false)
+    {
         $detailsResolver = new \Vaimo\ComposerChangelogs\Resolvers\ReleaseDetailsResolver();
 
         $generalInfo = $detailsResolver->resolveOverview($details);
@@ -146,25 +173,13 @@ class InfoCommand extends \Composer\Command\BaseCommand
             );
         }
 
-        try {
-            $result = $this->generateOutput($groups, $format, $fromSource);
-        } catch (\Exception $exception) {
-            $output->writeln(
-                sprintf('<error>%s</error>', $exception->getMessage())
-            );
-
-            return 1;
-        }
-
-        $output->writeln($result);
-        
-        return 0;
+        return $groups;
     }
-    
+
     private function generateOutput($groups, $format, $fromSource)
     {
         $composerRuntime = $this->getComposer();
-        
+
         if ($format === 'json') {
             $jsonEncoder = new \Camspiers\JsonPretty\JsonPretty();
 
@@ -197,7 +212,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
             array('root' => $templates[$format]['release'])
         );
     }
-    
+
     private function printException($exception, OutputInterface $output)
     {
         $errorOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
@@ -216,7 +231,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
     private function resolvePackage($packageName)
     {
         $composerRuntime = $this->getComposer();
-        
+
         if (!$packageName) {
             $packageName = $composerRuntime->getPackage()->getName();
         }
@@ -227,7 +242,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
 
         return $packageRepository->getByName($packageName);
     }
-    
+
     private function resolveVersion($changelog, $branch, $showUpcoming)
     {
         $releaseResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogReleaseResolver();

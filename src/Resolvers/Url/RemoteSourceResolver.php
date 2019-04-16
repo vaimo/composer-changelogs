@@ -16,6 +16,11 @@ class RemoteSourceResolver implements \Vaimo\ComposerChangelogs\Interfaces\UrlRe
      * @var \Vaimo\ComposerChangelogs\Normalizers\UrlNormalizer
      */
     private $urlNormalizer;
+
+    /**
+     * @var \Vaimo\ComposerChangelogs\Utils\PathUtils
+     */
+    private $pathUtils;
     
     /**
      * @param \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver $packageInfoResolver,
@@ -26,6 +31,8 @@ class RemoteSourceResolver implements \Vaimo\ComposerChangelogs\Interfaces\UrlRe
         $this->packageInfoResolver = $packageInfoResolver;
 
         $this->urlNormalizer = new \Vaimo\ComposerChangelogs\Normalizers\UrlNormalizer();
+        
+        $this->pathUtils = new \Vaimo\ComposerChangelogs\Utils\PathUtils();
     }
 
     public function resolveForPackage(\Composer\Package\PackageInterface $package)
@@ -45,7 +52,7 @@ class RemoteSourceResolver implements \Vaimo\ComposerChangelogs\Interfaces\UrlRe
             foreach ($queryCommands as $folder => $command) {
                 $sourcePath = $this->packageInfoResolver->getSourcePath($package);
 
-                if (!file_exists($this->composePath($sourcePath, $folder))) {
+                if (!file_exists($this->pathUtils->composePath($sourcePath, $folder))) {
                     continue;
                 }
 
@@ -67,17 +74,5 @@ class RemoteSourceResolver implements \Vaimo\ComposerChangelogs\Interfaces\UrlRe
 
 
         return isset($support['source']) ? $support['source'] : '';
-    }
-
-    private function composePath()
-    {
-        $pathSegments = array_map(function ($item) {
-            return rtrim($item, DIRECTORY_SEPARATOR);
-        }, func_get_args());
-
-        return implode(
-            DIRECTORY_SEPARATOR,
-            array_filter($pathSegments)
-        );
     }
 }

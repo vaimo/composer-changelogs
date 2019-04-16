@@ -42,6 +42,7 @@ class ReleaseDetailsResolver
     public function __construct()
     {
         $this->constraintValidator = new \Vaimo\ComposerChangelogs\Validators\ConstraintValidator();
+        $this->pathUtils = new \Vaimo\ComposerChangelogs\Utils\PathUtils();
     }
 
     public function resolveOverview(array $release)
@@ -70,7 +71,7 @@ class ReleaseDetailsResolver
         $result = '0';
 
         foreach ($this->initialQueryTemplates as $folder => $command) {
-            if (!file_exists($this->composePath($repositoryRoot, $folder))) {
+            if (!file_exists($this->pathUtils->composePath($repositoryRoot, $folder))) {
                 continue;
             }
 
@@ -133,7 +134,7 @@ class ReleaseDetailsResolver
         }
         
         foreach ($this->dateQueryTemplates as $folder => $commandTemplate) {
-            if (!file_exists($this->composePath($repositoryRoot, $folder))) {
+            if (!file_exists($this->pathUtils->composePath($repositoryRoot, $folder))) {
                 continue;
             }
 
@@ -175,18 +176,6 @@ class ReleaseDetailsResolver
         return array_diff_key(
             $release,
             array_fill_keys($reservedKeys, true)
-        );
-    }
-
-    private function composePath()
-    {
-        $pathSegments = array_map(function ($item) {
-            return rtrim($item, \DIRECTORY_SEPARATOR);
-        }, func_get_args());
-
-        return implode(
-            DIRECTORY_SEPARATOR,
-            array_filter($pathSegments)
         );
     }
 }

@@ -85,7 +85,7 @@ class DocumentationGenerator
 
             try {
                 $output = $this->templateRenderer->generateOutput(
-                    $contextData, 
+                    $contextData,
                     $templates[$type],
                     $escapers
                 );

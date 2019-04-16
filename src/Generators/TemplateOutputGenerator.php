@@ -52,8 +52,8 @@ class TemplateOutputGenerator implements \Vaimo\ComposerChangelogs\Interfaces\Te
                     }
                     
                     $value = preg_replace(
-                        sprintf('/%s/', $pattern), 
-                        $replacement, 
+                        sprintf('/%s/', $pattern),
+                        $replacement,
                         $value
                     );
                 }
