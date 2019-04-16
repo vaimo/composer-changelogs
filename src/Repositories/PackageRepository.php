@@ -64,7 +64,7 @@ class PackageRepository
             return $match['name'] === $query;
         });
         
-        if ($exactMatches) {
+        if (!empty($exactMatches)) {
             $matches = $exactMatches;
         }
         

@@ -21,7 +21,7 @@ class VersionResolver
     {
         $segments = explode('.', $value);
         
-        while (!$this->constraintValidator->isConstraint(implode('.', $segments)) && $segments) {
+        while (!empty($segments) && !$this->constraintValidator->isConstraint(implode('.', $segments))) {
             array_shift($segments);
         }
 
