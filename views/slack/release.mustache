@@ -1,22 +1,23 @@
-{{#overview.length}}
+{{#overview.0}}
 ```
-{{/overview.length}}
+{{/overview.0}}
+{{#overview-reduced.0}}
 {{#overview-reduced}}
 {{.}}
 {{/overview-reduced}}
-{{#overview.length}}
+{{/overview-reduced.0}}
+{{#overview.0}}
 ```
-{{/overview.length}}
+{{/overview.0}}
 {{#summary}}
 {{#overview}}
-
 {{/overview}}
 _{{summary}}_
 {{/summary}}
 {{#groups}}
-{{#overview.length}}
+{{#overview.0}}
 
-{{/overview.length}}
+{{/overview.0}}
 *{{label}}*
 {{#items}}
 • _{{.}}_

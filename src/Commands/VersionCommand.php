@@ -7,7 +7,6 @@ namespace Vaimo\ComposerChangelogs\Commands;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Vaimo\ComposerChangelogs\Exceptions\PackageResolverException;
 
 use Vaimo\ComposerChangelogs\Factories;
 
@@ -80,42 +79,31 @@ class VersionCommand extends \Composer\Command\BaseCommand
 
         $showUpcoming = $input->getOption('upcoming');
         $showTip = $input->getOption('tip');
-
-        $composerRuntime = $this->getComposer();
-
-        try {
-            $package = $this->resolvePackage(is_string($packageName) ? $packageName : '');
-        } catch (PackageResolverException $exception) {
-            $this->printException($exception, $output);
-
-            return 1;
-        }
         
-        $chLogLoaderFactory = new Factories\Changelog\LoaderFactory($composerRuntime);
-        $chLogLoader = $chLogLoaderFactory->create($fromSource);
+        $chLogRepoFactory = new Factories\ChangelogRepositoryFactory(
+            $this->getComposer(),
+            $output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL ? $output : null
+        );
+        
+        $chLogRepo = $chLogRepoFactory->create($fromSource);
 
-        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($chLogLoader, array(
-            'failure' => '<error>%s</error>',
-            'success' => '<info>%s</info>'
-        ));
+        $changelog = $chLogRepo->getByPackageName($packageName);
 
-        $result = $validator->validateForPackage($package, $output->getVerbosity());
-
-        if (!$result()) {
+        if ($changelog === null) {
             return 1;
         }
 
-        $changelog = $chLogLoader->load($package);
-
+        $releases = $changelog->getReleases();
+        
         $releaseResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogReleaseResolver();
 
         $version = key($changelog);
 
         if (!$showTip) {
-            $version = $releaseResolver->resolveLatestVersionedRelease($changelog, $branch);
+            $version = $releaseResolver->resolveLatestVersionedRelease($releases, $branch);
 
             if ($showUpcoming) {
-                $version = $releaseResolver->resolveUpcomingRelease($changelog, $branch);
+                $version = $releaseResolver->resolveUpcomingRelease($releases, $branch);
             }
         }
 
@@ -138,35 +126,5 @@ class VersionCommand extends \Composer\Command\BaseCommand
         $output->writeln($version);
         
         return 0;
-    }
-
-    private function printException($exception, OutputInterface $output)
-    {
-        $errorOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
-
-        \array_map(
-            array($output, 'writeln'),
-            $errorOutputGenerator->generateForResolverException($exception)
-        );
-    }
-
-    /**
-     * @param string $packageName
-     * @return \Composer\Package\PackageInterface
-     * @throws PackageResolverException
-     */
-    private function resolvePackage($packageName)
-    {
-        $composerRuntime = $this->getComposer();
-
-        if (!$packageName) {
-            $packageName = $composerRuntime->getPackage()->getName();
-        }
-
-        $packageRepoFactory = new Factories\PackageRepositoryFactory($composerRuntime);
-
-        $packageRepository = $packageRepoFactory->create();
-
-        return $packageRepository->getByName($packageName);
     }
 }

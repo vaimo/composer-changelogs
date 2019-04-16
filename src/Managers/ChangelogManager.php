@@ -46,17 +46,12 @@ class ChangelogManager
 
         $package = $this->composerRuntime->getPackage();
 
-        if (!$configResolver->hasConfig($package)) {
-            return;
-        }
+        $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($this->composerRuntime);
+        $chLogRepo = $chLogRepoFactory->create(false);
 
-        $changelogLoader = new \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader($configResolver);
-
-        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($changelogLoader);
-
-        $result = $validator->validateForPackage($package);
-
-        if (!$result()) {
+        $changelog = $chLogRepo->getByPackageName($package->getName());
+        
+        if (!$changelog) {
             return;
         }
 
@@ -68,13 +63,12 @@ class ChangelogManager
         
         $docsGenerator = new \Vaimo\ComposerChangelogs\Generators\DocumentationGenerator(
             $configResolver,
-            $changelogLoader,
             $infoResolver,
             $urlResolver
         );
 
         try {
-            $docsGenerator->generate($package);
+            $docsGenerator->generate($package, $changelog->getReleases());
         } catch (\Exception $exception) {
             // Due to change-log not being all that important, we don't fail the installation just because of it
         }

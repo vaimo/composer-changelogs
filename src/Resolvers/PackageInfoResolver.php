@@ -30,10 +30,10 @@ class PackageInfoResolver
     /**
      * @SuppressWarnings(PHPMD.StaticAccess)
      *
-     * @param \Composer\Package\PackageInterface $package
+     * @param PackageInterface $package
      * @return bool|string
      */
-    public function getSourcePath(\Composer\Package\PackageInterface $package)
+    public function getSourcePath(PackageInterface $package)
     {
         return !$package instanceof \Composer\Package\RootPackage
             ? $this->installationManager->getInstallPath($package)

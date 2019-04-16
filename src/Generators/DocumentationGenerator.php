@@ -13,11 +13,6 @@ class DocumentationGenerator
     private $configResolver;
 
     /**
-     * @var \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader
-     */
-    private $changelogLoader;
-
-    /**
      * @var \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver
      */
     private $packageInfoResolver;
@@ -39,18 +34,15 @@ class DocumentationGenerator
 
     /**
      * @param \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver $configResolver
-     * @param \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader $changelogLoader
      * @param \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver $packageInfoResolver
      * @param \Vaimo\ComposerChangelogs\Interfaces\UrlResolverInterface $urlResolver
      */
     public function __construct(
         \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver $configResolver,
-        \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader $changelogLoader,
         \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver $packageInfoResolver,
         \Vaimo\ComposerChangelogs\Interfaces\UrlResolverInterface $urlResolver
     ) {
         $this->configResolver = $configResolver;
-        $this->changelogLoader = $changelogLoader;
         $this->packageInfoResolver = $packageInfoResolver;
         $this->urlResolver = $urlResolver;
 
@@ -58,10 +50,8 @@ class DocumentationGenerator
         $this->templateRenderer = new \Vaimo\ComposerChangelogs\Generators\TemplateOutputGenerator();
     }
 
-    public function generate(\Composer\Package\PackageInterface $package)
+    public function generate(\Composer\Package\PackageInterface $package, array $changelog)
     {
-        $changelog = $this->changelogLoader->load($package);
-
         $outputPaths = $this->configResolver->resolveOutputTargets($package);
         
         $templates = array_replace_recursive(

@@ -7,10 +7,14 @@
 {{#groups}}
 <div>
   {{#label}}<b>{{/label}}{{label}}{{#label}}</b>{{/label}}
-  {{#items.length}}<ol>{{/items.length}}
+  {{#items.0}}
+  <ol>
+  {{/items.0}}
   {{#items}}
     <li>{{.}}</li>
   {{/items}}
-  {{#items.length}}</ol>{{/items.length}}
+  {{#items.0}}
+  </ol>
+  {{/items.0}}
 </div>
 {{/groups}}

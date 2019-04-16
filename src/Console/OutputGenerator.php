@@ -9,11 +9,43 @@ use Vaimo\ComposerChangelogs\Exceptions\PackageResolverException;
 
 class OutputGenerator
 {
-    public function generateForResolverException(PackageResolverException $exception)
+    /**
+     * @var \Symfony\Component\Console\Output\OutputInterface
+     */
+    private $output;
+
+    /**
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     */
+    public function __construct(
+        \Symfony\Component\Console\Output\OutputInterface $output = null
+    ) {
+        $this->output = $output;
+    }
+
+    public function writeResolverException(PackageResolverException $exception)
     {
-        return array_merge(
+        if (!$this->output) {
+            return;
+        }
+        
+        $messages = array_merge(
             array(sprintf('<error>%s</error>', $exception->getMessage())),
             array_filter((array)$exception->getExtraInfo())
         );
+        
+        array_map(
+            array($this->output, 'writeln'),
+            $messages
+        );
+    }
+    
+    public function writeLines(array $lines)
+    {
+        if (!$this->output) {
+            return;
+        }
+        
+        array_map(array($this->output, 'writeln'), $lines);
     }
 }

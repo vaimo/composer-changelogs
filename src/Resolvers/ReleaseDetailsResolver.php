@@ -59,10 +59,12 @@ class ReleaseDetailsResolver
         $reducedLines = explode(PHP_EOL, implode(
             ' ',
             array_map(function ($line) {
-                return !trim($line) ? PHP_EOL . PHP_EOL: $line;
+                return !trim($line) ? PHP_EOL . PHP_EOL : $line;
             }, $overviewLines)
         ));
 
+        $reducedLines = array_map('trim', $reducedLines);
+        
         return array(
             'version' => isset($release['version']) ? $release['version'] : '',
             'overview' => $overviewLines,

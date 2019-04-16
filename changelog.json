@@ -4,6 +4,15 @@
         "possible to generate change-logs in other formats as well (when needed) and to do automatic releases based on",
         "added change-log records. More on how to use it: https://github.com/vaimo/composer-changelogs"
     ],
+    "0.15.3": {
+        "fix": [
+            "reduced overview added odd extra space in front of a new line when new lines used (blank line in the middle of overview)",
+            "changelog:info did not work correctly when used on ROOT package"
+        ],
+        "maintenance": [
+            "code repetition reduced within command classes"
+        ]
+    },
     "0.15.2": {
         "fix": [
             "fix to generate command where it was url-encoding certain characters even when output was not HTML",
@@ -219,4 +228,4 @@
             "generate changelog for root package on install/update"
         ]
     }
-}
+},
