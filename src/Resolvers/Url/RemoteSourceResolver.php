@@ -25,7 +25,7 @@ class RemoteSourceResolver implements \Vaimo\ComposerChangelogs\Interfaces\UrlRe
     private $pathUtils;
     
     /**
-     * @var \Vaimo\ComposerChangelogs\Utils\SystemUtils 
+     * @var \Vaimo\ComposerChangelogs\Utils\SystemUtils
      */
     private $systemUtils;
 
@@ -71,7 +71,7 @@ class RemoteSourceResolver implements \Vaimo\ComposerChangelogs\Interfaces\UrlRe
                     continue;
                 }
 
-                return $this->urlNormalizer->assureHttpAccessibility($result);   
+                return $this->urlNormalizer->assureHttpAccessibility($result);
             }
         }
 

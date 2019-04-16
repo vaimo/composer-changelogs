@@ -8,11 +8,11 @@ namespace Vaimo\ComposerChangelogs\Normalizers;
 class UrlNormalizer
 {
     /**
-     * @var \Vaimo\ComposerChangelogs\Utils\DataUtils 
+     * @var \Vaimo\ComposerChangelogs\Utils\DataUtils
      */
     private $dataUtils;
     
-    public function __construct() 
+    public function __construct()
     {
         $this->dataUtils = new \Vaimo\ComposerChangelogs\Utils\DataUtils();
     }
