@@ -75,7 +75,7 @@ class VersionCommand extends \Composer\Command\BaseCommand
         $fromSource = $input->getOption('from-source');
         $format = $input->getOption('format');
         $branch = $input->getOption('branch');
-        $segmentsCount = $input->getOption('segments');
+        $segmentsCount = (int)$input->getOption('segments');
 
         $showUpcoming = $input->getOption('upcoming');
         $showTip = $input->getOption('tip');
@@ -97,7 +97,7 @@ class VersionCommand extends \Composer\Command\BaseCommand
         
         $releaseResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogReleaseResolver();
 
-        $version = key($changelog);
+        $version = key($releases);
 
         if (!$showTip) {
             $version = $releaseResolver->resolveLatestVersionedRelease($releases, $branch);
@@ -120,7 +120,14 @@ class VersionCommand extends \Composer\Command\BaseCommand
         }
         
         if ($segmentsCount) {
-            $version = implode('.', array_slice(explode('.', $version), 0, $segmentsCount));
+            $version = implode(
+                '.', 
+                array_slice(
+                    explode('.', $version), 
+                    0, 
+                    $segmentsCount
+                )
+            );
         }
         
         $output->writeln($version);

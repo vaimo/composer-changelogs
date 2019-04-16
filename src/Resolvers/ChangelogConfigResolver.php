@@ -91,6 +91,10 @@ class ChangelogConfigResolver
                 );
             }, $types)
         );
+        
+        if ($templateGroups === false) {
+            return array();
+        }
 
         return $this->assembleGroupedFilePaths($templateGroups);
     }
