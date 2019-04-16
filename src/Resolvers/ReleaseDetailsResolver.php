@@ -13,6 +13,11 @@ class ReleaseDetailsResolver
     private $constraintValidator;
 
     /**
+     * @var \Vaimo\ComposerChangelogs\Utils\PathUtils
+     */
+    private $pathUtils;
+
+    /**
      * @var string[][]
      */
     private $linkTemplates = array(
@@ -33,12 +38,12 @@ class ReleaseDetailsResolver
         '.hg' => 'hg log --rev \'{version}\' --template=\'{date|isodate}\'',
         '.git' => 'git log {version}~1..{version} --simplify-by-decoration --pretty="format:%ai"',
     );
-    
+
     private $initialQueryTemplates = array(
         '.hg' => 'hg log -r "branch(default) and 0:" -l 1 --template "{node}"',
         '.git' => 'git rev-list --max-parents=0 HEAD'
     );
-    
+
     public function __construct()
     {
         $this->constraintValidator = new \Vaimo\ComposerChangelogs\Validators\ConstraintValidator();
@@ -57,7 +62,7 @@ class ReleaseDetailsResolver
                 return !trim($line) ? PHP_EOL . PHP_EOL: $line;
             }, $overviewLines)
         ));
-        
+
         return array(
             'version' => isset($release['version']) ? $release['version'] : '',
             'overview' => $overviewLines,
