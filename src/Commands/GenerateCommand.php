@@ -53,26 +53,14 @@ class GenerateCommand extends \Composer\Command\BaseCommand
 
         $composerRuntime = $this->getComposer();
 
-        $packageRepoFactory = new Factories\PackageRepositoryFactory($composerRuntime);
-        $errOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
-
-        if (!$packageName) {
-            $packageName = $composerRuntime->getPackage()->getName();
-        }
-        
-        $packageRepo = $packageRepoFactory->create();
-        
         try {
-            $package = $packageRepo->getByName($packageName);
+            $package = $this->resolvePackage(is_string($packageName) ? $packageName : '');
         } catch (PackageResolverException $exception) {
-            \array_map(
-                array($output, 'writeln'),
-                $errOutputGenerator->generateForResolverException($exception)
-            );
+            $this->printException($exception, $output);
 
             return 1;
         }
-
+        
         $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerRuntime);
 
         $confResolver = $confResolverFactory->create($fromSource);
@@ -124,6 +112,36 @@ class GenerateCommand extends \Composer\Command\BaseCommand
         $output->writeln('<info>Done</info>');
         
         return 0;
+    }
+
+    private function printException($exception, OutputInterface $output)
+    {
+        $errorOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
+
+        \array_map(
+            array($output, 'writeln'),
+            $errorOutputGenerator->generateForResolverException($exception)
+        );
+    }
+    
+    /**
+     * @param string $packageName
+     * @return \Composer\Package\PackageInterface
+     * @throws PackageResolverException
+     */
+    private function resolvePackage($packageName)
+    {
+        $composerRuntime = $this->getComposer();
+
+        if (!$packageName) {
+            $packageName = $composerRuntime->getPackage()->getName();
+        }
+
+        $packageRepoFactory = new Factories\PackageRepositoryFactory($composerRuntime);
+
+        $packageRepository = $packageRepoFactory->create();
+
+        return $packageRepository->getByName($packageName);
     }
     
     private function createUrlResolver($repositoryUrl, array $featureFlags)

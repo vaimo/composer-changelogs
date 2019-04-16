@@ -40,6 +40,7 @@ class PackageRepository
 
     public function getByName($query)
     {
+        /** @var \Composer\Repository\RepositoryInterface[] $repositories */
         $repositories = array(
             new \Composer\Repository\ArrayRepository(array($this->rootPackage)),
             $this->packageRepository
@@ -84,6 +85,14 @@ class PackageRepository
         $repository = $repositories[$repositoryKey];
         $firstMatch = reset($matches);
 
-        return $repository->findPackage($firstMatch['name'], '*');
+        $package = $repository->findPackage($firstMatch['name'], '*');
+        
+        if (!$package) {
+            throw new PackageResolverException(
+                sprintf('No packages for query %s', $query)
+            );
+        }
+        
+        return $package;
     }
 }

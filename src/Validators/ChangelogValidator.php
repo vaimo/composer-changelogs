@@ -41,7 +41,7 @@ class ChangelogValidator
         $this->errorExtractor = new \Vaimo\ComposerChangelogs\Extractors\ErrorExtractor();
     }
 
-    public function validateForPackage(Package $package, $vebosity = Output::VERBOSITY_NORMAL)
+    public function validateForPackage(Package $package, $verbosity = Output::VERBOSITY_NORMAL)
     {
         $formats = array_replace(array(
             'failure' => '%s',
@@ -51,7 +51,7 @@ class ChangelogValidator
         try {
             $this->changelogLoader->load($package);
         } catch (\Exception $exception) {
-            if ($vebosity > Output::VERBOSITY_VERBOSE) {
+            if ($verbosity > Output::VERBOSITY_VERBOSE) {
                 throw $exception;
             }
 

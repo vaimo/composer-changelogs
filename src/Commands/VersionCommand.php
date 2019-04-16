@@ -83,32 +83,21 @@ class VersionCommand extends \Composer\Command\BaseCommand
 
         $composerRuntime = $this->getComposer();
 
-        $packageRepoFactory = new Factories\PackageRepositoryFactory($composerRuntime);
-        $errOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
-
-        if (!$packageName) {
-            $packageName = $composerRuntime->getPackage()->getName();
-        }
-        
-        $packageRepository = $packageRepoFactory->create();
-        
         try {
-            $package = $packageRepository->getByName($packageName);
+            $package = $this->resolvePackage(is_string($packageName) ? $packageName : '');
         } catch (PackageResolverException $exception) {
-            \array_map(
-                array($output, 'writeln'),
-                $errOutputGenerator->generateForResolverException($exception)
-            );
+            $this->printException($exception, $output);
 
             return 1;
         }
-
-        $versionResolver = new \Vaimo\ComposerChangelogs\Resolvers\VersionResolver();
         
         $chLogLoaderFactory = new Factories\Changelog\LoaderFactory($composerRuntime);
         $chLogLoader = $chLogLoaderFactory->create($fromSource);
 
-        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($chLogLoader);
+        $validator = new \Vaimo\ComposerChangelogs\Validators\ChangelogValidator($chLogLoader, array(
+            'failure' => '<error>%s</error>',
+            'success' => '<info>%s</info>'
+        ));
 
         $result = $validator->validateForPackage($package, $output->getVerbosity());
 
@@ -134,6 +123,8 @@ class VersionCommand extends \Composer\Command\BaseCommand
             return 0;
         }
 
+        $versionResolver = new \Vaimo\ComposerChangelogs\Resolvers\VersionResolver();
+
         $version = $versionResolver->resolveValidVersion($version);
             
         if ($format == 'regex') {
@@ -147,5 +138,35 @@ class VersionCommand extends \Composer\Command\BaseCommand
         $output->writeln($version);
         
         return 0;
+    }
+
+    private function printException($exception, OutputInterface $output)
+    {
+        $errorOutputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator();
+
+        \array_map(
+            array($output, 'writeln'),
+            $errorOutputGenerator->generateForResolverException($exception)
+        );
+    }
+
+    /**
+     * @param string $packageName
+     * @return \Composer\Package\PackageInterface
+     * @throws PackageResolverException
+     */
+    private function resolvePackage($packageName)
+    {
+        $composerRuntime = $this->getComposer();
+
+        if (!$packageName) {
+            $packageName = $composerRuntime->getPackage()->getName();
+        }
+
+        $packageRepoFactory = new Factories\PackageRepositoryFactory($composerRuntime);
+
+        $packageRepository = $packageRepoFactory->create();
+
+        return $packageRepository->getByName($packageName);
     }
 }
