@@ -2,12 +2,13 @@
 
 _This file has been auto-generated from the contents of changelog.json_
 
-## 0.15.3
+## 0.15.3 (2019-04-16)
 
 ### Fix
 
 * reduced overview added odd extra space in front of a new line when new lines used (blank line in the middle of overview)
 * changelog:info did not work correctly when used on ROOT package
+* certain templates did not render wrapper elements correctly (issue introduced after switching to new, 5.3-compatible output generator)
 
 ### Maintenance
 
