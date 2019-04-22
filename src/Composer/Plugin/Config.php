@@ -14,9 +14,9 @@ class Config
     
     public function getEscapers()
     {
-        
         return array(
             'sphinx' => array(
+                '\\\\' => '\\\\\\\\',
                 '^.. ' => '\\.\\. '
             ),
             'html' => array(
