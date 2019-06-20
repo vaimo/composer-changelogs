@@ -5,6 +5,7 @@
 [![Daily Downloads](https://poser.pugx.org/vaimo/composer-changelogs/d/daily)](https://packagist.org/packages/vaimo/composer-changelogs)
 [![Minimum PHP Version](https://img.shields.io/packagist/php-v/vaimo/composer-changelogs.svg)](https://php.net/)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/vaimo/composer-changelogs/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/vaimo/composer-changelogs/?branch=master)
+[![Code Climate](https://codeclimate.com/github/vaimo/composer-changelogs/badges/gpa.svg)](https://codeclimate.com/github/vaimo/composer-changelogs)
 [![License](https://poser.pugx.org/vaimo/composer-changelogs/license)](https://packagist.org/packages/vaimo/composer-changelogs)
 
 Provides information about package changes based on changelog files that are bundled with releases and introduces tools/commands for generating documentation files (in many different formats and with the option to create custom templates) from changelog sources. 
