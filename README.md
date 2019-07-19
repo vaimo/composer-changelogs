@@ -12,7 +12,7 @@ Provides information about package changes based on changelog files that are bun
 
 It comes with several commands that aid the developer on setting up automatic package publishing logic in CI.
 
-More information on recent changes [HERE](./CHANGELOG.md).
+More information on recent changes [HERE](./CHANGELOG.md) (which also serves as an example of how MD formatting for changelog.json looks like).
 
 ## Configuration: overview
 
