@@ -4,9 +4,15 @@
         "possible to generate change-logs in other formats as well (when needed) and to do automatic releases based on",
         "added change-log records. More on how to use it: https://github.com/vaimo/composer-changelogs"
     ],
+    "0.15.5": {
+        "fix": [
+            "anchors in Sphinx output for release change group titles were anonymous instead of being unique to specific release",
+            "if a sentence in changelog change description started with two-letter word, it was converted to .."
+        ]
+    },
     "0.15.4": {
         "fix": [
-            "class names (like This\\That) not rendered correctly on Sphinx output (separatords stripped)"
+            "class names (like This\\That) not rendered correctly on Sphinx output (separators stripped)"
         ]
     },
     "0.15.3": {

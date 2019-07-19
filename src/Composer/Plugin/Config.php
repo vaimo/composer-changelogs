@@ -17,7 +17,7 @@ class Config
         return array(
             'sphinx' => array(
                 '\\\\' => '\\\\\\\\',
-                '^.. ' => '\\.\\. '
+                '^\.\. ' => '\\.\\. '
             ),
             'html' => array(
                 '*' => array(
