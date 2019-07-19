@@ -7,7 +7,7 @@ _This file has been auto-generated from the contents of changelog.json_
 ### Fix
 
 * anchors in Sphinx output for release change group titles were anonymous instead of being unique to specific release
-* if a sentence in changelog change description started with two-letter word, it was converted to ..
+* if a sentence in changelog change description started with two-letter word, it was incorrectly converted to '..' (affects Sphinx format)
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.5) [diff](https://github.com/vaimo/composer-changelogs/compare/0.15.4...0.15.5)
 
