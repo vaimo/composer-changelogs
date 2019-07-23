@@ -4,7 +4,7 @@ _This file has been auto-generated from the contents of changelog.json_
 
 ## 0.15.5 (2019-07-19)
 
-### <a name='abc-lala'/>Fix
+### Fix [MultiMarkdownOverview]
 
 * anchors in Sphinx output for release change group titles were anonymous instead of being unique to specific release
 * if a sentence in changelog change description started with two-letter word, it was incorrectly converted to '..' (affects Sphinx format)
