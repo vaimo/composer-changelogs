@@ -42,6 +42,12 @@ class PackageResolver
             $packageName = $this->rootPackage->getName();
         }
 
-        return $this->packageRepository->getByName($packageName);
+        $package = $this->packageRepository->getByName($packageName);
+
+        while ($package instanceof \Composer\Package\AliasPackage) {
+            $package = $package->getAliasOf();
+        }
+
+        return $package;
     }
 }
