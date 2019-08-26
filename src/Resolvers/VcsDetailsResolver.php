@@ -39,7 +39,7 @@ class VcsDetailsResolver
         '.git' => 'git log {version}~1..{version} --simplify-by-decoration --pretty="format:%ai"',
     );
 
-    private $initialQueryTemplates = array(
+    private $headQueryTemplates = array(
         '.hg' => 'hg log -r "branch(default) and 0:" -l 1 --template "{node}"',
         '.git' => 'git rev-list --max-parents=0 HEAD'
     );
@@ -54,7 +54,7 @@ class VcsDetailsResolver
     {
         $result = '0';
 
-        foreach ($this->initialQueryTemplates as $folder => $command) {
+        foreach ($this->headQueryTemplates as $folder => $command) {
             if (!file_exists($this->pathUtils->composePath($repositoryRoot, $folder))) {
                 continue;
             }

@@ -71,6 +71,21 @@ Developer is not limited only to these groups and any other group will end up be
 generator output as well. The exception to this rule is the "overview" group, which is bound to additional
 processing logic and is not perceived as a "changes" group in the code. 
 
+## Configuration: adding releases
+
+The releases should be added in ascending order where the latest release is always the topmost record (as 
+is the case with all change-logs that one might encounter).
+
+```json
+{
+    "2.0.0": {},
+    "1.2.1": {},
+    "1.1.1": {},
+    "1.1.0": {},
+    "1.0.0": {}
+}
+``` 
+
 ## Configuration: upcoming releases
 
 To make sure that all the commands of the plugin work as intended, upcoming releases should be marked in

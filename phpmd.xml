@@ -4,7 +4,10 @@
  See LICENSE_VAIMO.txt for license details.
 -->
 <ruleset name="LOCAL">
-    <rule ref="rulesets/cleancode.xml" />
+    <rule ref="rulesets/cleancode.xml" >
+        <exclude name="MissingImport" />
+        <exclude name="StaticAccess" />
+    </rule>
     <rule ref="rulesets/codesize.xml" />
     <rule ref="rulesets/design.xml" />
     <rule ref="rulesets/naming.xml" />

@@ -22,14 +22,20 @@ class Plugin implements
      * @var \Vaimo\ComposerChangelogs\Analysers\ComposerOperationAnalyser
      */
     private $operationAnalyser;
-    
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @param \Composer\Composer $composer
+     * @param \Composer\IO\IOInterface $cliIO
+     */
     public function activate(\Composer\Composer $composer, \Composer\IO\IOInterface $cliIO)
     {
         $pluginBootstrap = new \Vaimo\ComposerChangelogs\Composer\Plugin\Bootstrap($composer);
 
         $pluginBootstrap->preloadPluginClasses();
         
-        $this->changelogManager = new Managers\ChangelogManager($composer, $cliIO);
+        $this->changelogManager = new Managers\ChangelogManager($composer);
         $this->operationAnalyser = new Analysers\ComposerOperationAnalyser();
     }
 

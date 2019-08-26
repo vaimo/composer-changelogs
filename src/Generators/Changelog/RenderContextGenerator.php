@@ -15,12 +15,12 @@ class RenderContextGenerator implements \Vaimo\ComposerChangelogs\Interfaces\Ren
     /**
      * @var \Vaimo\ComposerChangelogs\Resolvers\ReleaseDetailsResolver
      */
-    private $releaseDetailsResolver;
+    private $releaseInfoResolver;
 
     public function __construct()
     {
         $this->vcsDetailsResolver = new \Vaimo\ComposerChangelogs\Resolvers\VcsDetailsResolver();
-        $this->releaseDetailsResolver = new \Vaimo\ComposerChangelogs\Resolvers\ReleaseDetailsResolver();
+        $this->releaseInfoResolver = new \Vaimo\ComposerChangelogs\Resolvers\ReleaseDetailsResolver();
     }
 
     public function generate(array $changelog, $repositoryUrl = '', $repositoryRoot = '')
@@ -30,7 +30,7 @@ class RenderContextGenerator implements \Vaimo\ComposerChangelogs\Interfaces\Ren
         $contextData = array();
         
         foreach (array_reverse($changelog) as $version => $details) {
-            $item = $this->releaseDetailsResolver->resolveOverview($details);
+            $item = $this->releaseInfoResolver->resolveOverview($details);
             
             $releaseLinks = $this->vcsDetailsResolver->resolveReleaseLinks(
                 $repositoryUrl,
@@ -66,7 +66,7 @@ class RenderContextGenerator implements \Vaimo\ComposerChangelogs\Interfaces\Ren
     {
         $result = array();
 
-        $changeGroups = $this->releaseDetailsResolver->resolveChangeGroups($details);
+        $changeGroups = $this->releaseInfoResolver->resolveChangeGroups($details);
         
         foreach ($changeGroups as $name => $groupItems) {
             $group = array();

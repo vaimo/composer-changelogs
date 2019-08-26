@@ -15,34 +15,26 @@ class ChangelogManager
     private $composerRuntime;
 
     /**
-     * @var \Composer\IO\IOInterface
-     */
-    private $cliIO;
-
-    /**
      * @var Factories\Changelog\ConfigResolverFactory
      */
-    private $configResolverFactory;
+    private $confResolverFactory;
     
     /**
      * @param \Composer\Composer $composerRuntime
-     * @param \Composer\IO\IOInterface $cliIO
      */
     public function __construct(
-        \Composer\Composer $composerRuntime,
-        \Composer\IO\IOInterface $cliIO
+        \Composer\Composer $composerRuntime
     ) {
         $this->composerRuntime = $composerRuntime;
-        $this->cliIO = $cliIO;
 
-        $this->configResolverFactory = new Factories\Changelog\ConfigResolverFactory(
+        $this->confResolverFactory = new Factories\Changelog\ConfigResolverFactory(
             $this->composerRuntime
         );
     }
     
     public function bootstrap()
     {
-        $configResolver = $this->configResolverFactory->create();
+        $configResolver = $this->confResolverFactory->create();
 
         $package = $this->composerRuntime->getPackage();
 

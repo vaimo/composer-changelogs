@@ -55,12 +55,14 @@
     "scripts-descriptions": {
         "test": "Run tests",
         "code:analyse": "Run static code analysis for the source code",
-        "code:normalise": "Apply automatic fixes to the code based on the static code analysis (where applicable)"
+        "code:normalise": "Apply automatic fixes to the code based on the static code analysis (where applicable)",
+        "code:deps": "Make sure that dependencies have code that will actually work with platform requirements defined"
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
         "code:analyse": "bin/analyse",
         "code:normalise": "bin/normalise",
+        "code:deps": "bin/analyse-vendor",
         "post-install-cmd": "bin/bootstrap",
         "post-update-cmd" : "bin/bootstrap"
     },

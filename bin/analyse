@@ -6,7 +6,11 @@ COPYRIGHT
 
 type=${1}
 
+rm phpcs.xml 2>/dev/null
+ln -s $(pwd)/.config/phpcs/package.xml $(pwd)/phpcs.xml
+
 if [ "${type}" == "" ] || [ "${type}" == "phpcs" ] ; then
+    echo ">>> phpcs"
     vendor/bin/phpcs -p src
     
     result=${?}
@@ -16,9 +20,10 @@ if [ "${type}" == "" ] || [ "${type}" == "phpcs" ] ; then
     fi
 fi
 
-if [ "${type}" == "" ] || [ "${type}" == "phpcpd" ] ; then
-    vendor/bin/phpcpd src
-    
+if [ "${type}" == "" ] || [ "${type}" == "phpmd" ] ; then
+    echo ">>> phpmd"
+    vendor/bin/phpmd src text phpmd.xml --suffixes php
+
     result=${?}
 
     if [ ${result} -gt 0 ] ; then
@@ -26,9 +31,10 @@ if [ "${type}" == "" ] || [ "${type}" == "phpcpd" ] ; then
     fi
 fi
 
-if [ "${type}" == "" ] || [ "${type}" == "phpmd" ] ; then
-    vendor/bin/phpmd src text phpmd.xml --suffixes php
-
+if [ "${type}" == "" ] || [ "${type}" == "phpcpd" ] ; then
+    echo ">>> phpcpd"
+    vendor/bin/phpcpd src
+    
     result=${?}
 
     if [ ${result} -gt 0 ] ; then
