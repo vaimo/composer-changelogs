@@ -7,6 +7,8 @@ namespace Vaimo\ComposerChangelogs\Resolvers;
 
 use Composer\Package\PackageInterface;
 
+use Vaimo\ComposerChangelogs\Composer\Plugin\Config as PluginConfig;
+
 class ChangelogConfigResolver
 {
     /**
@@ -128,9 +130,10 @@ class ChangelogConfigResolver
     
     public function hasConfig(PackageInterface $package)
     {
-        $packageExtraConfig = $this->configExtractor->getConfig($package);
+        $pkgExtraConfig = $this->configExtractor->getConfig($package);
 
-        return isset($packageExtraConfig['changelog']) && is_array($packageExtraConfig['changelog']);
+        return isset($pkgExtraConfig[PluginConfig::ROOT]) 
+            && is_array($pkgExtraConfig[PluginConfig::ROOT]);
     }
 
     public function getFeatureFlags(PackageInterface $package)
@@ -145,12 +148,12 @@ class ChangelogConfigResolver
     
     public function getConfig(PackageInterface $package)
     {
-        $packageExtraConfig = $this->configExtractor->getConfig($package);
+        $pkgExtraConfig = $this->configExtractor->getConfig($package);
 
-        if (!isset($packageExtraConfig['changelog']) || !is_array($packageExtraConfig['changelog'])) {
+        if (!isset($pkgExtraConfig[PluginConfig::ROOT]) || !is_array($pkgExtraConfig[PluginConfig::ROOT])) {
             return array();
         }
 
-        return $packageExtraConfig['changelog'];
+        return $pkgExtraConfig['changelog'];
     }
 }

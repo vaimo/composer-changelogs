@@ -5,6 +5,10 @@
  */
 namespace Vaimo\ComposerChangelogs\Extractors;
 
+use Composer\Package\PackageInterface as Package;
+
+use Vaimo\ComposerChangelogs\Composer\Config as ComposerConfig;
+
 class VendorConfigExtractor implements \Vaimo\ComposerChangelogs\Interfaces\PackageConfigExtractorInterface
 {
     /**
@@ -34,21 +38,32 @@ class VendorConfigExtractor implements \Vaimo\ComposerChangelogs\Interfaces\Pack
         $this->pathUtils = new \Vaimo\ComposerChangelogs\Utils\PathUtils();
     }
 
-    public function getConfig(\Composer\Package\PackageInterface $package)
+    public function getConfig(Package $package)
+    {
+        $packageConfig = $this->getPackageFullConfig($package);
+        
+        if (!$packageConfig) {
+            return array();
+        }
+
+        if (!isset($packageConfig[ComposerConfig::CONFIG_ROOT])) {
+            return array();
+        }
+
+        return $packageConfig[ComposerConfig::CONFIG_ROOT];
+    }
+    
+    public function getPackageFullConfig(Package $package)
     {
         $source = $this->pathUtils->composePath(
             $this->packageInfoResolver->getInstallPath($package),
-            \Vaimo\ComposerChangelogs\Composer\Config::PACKAGE_CONFIG_FILE
+            \Vaimo\ComposerChangelogs\Composer\Files::PACKAGE_CONFIG
         );
-        
+
         if (file_exists($source)) {
-            $fileContents = $this->configLoader->readToArray($source);
-
-            if (isset($fileContents[\Vaimo\ComposerChangelogs\Composer\Config::CONFIG_ROOT])) {
-                return $fileContents[\Vaimo\ComposerChangelogs\Composer\Config::CONFIG_ROOT];
-            }
+            return $this->configLoader->readToArray($source);
         }
-
+        
         return array();
     }
 }
