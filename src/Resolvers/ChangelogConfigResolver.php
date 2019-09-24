@@ -132,7 +132,7 @@ class ChangelogConfigResolver
     {
         $pkgExtraConfig = $this->configExtractor->getConfig($package);
 
-        return isset($pkgExtraConfig[PluginConfig::ROOT]) 
+        return isset($pkgExtraConfig[PluginConfig::ROOT])
             && is_array($pkgExtraConfig[PluginConfig::ROOT]);
     }
 

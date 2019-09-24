@@ -283,6 +283,9 @@ composer changelog:info
 
 # Validate changelog files content
 composer changelog:validate
+
+# Setup basic usage of the changelogs for a module
+composer changelog:bootstrap
 ```
 
 ## Upgrading The Module

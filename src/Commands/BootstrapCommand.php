@@ -81,7 +81,7 @@ class BootstrapCommand extends \Composer\Command\BaseCommand
             $rootPath = array(ComposerConfig::CONFIG_ROOT, PluginConfig::ROOT);
 
             $message = sprintf(
-                'Configuration root (<comment>%s</comment>) already present in package config', 
+                'Configuration root (<comment>%s</comment>) already present in package config',
                 implode('/', $rootPath)
             );
             
@@ -94,10 +94,10 @@ class BootstrapCommand extends \Composer\Command\BaseCommand
 
         $config = $configExtractor->getPackageFullConfig($package);
 
-        $paths = [
+        $paths = array(
             'md' => 'CHANGELOG.md',
             'sphinx' => 'docs/changelog.rst'
-        ];
+        );
 
         $update = array(
             ComposerConfig::CONFIG_ROOT => array(
@@ -105,7 +105,7 @@ class BootstrapCommand extends \Composer\Command\BaseCommand
                     'source' => 'changelog.json',
                     'output' => array(
                         $type => $paths[$type]
-                    )   
+                    )
                 )
             )
         );
@@ -114,7 +114,9 @@ class BootstrapCommand extends \Composer\Command\BaseCommand
 
         $pathUtils = new \Vaimo\ComposerChangelogs\Utils\PathUtils();
 
-        $encodedConfig = json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        $jsonEncoder = new \Camspiers\JsonPretty\JsonPretty();
+        
+        $encodedConfig = $jsonEncoder->prettify($config, null, '    ');
         
         $pkgConfigPath = $pathUtils->composePath($installPath, ComposerFiles::PACKAGE_CONFIG);
         $chLogConfigPath = $pathUtils->composePath($installPath, 'changelog.json');
@@ -131,10 +133,14 @@ class BootstrapCommand extends \Composer\Command\BaseCommand
                     'added change-log records. More on how to use it: https://github.com/vaimo/composer-changelogs'
                 )
             );
+
+            $encodedChangeLog = $jsonEncoder->prettify($changeLog, null, '    ');
             
-            file_put_contents($chLogConfigPath, json_encode($changeLog, JSON_PRETTY_PRINT));
+            file_put_contents($chLogConfigPath, $encodedChangeLog);
         }
 
         $output->writeln('<info>Done</info>');
+        
+        return 0;
     }
 }
