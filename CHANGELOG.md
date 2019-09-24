@@ -2,7 +2,7 @@
 
 _This file has been auto-generated from the contents of changelog.json_
 
-## 0.16.0
+## 0.16.0 (2019-09-24)
 
 ### Feature
 
