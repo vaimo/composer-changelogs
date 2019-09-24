@@ -12,15 +12,15 @@ class LoaderFactory
     /**
      * @var \Vaimo\ComposerChangelogs\Composer\Context
      */
-    private $composerContext;
+    private $composerCtx;
 
     /**
-     * @param \Vaimo\ComposerChangelogs\Composer\Context $composerContext
+     * @param \Vaimo\ComposerChangelogs\Composer\Context $composerCtx
      */
     public function __construct(
-        \Vaimo\ComposerChangelogs\Composer\Context $composerContext
+        \Vaimo\ComposerChangelogs\Composer\Context $composerCtx
     ) {
-        $this->composerContext = $composerContext;
+        $this->composerCtx = $composerCtx;
     }
 
     /**
@@ -32,7 +32,7 @@ class LoaderFactory
      */
     public function create($fromSource = false)
     {
-        $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($this->composerContext);
+        $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($this->composerCtx);
 
         return new \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader(
             $confResolverFactory->create($fromSource)

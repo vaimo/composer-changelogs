@@ -11,7 +11,7 @@ class Config
     
     public function getAvailableFormats()
     {
-        return array('sphinx', 'html', 'md', 'yml', 'rst', 'txt', 'slack');
+        return array('sphinx', 'html', 'md', 'yml', 'rst', 'txt', 'slack', 'json');
     }
     
     public function getEscapers()

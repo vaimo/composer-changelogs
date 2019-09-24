@@ -7,31 +7,33 @@ namespace Vaimo\ComposerChangelogs\Commands;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputArgument as Argument;
+use Symfony\Component\Console\Input\InputOption as Option;
 
 use Vaimo\ComposerChangelogs\Composer\Plugin\Config as PluginConfig;
 use Vaimo\ComposerChangelogs\Composer\Config as ComposerConfig;
-use Vaimo\ComposerChangelogs\Composer\Files as ComposerFiles;
-use Vaimo\ComposerChangelogs\Factories;
 
 class BootstrapCommand extends \Composer\Command\BaseCommand
 {
     protected function configure()
     {
+        $pluginConfig = new \Vaimo\ComposerChangelogs\Composer\Plugin\Config();
+
         $this->setName('changelog:bootstrap');
 
-        $this->setDescription('Add basic configuration for the usage of change-logs');
+        $this->setDescription('Add basic configuration for the usage of generated change-logs');
 
         $this->addArgument(
             'name',
-            \Symfony\Component\Console\Input\InputArgument::OPTIONAL,
+            Argument::OPTIONAL,
             'Targeted package name. Default: root package'
         );
 
         $this->addOption(
-            '--type',
+            '--format',
             null,
-            \Symfony\Component\Console\Input\InputOption::VALUE_OPTIONAL,
-            'Type of output (sphinx, md)',
+            Option::VALUE_OPTIONAL,
+            sprintf('Format of the output (%s)', implode(', ', $pluginConfig->getAvailableFormats())),
             'md'
         );
     }
@@ -41,43 +43,27 @@ class BootstrapCommand extends \Composer\Command\BaseCommand
         $packageName = $input->getArgument('name');
         $type = $input->getOption('type');
 
-        $composerRuntime = $this->getComposer();
+        $composerCtxFactory = new \Vaimo\ComposerChangelogs\Factories\ComposerContextFactory($this->getComposer());
+        $composerCtx = $composerCtxFactory->create();
 
-        $composerCtxFactory = new \Vaimo\ComposerChangelogs\Factories\ComposerContextFactory(
-            $composerRuntime
-        );
-
-        $composerContext = $composerCtxFactory->create();
-
-        $packageRepoFactory = new Factories\PackageResolverFactory($composerContext);
-        $packageResolver = $packageRepoFactory->create();
-
-        $outputGenerator = new \Vaimo\ComposerChangelogs\Console\OutputGenerator($output);
+        $commandCtx = new \Vaimo\ComposerChangelogs\Console\Command\ExecutionContext($output, $composerCtx);
         
-        try {
-            $package = $packageResolver->resolvePackage(is_string($packageName) ? $packageName : '');
-        } catch (PackageResolverException $exception) {
-            $outputGenerator->writeResolverException($exception);
+        $cfgResolverFactory = new \Vaimo\ComposerChangelogs\Factories\Changelog\ConfigResolverFactory($composerCtx);
+        $cfgResolver = $cfgResolverFactory->create();
 
-            return null;
+        $packageManager = new \Vaimo\ComposerChangelogs\Managers\PackageManager($composerCtx);
+
+        $package = $commandCtx->resolvePackage($packageName);
+
+        if ($package === null) {
+            return 1;
         }
 
         $output->writeln(
-            sprintf('Bootstrapping changelogs for <info>%s</info>', $package->getName())
+            sprintf('Bootstrapping changelog generation for <info>%s</info>', $package->getName())
         );
         
-        /** @var /Composer/Composer $composer */
-        $composer = $composerContext->getLocalComposer();
-
-        $packageInfoResolver = new \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver(
-            $composer->getInstallationManager()
-        );
-        
-        $configExtractor = new \Vaimo\ComposerChangelogs\Extractors\VendorConfigExtractor($packageInfoResolver);
-        
-        $config = $configExtractor->getConfig($package);
-
-        if (isset($config[PluginConfig::ROOT])) {
+        if ($cfgResolver->hasConfig($package)) {
             $rootPath = array(ComposerConfig::CONFIG_ROOT, PluginConfig::ROOT);
 
             $message = sprintf(
@@ -90,55 +76,16 @@ class BootstrapCommand extends \Composer\Command\BaseCommand
             return 0;
         }
         
-        $installPath = $packageInfoResolver->getInstallPath($package);
-
-        $config = $configExtractor->getPackageFullConfig($package);
-
-        $paths = array(
-            'md' => 'CHANGELOG.md',
-            'sphinx' => 'docs/changelog.rst'
-        );
-
-        $update = array(
-            ComposerConfig::CONFIG_ROOT => array(
-                PluginConfig::ROOT => array(
-                    'source' => 'changelog.json',
-                    'output' => array(
-                        $type => $paths[$type]
-                    )
-                )
-            )
-        );
-        
-        $config = array_replace_recursive($config, $update);
-
-        $pathUtils = new \Vaimo\ComposerChangelogs\Utils\PathUtils();
-
-        $jsonEncoder = new \Camspiers\JsonPretty\JsonPretty();
-        
-        $encodedConfig = $jsonEncoder->prettify($config, null, '    ');
-        
-        $pkgConfigPath = $pathUtils->composePath($installPath, ComposerFiles::PACKAGE_CONFIG);
-        $chLogConfigPath = $pathUtils->composePath($installPath, 'changelog.json');
-        
-        file_put_contents($pkgConfigPath, $encodedConfig);
-        
-        if (!file_exists($chLogConfigPath)) {
-            $changeLog = array(
-                '_readme' => array(
-                    'The contents of this file are used to generate CHANGELOG.md; It\'s kept in '
-                        . 'JSON/parsable format to make it',
-                    'possible to generate change-logs in other formats as well (when needed) and '
-                        . 'to do automatic releases based on',
-                    'added change-log records. More on how to use it: https://github.com/vaimo/composer-changelogs'
-                )
-            );
-
-            $encodedChangeLog = $jsonEncoder->prettify($changeLog, null, '    ');
+        try {
+            $packageManager->bootstrapChangelogGeneration($package, $type);
+        } catch (\Vaimo\ComposerChangelogs\Exceptions\UpdaterException $exception) {
+            $message = sprintf('<error>%s</error>', $exception->getMessage());
             
-            file_put_contents($chLogConfigPath, $encodedChangeLog);
+            $output->writeln($message);
+            
+            return 1;
         }
-
+        
         $output->writeln('<info>Done</info>');
         
         return 0;

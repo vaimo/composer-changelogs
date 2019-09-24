@@ -10,20 +10,20 @@ class Bootstrap
     /**
      * @var \Vaimo\ComposerChangelogs\Composer\Context
      */
-    private $composerContext;
+    private $composerCtx;
 
     /**
-     * @param \Vaimo\ComposerChangelogs\Composer\Context $composerContext
+     * @param \Vaimo\ComposerChangelogs\Composer\Context $composerCtx
      */
     public function __construct(
-        \Vaimo\ComposerChangelogs\Composer\Context $composerContext
+        \Vaimo\ComposerChangelogs\Composer\Context $composerCtx
     ) {
-        $this->composerContext = $composerContext;
+        $this->composerCtx = $composerCtx;
     }
 
     public function preloadPluginClasses()
     {
-        $composer = $this->composerContext->getLocalComposer();
+        $composer = $this->composerCtx->getLocalComposer();
         
         $installationManager = $composer->getInstallationManager();
 
@@ -37,7 +37,7 @@ class Bootstrap
 
         $sourcesPreloader = new \Vaimo\ComposerChangelogs\Loaders\SourcesPreloader($packageInfoResolver);
 
-        $packages = $this->composerContext->getActivePackages();
+        $packages = $this->composerCtx->getActivePackages();
         
         $pluginPackage = $packageResolver->resolveForNamespace($packages, __NAMESPACE__);
         

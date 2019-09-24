@@ -12,7 +12,7 @@ class ConfigResolverFactory
     /**
      * @var \Vaimo\ComposerChangelogs\Composer\Context
      */
-    private $composerContext;
+    private $composerCtx;
 
     /**
      * @var \Vaimo\ComposerChangelogs\Resolvers\PluginPackageResolver
@@ -20,14 +20,14 @@ class ConfigResolverFactory
     private $packageResolver;
 
     /**
-     * @param \Vaimo\ComposerChangelogs\Composer\Context $composerContext
+     * @param \Vaimo\ComposerChangelogs\Composer\Context $composerCtx
      */
     public function __construct(
-        \Vaimo\ComposerChangelogs\Composer\Context $composerContext
+        \Vaimo\ComposerChangelogs\Composer\Context $composerCtx
     ) {
-        $this->composerContext = $composerContext;
+        $this->composerCtx = $composerCtx;
 
-        $composer = $this->composerContext->getLocalComposer();
+        $composer = $this->composerCtx->getLocalComposer();
         
         $this->packageResolver = new \Vaimo\ComposerChangelogs\Resolvers\PluginPackageResolver(
             array($composer->getPackage())
@@ -43,10 +43,10 @@ class ConfigResolverFactory
      */
     public function create($fromSource = false)
     {
-        $composer = $this->composerContext->getLocalComposer();
+        $composer = $this->composerCtx->getLocalComposer();
         
         $pluginPackage = $this->packageResolver->resolveForNamespace(
-            $this->composerContext->getActivePackages(),
+            $this->composerCtx->getActivePackages(),
             __NAMESPACE__
         );
         

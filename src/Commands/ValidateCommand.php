@@ -41,9 +41,9 @@ class ValidateCommand extends \Composer\Command\BaseCommand
             $this->getComposer()
         );
 
-        $composerContext = $composerCtxFactory->create();
+        $composerCtx = $composerCtxFactory->create();
         
-        $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($composerContext, $output);
+        $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($composerCtx, $output);
         $chLogRepo = $chLogRepoFactory->create($fromSource);
 
         $changelog = $chLogRepo->getByPackageName(

@@ -37,13 +37,13 @@ class Plugin implements
     public function activate(\Composer\Composer $composer, \Composer\IO\IOInterface $cliIO)
     {
         $composerCtxFactory = new \Vaimo\ComposerChangelogs\Factories\ComposerContextFactory($composer);
-        $composerContext = $composerCtxFactory->create();
+        $composerCtx = $composerCtxFactory->create();
 
-        $pluginBootstrap = new \Vaimo\ComposerChangelogs\Composer\Plugin\Bootstrap($composerContext);
+        $pluginBootstrap = new \Vaimo\ComposerChangelogs\Composer\Plugin\Bootstrap($composerCtx);
 
         $pluginBootstrap->preloadPluginClasses();
         
-        $this->changelogManager = new Managers\ChangelogManager($composerContext);
+        $this->changelogManager = new Managers\ChangelogManager($composerCtx);
         $this->operationAnalyser = new Analysers\ComposerOperationAnalyser();
 
         if (!interface_exists('\Composer\Plugin\Capability\CommandProvider')) {

@@ -92,11 +92,11 @@ class InfoCommand extends \Composer\Command\BaseCommand
             $this->getComposer()
         );
         
-        $composerContext = $composerCtxFactory->create();
+        $composerCtx = $composerCtxFactory->create();
 
-        $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($composerContext, $output);
+        $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($composerCtx, $output);
         $chLogRepo = $chLogRepoFactory->create($fromSource);
-
+        
         $changelog = $chLogRepo->getByPackageName(
             $packageName,
             $output->getVerbosity()
@@ -123,7 +123,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
 
         try {
             $result = $this->generateOutput(
-                $composerContext,
+                $composerCtx,
                 $changelog->getOwner(),
                 $groups,
                 $format,
@@ -177,7 +177,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
         return $groups;
     }
 
-    private function generateOutput(ComposerContext $composerContext, Package $package, $groups, $format, $fromSource)
+    private function generateOutput(ComposerContext $composerCtx, Package $package, $groups, $format, $fromSource)
     {
         $composerRuntime = $this->getComposer();
 
@@ -187,7 +187,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
             return $jsonEncoder->prettify($groups, null, '    ');
         }
         
-        $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerContext);
+        $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerCtx);
 
         $confResolver = $confResolverFactory->create($fromSource);
 

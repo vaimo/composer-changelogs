@@ -84,10 +84,10 @@ class VersionCommand extends \Composer\Command\BaseCommand
             $this->getComposer()
         );
 
-        $composerContext = $composerCtxFactory->create();
+        $composerCtx = $composerCtxFactory->create();
         
         $chLogRepoFactory = new Factories\ChangelogRepositoryFactory(
-            $composerContext,
+            $composerCtx,
             $output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL ? $output : null
         );
         

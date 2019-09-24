@@ -10,20 +10,20 @@ class PackageRepositoryFactory
     /**
      * @var \Vaimo\ComposerChangelogs\Composer\Context
      */
-    private $composerContext;
+    private $composerCtx;
 
     /**
-     * @param \Vaimo\ComposerChangelogs\Composer\Context $composerContext
+     * @param \Vaimo\ComposerChangelogs\Composer\Context $composerCtx
      */
     public function __construct(
-        \Vaimo\ComposerChangelogs\Composer\Context $composerContext
+        \Vaimo\ComposerChangelogs\Composer\Context $composerCtx
     ) {
-        $this->composerContext = $composerContext;
+        $this->composerCtx = $composerCtx;
     }
 
     public function create()
     {
-        $composer = $this->composerContext->getLocalComposer();
+        $composer = $this->composerCtx->getLocalComposer();
         
         return new \Vaimo\ComposerChangelogs\Repositories\PackageRepository(
             $composer->getPackage(),

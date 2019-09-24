@@ -53,9 +53,9 @@ class GenerateCommand extends \Composer\Command\BaseCommand
             $composerRuntime
         );
 
-        $composerContext = $composerCtxFactory->create();
+        $composerCtx = $composerCtxFactory->create();
         
-        $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($composerContext, $output);
+        $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($composerCtx, $output);
         $chLogRepo = $chLogRepoFactory->create($fromSource);
 
         $changelog = $chLogRepo->getByPackageName(
@@ -67,7 +67,7 @@ class GenerateCommand extends \Composer\Command\BaseCommand
             return 1;
         }
 
-        $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerContext);
+        $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerCtx);
 
         $confResolver = $confResolverFactory->create($fromSource);
 

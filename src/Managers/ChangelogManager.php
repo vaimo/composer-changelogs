@@ -12,7 +12,7 @@ class ChangelogManager
     /**
      * @var \Vaimo\ComposerChangelogs\Composer\Context
      */
-    private $composerContext;
+    private $composerCtx;
 
     /**
      * @var Factories\Changelog\ConfigResolverFactory
@@ -20,15 +20,15 @@ class ChangelogManager
     private $confResolverFactory;
     
     /**
-     * @param \Vaimo\ComposerChangelogs\Composer\Context $composerContext
+     * @param \Vaimo\ComposerChangelogs\Composer\Context $composerCtx
      */
     public function __construct(
-        \Vaimo\ComposerChangelogs\Composer\Context $composerContext
+        \Vaimo\ComposerChangelogs\Composer\Context $composerCtx
     ) {
-        $this->composerContext = $composerContext;
+        $this->composerCtx = $composerCtx;
 
         $this->confResolverFactory = new Factories\Changelog\ConfigResolverFactory(
-            $this->composerContext
+            $this->composerCtx
         );
     }
     
@@ -36,11 +36,11 @@ class ChangelogManager
     {
         $configResolver = $this->confResolverFactory->create();
 
-        $composer = $this->composerContext->getLocalComposer();
+        $composer = $this->composerCtx->getLocalComposer();
         
         $package = $composer->getPackage();
 
-        $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($this->composerContext);
+        $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($this->composerCtx);
         $chLogRepo = $chLogRepoFactory->create(false);
 
         $changelog = $chLogRepo->getByPackageName($package->getName());
