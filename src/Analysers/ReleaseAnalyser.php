@@ -36,7 +36,7 @@ class ReleaseAnalyser
             return true;
         }
 
-        if (isset($item['branch']) && $itemBranch === $branch) {
+        if ($itemBranch === $branch && isset($item['branch'])) {
             return true;
         }
 

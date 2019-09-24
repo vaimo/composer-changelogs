@@ -8,9 +8,9 @@ namespace Vaimo\ComposerChangelogs\Factories;
 class ChangelogRepositoryFactory
 {
     /**
-     * @var \Composer\Composer
+     * @var \Vaimo\ComposerChangelogs\Composer\Context $composerContext
      */
-    private $composerRuntime;
+    private $composerContext;
 
     /**
      * @var \Symfony\Component\Console\Output\OutputInterface
@@ -18,24 +18,22 @@ class ChangelogRepositoryFactory
     private $output;
 
     /**
-     * @param \Composer\Composer $composerRuntime
+     * @param \Vaimo\ComposerChangelogs\Composer\Context $composerContext
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      */
     public function __construct(
-        \Composer\Composer $composerRuntime,
+        \Vaimo\ComposerChangelogs\Composer\Context $composerContext,
         \Symfony\Component\Console\Output\OutputInterface $output = null
     ) {
-        $this->composerRuntime = $composerRuntime;
+        $this->composerContext = $composerContext;
         $this->output = $output;
     }
     
     public function create($fromSource)
     {
-        $pkgResolverFactory = new PackageResolverFactory(
-            $this->composerRuntime
-        );
+        $pkgResolverFactory = new PackageResolverFactory($this->composerContext);
         
-        $chLogLoaderFactory = new Changelog\LoaderFactory($this->composerRuntime);
+        $chLogLoaderFactory = new Changelog\LoaderFactory($this->composerContext);
 
         $chLogLoader = $chLogLoaderFactory->create($fromSource);
         

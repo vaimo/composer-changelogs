@@ -8,10 +8,11 @@ namespace Vaimo\ComposerChangelogs\Commands;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use Composer\Package\PackageInterface;
+use Composer\Package\PackageInterface as Package;
 
 use Vaimo\ComposerChangelogs\Resolvers;
 use Vaimo\ComposerChangelogs\Factories;
+use Vaimo\ComposerChangelogs\Composer\Context as ComposerContext;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -86,8 +87,14 @@ class InfoCommand extends \Composer\Command\BaseCommand
         $format = $input->getOption('format');
         $branch = $input->getOption('branch');
         $showUpcoming = $input->getOption('upcoming');
+
+        $composerCtxFactory = new \Vaimo\ComposerChangelogs\Factories\ComposerContextFactory(
+            $this->getComposer()
+        );
         
-        $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($this->getComposer(), $output);
+        $composerContext = $composerCtxFactory->create();
+
+        $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($composerContext, $output);
         $chLogRepo = $chLogRepoFactory->create($fromSource);
 
         $changelog = $chLogRepo->getByPackageName(
@@ -115,7 +122,13 @@ class InfoCommand extends \Composer\Command\BaseCommand
         );
 
         try {
-            $result = $this->generateOutput($changelog->getOwner(), $groups, $format, $fromSource);
+            $result = $this->generateOutput(
+                $composerContext,
+                $changelog->getOwner(),
+                $groups,
+                $format,
+                $fromSource
+            );
         } catch (\Exception $exception) {
             $output->writeln(
                 sprintf('<error>%s</error>', $exception->getMessage())
@@ -164,7 +177,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
         return $groups;
     }
 
-    private function generateOutput(PackageInterface $package, $groups, $format, $fromSource)
+    private function generateOutput(ComposerContext $composerContext, Package $package, $groups, $format, $fromSource)
     {
         $composerRuntime = $this->getComposer();
 
@@ -173,8 +186,8 @@ class InfoCommand extends \Composer\Command\BaseCommand
 
             return $jsonEncoder->prettify($groups, null, '    ');
         }
-
-        $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerRuntime);
+        
+        $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerContext);
 
         $confResolver = $confResolverFactory->create($fromSource);
 

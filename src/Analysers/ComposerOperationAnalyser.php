@@ -23,7 +23,7 @@ class ComposerOperationAnalyser
     {
         if (!$operation instanceof \Composer\DependencyResolver\Operation\UninstallOperation) {
             return false;
-        };
+        }
 
         $package = $operation->getPackage();
 

@@ -2,6 +2,15 @@
 
 _This file has been auto-generated from the contents of changelog.json_
 
+## 0.15.7
+
+### Fix
+
+* allow the plugin to be installed as dependency to globally installed package; previously caused every composer call to crash with class declaration conflict
+* allow usage on older Composer version (before plugins could provide new composer commands)
+
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.7) [diff](https://github.com/vaimo/composer-changelogs/compare/0.15.6...0.15.7)
+
 ## 0.15.6 (2019-07-29)
 
 ### Fix

@@ -103,8 +103,6 @@ class DocumentationGenerator
                 );
 
                 throw new \Vaimo\ComposerChangelogs\Exceptions\GeneratorException($errorMessage);
-
-                break;
             }
 
             file_put_contents($target, $output);

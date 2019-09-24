@@ -49,7 +49,13 @@ class GenerateCommand extends \Composer\Command\BaseCommand
 
         $composerRuntime = $this->getComposer();
 
-        $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($composerRuntime, $output);
+        $composerCtxFactory = new \Vaimo\ComposerChangelogs\Factories\ComposerContextFactory(
+            $composerRuntime
+        );
+
+        $composerContext = $composerCtxFactory->create();
+        
+        $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($composerContext, $output);
         $chLogRepo = $chLogRepoFactory->create($fromSource);
 
         $changelog = $chLogRepo->getByPackageName(
@@ -61,7 +67,7 @@ class GenerateCommand extends \Composer\Command\BaseCommand
             return 1;
         }
 
-        $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerRuntime);
+        $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerContext);
 
         $confResolver = $confResolverFactory->create($fromSource);
 

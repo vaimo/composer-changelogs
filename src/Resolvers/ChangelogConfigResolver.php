@@ -30,6 +30,11 @@ class ChangelogConfigResolver
     private $packageInfoResolver;
 
     /**
+     * @var \Vaimo\ComposerChangelogs\Utils\DataUtils
+     */
+    private $dataUtils;
+    
+    /**
      * @var \Vaimo\ComposerChangelogs\Utils\PathUtils
      */
     private $pathUtils;
@@ -50,7 +55,8 @@ class ChangelogConfigResolver
         $this->pluginConfig = $pluginConfig;
         $this->packageInfoResolver = $packageInfoResolver;
         $this->configExtractor = $configExtractor;
-        
+
+        $this->dataUtils = new \Vaimo\ComposerChangelogs\Utils\DataUtils();
         $this->pathUtils = new \Vaimo\ComposerChangelogs\Utils\PathUtils();
     }
 
@@ -63,16 +69,19 @@ class ChangelogConfigResolver
         }
 
         $installPath = $this->packageInfoResolver->getInstallPath($package);
+        
+        $dataUtils = $this->dataUtils;
+        $pathUtils = $this->pathUtils;
 
         return array_filter(
-            array_map(function ($config) use ($installPath) {
-                $path = is_array($config) ? (isset($config['path']) ? $config['path'] : '') : $config;
+            array_map(function ($config) use ($installPath, $dataUtils, $pathUtils) {
+                $path = is_array($config) ? $dataUtils->extractValue($config, 'path') : $config;
 
                 if (!$path) {
                     return false;
                 }
 
-                return $installPath . DIRECTORY_SEPARATOR . $path;
+                return $pathUtils->composePath($installPath, $path);
             }, $config['output'])
         );
     }

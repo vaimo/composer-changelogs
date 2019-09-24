@@ -88,7 +88,7 @@ class VcsDetailsResolver
         foreach ($this->linkTemplates[$hostCode] as $code => $template) {
             $data[$code] = str_replace(
                 array('{base}', '{higher}', '{lower}'),
-                array($repositoryUrl, $version, $lastVersion ? $lastVersion : '0'),
+                array($repositoryUrl, $version, $lastVersion ?: '0'),
                 $template
             );
         }

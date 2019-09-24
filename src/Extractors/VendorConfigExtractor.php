@@ -18,6 +18,11 @@ class VendorConfigExtractor implements \Vaimo\ComposerChangelogs\Interfaces\Pack
     private $configLoader;
 
     /**
+     * @var \Vaimo\ComposerChangelogs\Utils\PathUtils
+     */
+    private $pathUtils;
+
+    /**
      * @param \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver $packageInfoResolver
      */
     public function __construct(
@@ -26,14 +31,16 @@ class VendorConfigExtractor implements \Vaimo\ComposerChangelogs\Interfaces\Pack
         $this->packageInfoResolver = $packageInfoResolver;
 
         $this->configLoader = new \Vaimo\ComposerChangelogs\Readers\JsonFileReader();
+        $this->pathUtils = new \Vaimo\ComposerChangelogs\Utils\PathUtils();
     }
 
     public function getConfig(\Composer\Package\PackageInterface $package)
     {
-        $source = $this->packageInfoResolver->getInstallPath($package)
-            . DIRECTORY_SEPARATOR
-            . \Vaimo\ComposerChangelogs\Composer\Config::PACKAGE_CONFIG_FILE;
-
+        $source = $this->pathUtils->composePath(
+            $this->packageInfoResolver->getInstallPath($package),
+            \Vaimo\ComposerChangelogs\Composer\Config::PACKAGE_CONFIG_FILE
+        );
+        
         if (file_exists($source)) {
             $fileContents = $this->configLoader->readToArray($source);
 

@@ -54,4 +54,22 @@ class DataUtils
 
         return sprintf($format, $data[$key]);
     }
+    
+    public function extractValue(array $data, $key, $default = '')
+    {
+        if (!isset($data[$key])) {
+            return $default;
+        }
+        
+        return $data[$key];
+    }
+    
+    public function assureArrayValue($value)
+    {
+        if (is_array($value)) {
+            return $value;
+        }
+
+        return array($value);
+    }
 }

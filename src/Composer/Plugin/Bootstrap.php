@@ -8,26 +8,27 @@ namespace Vaimo\ComposerChangelogs\Composer\Plugin;
 class Bootstrap
 {
     /**
-     * @var \Composer\Composer
+     * @var \Vaimo\ComposerChangelogs\Composer\Context
      */
-    private $composer;
+    private $composerContext;
 
     /**
-     * @param \Composer\Composer $composer
+     * @param \Vaimo\ComposerChangelogs\Composer\Context $composerContext
      */
     public function __construct(
-        \Composer\Composer $composer
+        \Vaimo\ComposerChangelogs\Composer\Context $composerContext
     ) {
-        $this->composer = $composer;
+        $this->composerContext = $composerContext;
     }
 
     public function preloadPluginClasses()
     {
-        $installationManager = $this->composer->getInstallationManager();
-        $repository = $this->composer->getRepositoryManager()->getLocalRepository();
+        $composer = $this->composerContext->getLocalComposer();
+        
+        $installationManager = $composer->getInstallationManager();
 
         $packageResolver = new \Vaimo\ComposerChangelogs\Resolvers\PluginPackageResolver(
-            array($this->composer->getPackage())
+            array($composer->getPackage())
         );
 
         $packageInfoResolver = new \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver(
@@ -36,8 +37,10 @@ class Bootstrap
 
         $sourcesPreloader = new \Vaimo\ComposerChangelogs\Loaders\SourcesPreloader($packageInfoResolver);
 
-        $sourcesPreloader->preloadForPackage(
-            $packageResolver->resolveForNamespace($repository, __NAMESPACE__)
-        );
+        $packages = $this->composerContext->getActivePackages();
+        
+        $pluginPackage = $packageResolver->resolveForNamespace($packages, __NAMESPACE__);
+        
+        $sourcesPreloader->preloadForPackage($pluginPackage);
     }
 }

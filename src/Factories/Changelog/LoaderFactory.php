@@ -10,17 +10,17 @@ use Vaimo\ComposerChangelogs\Factories;
 class LoaderFactory
 {
     /**
-     * @var \Composer\Composer
+     * @var \Vaimo\ComposerChangelogs\Composer\Context
      */
-    private $composerRuntime;
+    private $composerContext;
 
     /**
-     * @param \Composer\Composer $composerRuntime
+     * @param \Vaimo\ComposerChangelogs\Composer\Context $composerContext
      */
     public function __construct(
-        \Composer\Composer $composerRuntime
+        \Vaimo\ComposerChangelogs\Composer\Context $composerContext
     ) {
-        $this->composerRuntime = $composerRuntime;
+        $this->composerContext = $composerContext;
     }
 
     /**
@@ -32,7 +32,7 @@ class LoaderFactory
      */
     public function create($fromSource = false)
     {
-        $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($this->composerRuntime);
+        $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($this->composerContext);
 
         return new \Vaimo\ComposerChangelogs\Loaders\ChangelogLoader(
             $confResolverFactory->create($fromSource)

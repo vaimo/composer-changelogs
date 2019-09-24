@@ -19,12 +19,19 @@ class PackageInfoResolver
     private $installationManager;
 
     /**
+     * @var \Vaimo\ComposerChangelogs\Utils\PathUtils
+     */
+    private $pathUtils;
+
+    /**
      * @param \Composer\Installer\InstallationManager $installationManager
      */
     public function __construct(
         \Composer\Installer\InstallationManager $installationManager
     ) {
         $this->installationManager = $installationManager;
+
+        $this->pathUtils = new \Vaimo\ComposerChangelogs\Utils\PathUtils();
     }
 
     /**
@@ -79,9 +86,11 @@ class PackageInfoResolver
 
         $installPath = $this->getInstallPath($package);
 
+        $pathUtils = $this->pathUtils;
+        
         $sourcePaths = array_map(
-            function ($path) use ($installPath) {
-                return $installPath . DIRECTORY_SEPARATOR . $path;
+            function ($path) use ($installPath, $pathUtils) {
+                return $pathUtils->composePath($installPath, $path);
             },
             $autoloadConfig[ConfigKeys::PSR4_CONFIG]
         );

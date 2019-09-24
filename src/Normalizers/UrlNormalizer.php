@@ -49,8 +49,7 @@ class UrlNormalizer
         }
 
         if ($components['scheme'] === 'ssh') {
-            unset($components['user']);
-            unset($components['pass']);
+            unset($components['user'], $components['pass']);
 
             $components['scheme'] = 'https';
         }

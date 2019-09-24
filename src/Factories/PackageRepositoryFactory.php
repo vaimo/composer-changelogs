@@ -8,24 +8,26 @@ namespace Vaimo\ComposerChangelogs\Factories;
 class PackageRepositoryFactory
 {
     /**
-     * @var \Composer\Composer
+     * @var \Vaimo\ComposerChangelogs\Composer\Context
      */
-    private $composerRuntime;
+    private $composerContext;
 
     /**
-     * @param \Composer\Composer $composerRuntime
+     * @param \Vaimo\ComposerChangelogs\Composer\Context $composerContext
      */
     public function __construct(
-        \Composer\Composer $composerRuntime
+        \Vaimo\ComposerChangelogs\Composer\Context $composerContext
     ) {
-        $this->composerRuntime = $composerRuntime;
+        $this->composerContext = $composerContext;
     }
 
     public function create()
     {
+        $composer = $this->composerContext->getLocalComposer();
+        
         return new \Vaimo\ComposerChangelogs\Repositories\PackageRepository(
-            $this->composerRuntime->getPackage(),
-            $this->composerRuntime->getRepositoryManager()->getLocalRepository()
+            $composer->getPackage(),
+            $composer->getRepositoryManager()->getLocalRepository()
         );
     }
 }

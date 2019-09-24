@@ -20,11 +20,6 @@ class PackageRepository
     private $packageRepository;
 
     /**
-     * @var \Vaimo\ComposerChangelogs\Resolvers\RealPackageResolver
-     */
-    private $realPackageResolver;
-
-    /**
      * @param \Composer\Package\RootPackageInterface $rootPackage
      * @param \Composer\Repository\WritableRepositoryInterface $packageRepository
      */
@@ -34,8 +29,6 @@ class PackageRepository
     ) {
         $this->rootPackage = $rootPackage;
         $this->packageRepository = $packageRepository;
-
-        $this->realPackageResolver = new \Vaimo\ComposerChangelogs\Resolvers\RealPackageResolver();
     }
 
     public function getByName($query)

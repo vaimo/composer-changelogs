@@ -24,6 +24,11 @@ class Plugin implements
     private $operationAnalyser;
 
     /**
+     * @var string[]
+     */
+    private $capabilitiesConfig = array();
+    
+    /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @param \Composer\Composer $composer
@@ -31,12 +36,23 @@ class Plugin implements
      */
     public function activate(\Composer\Composer $composer, \Composer\IO\IOInterface $cliIO)
     {
-        $pluginBootstrap = new \Vaimo\ComposerChangelogs\Composer\Plugin\Bootstrap($composer);
+        $composerCtxFactory = new \Vaimo\ComposerChangelogs\Factories\ComposerContextFactory($composer);
+        $composerContext = $composerCtxFactory->create();
+
+        $pluginBootstrap = new \Vaimo\ComposerChangelogs\Composer\Plugin\Bootstrap($composerContext);
 
         $pluginBootstrap->preloadPluginClasses();
         
-        $this->changelogManager = new Managers\ChangelogManager($composer);
+        $this->changelogManager = new Managers\ChangelogManager($composerContext);
         $this->operationAnalyser = new Analysers\ComposerOperationAnalyser();
+
+        if (!interface_exists('\Composer\Plugin\Capability\CommandProvider')) {
+            return;
+        }
+
+        $this->capabilitiesConfig = array(
+            'Composer\Plugin\Capability\CommandProvider' => 'Vaimo\ComposerChangelogs\Composer\Plugin\CommandsProvider',
+        );
     }
 
     public static function getSubscribedEvents()
@@ -50,10 +66,7 @@ class Plugin implements
     
     public function getCapabilities()
     {
-        return array(
-            'Composer\Plugin\Capability\CommandProvider' =>
-                'Vaimo\ComposerChangelogs\Composer\Plugin\CommandsProvider'
-        );
+        return $this->capabilitiesConfig;
     }
     
     public function bootstrapImplementation()

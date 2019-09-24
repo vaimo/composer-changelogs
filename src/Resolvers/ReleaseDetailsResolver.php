@@ -7,6 +7,14 @@ namespace Vaimo\ComposerChangelogs\Resolvers;
 
 class ReleaseDetailsResolver
 {
+    /**
+     * @var \Vaimo\ComposerChangelogs\Utils\DataUtils
+     */
+    private $dataUtils;
+
+    /**
+     * @var string[]
+     */
     private $reservedKeys = array(
         'overview',
         'version',
@@ -19,10 +27,15 @@ class ReleaseDetailsResolver
         'time'
     );
     
+    public function __construct()
+    {
+        $this->dataUtils = new \Vaimo\ComposerChangelogs\Utils\DataUtils();
+    }
+
     public function resolveOverview(array $release)
     {
         $overviewLines = isset($release['overview'])
-            ? (is_array($release['overview']) ? $release['overview'] : array($release['overview']))
+            ? $this->dataUtils->assureArrayValue($release['overview'])
             : array();
 
         $reducedLines = explode(PHP_EOL, implode(

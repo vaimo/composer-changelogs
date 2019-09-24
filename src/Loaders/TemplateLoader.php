@@ -32,9 +32,9 @@ class TemplateLoader implements \Mustache_Loader
         
         if (!isset($this->content[$path])) {
             if (!file_exists($path)) {
-                throw new \Exception(
-                    sprintf('Could not find template file %s', $path)
-                );
+                $message = sprintf('Could not find template file %s', $path);
+                
+                throw new \Vaimo\ComposerChangelogs\Exceptions\LoaderException($message);
             }
 
             $this->content[$path] = file_get_contents($path);

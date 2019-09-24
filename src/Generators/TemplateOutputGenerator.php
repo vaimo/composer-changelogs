@@ -9,16 +9,6 @@ use Vaimo\ComposerChangelogs\Loaders\TemplateLoader;
 
 class TemplateOutputGenerator implements \Vaimo\ComposerChangelogs\Interfaces\TemplateOutputGeneratorInterface
 {
-    /**
-     * @var TemplateLoader
-     */
-    private $templateLoader;
-
-    public function __construct()
-    {
-        $this->templateLoader = new TemplateLoader();
-    }
-
     public function generateOutput(array $data, array $templatePaths, array $escapedValues = array())
     {
         $options = array(

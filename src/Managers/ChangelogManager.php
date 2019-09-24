@@ -10,9 +10,9 @@ use Vaimo\ComposerChangelogs\Factories;
 class ChangelogManager
 {
     /**
-     * @var \Composer\Composer
+     * @var \Vaimo\ComposerChangelogs\Composer\Context
      */
-    private $composerRuntime;
+    private $composerContext;
 
     /**
      * @var Factories\Changelog\ConfigResolverFactory
@@ -20,15 +20,15 @@ class ChangelogManager
     private $confResolverFactory;
     
     /**
-     * @param \Composer\Composer $composerRuntime
+     * @param \Vaimo\ComposerChangelogs\Composer\Context $composerContext
      */
     public function __construct(
-        \Composer\Composer $composerRuntime
+        \Vaimo\ComposerChangelogs\Composer\Context $composerContext
     ) {
-        $this->composerRuntime = $composerRuntime;
+        $this->composerContext = $composerContext;
 
         $this->confResolverFactory = new Factories\Changelog\ConfigResolverFactory(
-            $this->composerRuntime
+            $this->composerContext
         );
     }
     
@@ -36,9 +36,11 @@ class ChangelogManager
     {
         $configResolver = $this->confResolverFactory->create();
 
-        $package = $this->composerRuntime->getPackage();
+        $composer = $this->composerContext->getLocalComposer();
+        
+        $package = $composer->getPackage();
 
-        $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($this->composerRuntime);
+        $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($this->composerContext);
         $chLogRepo = $chLogRepoFactory->create(false);
 
         $changelog = $chLogRepo->getByPackageName($package->getName());
@@ -48,7 +50,7 @@ class ChangelogManager
         }
 
         $infoResolver = new \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver(
-            $this->composerRuntime->getInstallationManager()
+            $composer->getInstallationManager()
         );
 
         $urlResolver = new \Vaimo\ComposerChangelogs\Resolvers\Url\RemoteSourceResolver($infoResolver);

@@ -29,6 +29,7 @@ class ChangelogLoader
         \Vaimo\ComposerChangelogs\Resolvers\ChangelogConfigResolver $configResolver
     ) {
         $this->configResolver = $configResolver;
+        
         $this->jsonFileReader = new \Vaimo\ComposerChangelogs\Readers\JsonFileReader();
     }
 

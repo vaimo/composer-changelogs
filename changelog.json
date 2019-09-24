@@ -4,6 +4,12 @@
         "possible to generate change-logs in other formats as well (when needed) and to do automatic releases based on",
         "added change-log records. More on how to use it: https://github.com/vaimo/composer-changelogs"
     ],
+    "0.15.7": {
+        "fix": [
+            "allow the plugin to be installed as dependency to globally installed package; previously caused every composer call to crash with class declaration conflict",
+            "allow usage on older Composer version (before plugins could provide new composer commands)"
+        ]
+    },
     "0.15.6": {
         "fix": [
             "changelog not properly resolved from Compose package repository when alias pacakges encountered"

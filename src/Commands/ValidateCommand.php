@@ -37,7 +37,13 @@ class ValidateCommand extends \Composer\Command\BaseCommand
         $packageName = $input->getArgument('name');
         $fromSource = $input->getOption('from-source');
 
-        $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($this->getComposer(), $output);
+        $composerCtxFactory = new \Vaimo\ComposerChangelogs\Factories\ComposerContextFactory(
+            $this->getComposer()
+        );
+
+        $composerContext = $composerCtxFactory->create();
+        
+        $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($composerContext, $output);
         $chLogRepo = $chLogRepoFactory->create($fromSource);
 
         $changelog = $chLogRepo->getByPackageName(

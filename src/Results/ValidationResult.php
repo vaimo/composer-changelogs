@@ -15,7 +15,7 @@ class ValidationResult
     /**
      * @var string[]
      */
-    private $messages = array();
+    private $messages;
 
     /**
      * @param bool $result

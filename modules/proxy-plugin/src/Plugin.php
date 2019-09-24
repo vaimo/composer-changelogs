@@ -32,25 +32,30 @@ class Plugin extends \Vaimo\ComposerChangelogs\Plugin
         
         include $autoloadFile;
 
-        $this->bootstrapFileTree($composer, $namespacePrefix);
+        $composerContextFactory = new \Vaimo\ComposerChangelogs\Factories\ComposerContextFactory($composer);
+        $composerContext = $composerContextFactory->create();
+        
+        $this->bootstrapFileTree($composerContext, $namespacePrefix);
 
         parent::activate($composer, $io);
     }
 
-    private function bootstrapFileTree(\Composer\Composer $composer, $namespacePrefix)
+    private function bootstrapFileTree(\Vaimo\ComposerChangelogs\Composer\Context $composerContext, $namespacePrefix)
     {
-        $composerConfig = $composer->getConfig();
-        $repositoryManager = $composer->getRepositoryManager();
+        $composer = $composerContext->getLocalComposer();
         
-        $localRepository = $repositoryManager->getLocalRepository();
-
+        $composerConfig = $composer->getConfig();
+        
         $vendorDir = $composerConfig->get(\Vaimo\ComposerChangelogs\Composer\Config::VENDOR_DIR);
 
         $packageResolver = new \Vaimo\ComposerChangelogs\Resolvers\PluginPackageResolver(
             [$composer->getPackage()]
         );
         
-        $pluginPackage = $packageResolver->resolveForNamespace($localRepository, $namespacePrefix);
+        $pluginPackage = $packageResolver->resolveForNamespace(
+            $composerContext->getActivePackages(), 
+            $namespacePrefix
+        );
 
         $this->createSymlink(
             realpath('.'),

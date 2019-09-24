@@ -5,8 +5,6 @@
  */
 namespace Vaimo\ComposerChangelogs\Resolvers;
 
-use Composer\Repository\WritableRepositoryInterface;
-
 class PluginPackageResolver
 {
     /**
@@ -31,16 +29,16 @@ class PluginPackageResolver
     }
 
     /**
-     * @param WritableRepositoryInterface $repository
+     * @param \Composer\Package\PackageInterface[] $packages
      * @param string $namespace
      * @return \Composer\Package\PackageInterface
      * @throws \Exception
      */
-    public function resolveForNamespace(WritableRepositoryInterface $repository, $namespace)
+    public function resolveForNamespace(array $packages, $namespace)
     {
         $packages = array_merge(
             $this->additionalPackages,
-            $repository->getCanonicalPackages()
+            array_values($packages)
         );
         
         foreach ($packages as $package) {

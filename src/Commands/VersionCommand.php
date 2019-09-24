@@ -79,9 +79,15 @@ class VersionCommand extends \Composer\Command\BaseCommand
 
         $showUpcoming = $input->getOption('upcoming');
         $showTip = $input->getOption('tip');
+
+        $composerCtxFactory = new \Vaimo\ComposerChangelogs\Factories\ComposerContextFactory(
+            $this->getComposer()
+        );
+
+        $composerContext = $composerCtxFactory->create();
         
         $chLogRepoFactory = new Factories\ChangelogRepositoryFactory(
-            $this->getComposer(),
+            $composerContext,
             $output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL ? $output : null
         );
         
@@ -115,8 +121,8 @@ class VersionCommand extends \Composer\Command\BaseCommand
 
         $version = $versionResolver->resolveValidVersion($version);
             
-        if ($format == 'regex') {
-            $version = preg_quote($version);
+        if ($format === 'regex') {
+            $version = preg_quote($version, '/');
         }
         
         if ($segmentsCount) {
