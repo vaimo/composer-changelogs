@@ -1,0 +1,219 @@
+#!/usr/bin/env bash
+: <<'COPYRIGHT'
+ Copyright (c) Vaimo Group. All rights reserved.
+ See LICENSE_VAIMO.txt for license details.
+COPYRIGHT
+
+script_path=${BASH_SOURCE[0]}
+script_root=$(dirname $(test -L ${script_path} && readlink -f ${script_path} || echo ${script_path}))
+source ${script_root}/lib/output.sh
+
+package="vaimo/composer-changelogs-local"
+
+if [ "${1}" != "current" ] ; then
+    versions="5.3.9 5.4.45 5.5.38 5.6.40 7.0.33 7.1.32 7.2.22 7.3.25 7.4.13 8.0.0"
+else
+    versions=$(php -r 'echo phpversion();'|cut -d '-' -f1)
+fi
+
+bin/bootstrap-test-env
+
+analyse_deps()
+{
+    local root_package=${1}
+    local config_root=${2}
+
+    local whitelist_root="${config_root}/phpcs/whitelist"
+
+    local has_errors=
+    
+    for dependency in $(find vendor -mindepth 2 -maxdepth 2 -type d|sed 's|[^/]*\/||') ; do
+        if ! is_production_dependency "${root_package}" "${dependency}" ; then
+            continue
+        fi
+
+        _info "${dependency}" 
+    
+        if validate_dependency "${dependency}" "${whitelist_root}" ; then
+            continue
+        fi
+        
+        has_errors=1
+    done
+    
+    if [ "${has_errors}" == "1" ] ; then
+        exit 1
+    fi
+}
+
+validate_dependency()
+{
+    local dependency=${1}
+    local whitelist_root=${2}
+    
+    local src_paths=$(get_autoload_paths "${dependency}")
+
+    local code=$(echo ${dependency}|sed 's/\//-/g')
+
+    local report_file=report-${code}.csv
+    
+    if vendor/bin/phpcs --report=full --report-csv=report-${code}.csv -p ${src_paths} ; then
+        return 0
+    fi
+    
+    local full_path=$(cd vendor/${dependency} &>/dev/null && pwd)
+    local whitelist_path="${whitelist_root}/${code}"
+    
+    local whitelists=
+    
+    if [ -d ${whitelist_path} ] ; then
+        whitelists=$(find ${whitelist_path} -type f)
+    elif [ -f ${whitelist_path} ] ; then
+        whitelists="${whitelist_path}"
+    fi
+    
+    if [ "${whitelists}" == "" ] ; then
+        return 1
+    fi
+    
+    local is_suitable_dependency=
+
+    local original_ifs=${IFS}
+    IFS=$'\n'
+    
+    local report_lines=$(cat ${report_file}|grep '^"'|cut -d':' -f2-)
+    
+    for whitelist in ${whitelists} ; do    
+        local whitelist_lines=$(cat ${whitelist})
+        
+        is_suitable_dependency=1
+            
+        for line in ${report_lines} ; do        
+            local file=$(echo ${line}|cut -d',' -f1|tr -d '"'|sed 's|'${full_path}'||g'|sed 's/^\/*//g')
+            local row=$(echo ${line}|cut -d',' -f2)
+            local col=$(echo ${line}|cut -d',' -f3)
+            local issue=$(echo ${line}|cut -d',' -f6)
+
+            local footprint="${file},${row},${col},${issue}"
+            
+            local whitelist_match=$(echo "${whitelist_lines}"|grep "${footprint}")
+            
+            if [ "${whitelist_match}" == "" ] ; then
+                is_suitable_dependency=
+                    
+                break
+            fi
+        done
+        
+        if [ "${is_suitable_dependency}" == "1" ] ; then
+            _warning "All encountered issues have been explicitly whitelisted"
+
+            return 0            
+        fi
+    done
+        
+    IFS=${original_ifs}
+    
+    return 1
+}
+
+get_autoload_paths() 
+{
+    local package_path=${1}
+    
+    local package_root=$(cd "vendor/${dependency}" &>/dev/null && pwd)
+
+    local autoload_config_extractor=$(cat <<SCRIPT
+        \$config = json_decode(
+            file_get_contents('${package_root}/composer.json'), 
+            true
+        ); 
+                
+        echo implode(\PHP_EOL, \$config['autoload']['psr-4']);
+SCRIPT
+)
+    local src_paths=
+        
+    for src_path in $(php -r "${autoload_config_extractor}") ; do
+        src_paths=",${package_root}/${src_path}"
+    done
+    
+    echo ${src_paths}|sed 's/^,*//g'
+}
+
+is_production_dependency()
+{
+    local root_name=${1}
+    local dependency=${2}
+    
+    local items="${dependency}"
+
+    local original_ifs=${IFS}
+    IFS=$'\n'
+
+    for item in ${items} ; do
+        if [ "${item}" == "" ] ; then
+            continue
+        fi
+        
+        local results=$(composer why ${item}|grep -v 'for development'|cut -d' ' -f1)
+        
+        if [ "${results}" == "" ] ; then
+            continue
+        fi
+        
+        for result in ${results} ; do
+            if [ "${result}" != "${root_name}" ] ; then
+                items="\n${results}"
+                
+                continue
+            fi
+
+             return 0
+        done       
+    done
+    
+    IFS=${original_ifs}
+
+    return 1
+}
+    
+(
+    package_root=$(pwd)
+    
+    cd test &>/dev/null
+        
+    sandbox_root=$(pwd)
+        
+    cd dependencies &>/dev/null
+        
+    if [ ! -d modules ] ; then
+        ln -s ${sandbox_root}/modules $(pwd)
+    fi
+
+    for version in ${versions} ; do
+        rm phpcs.xml 2>/dev/null
+        
+        cp ${package_root}/.config/phpcs/vendor.xml $(pwd)/phpcs.xml
+
+        version_mm=$(echo ${version}|cut -d'.' -f1-2)
+
+        sed -i.org 's|_VERSION_|'${version_mm}'|g' $(pwd)/phpcs.xml
+        
+        _line '=' 80
+        _title "CHECK VIABILITY WITH" "PHP ${version_mm}" "code compatibility of required dependencies"
+        _line '=' 80
+
+        composer config platform.php ${version}
+
+        if ! composer update --ansi ; then
+            exit 1
+        fi
+        
+        vendor/bin/phpcs --config-set installed_paths 'vendor/phpcompatibility/php-compatibility'
+        vendor/bin/phpcs --config-set error_severity 1
+        vendor/bin/phpcs --config-set default_standard 'LOCAL'
+        
+        analyse_deps "${package}" "${package_root}/.config"
+    done
+)

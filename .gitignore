@@ -3,4 +3,10 @@ vendor/
 test/modules/composer-patches/
 phpcs.xml
 report-*
+test/**/composer.lock
+test/installations/**/modules
+test/installations/**/patches
+test/installations/**/patches.json
+test/dependencies/modules
+test/modules
 .history
