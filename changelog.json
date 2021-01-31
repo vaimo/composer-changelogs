@@ -4,6 +4,14 @@
         "possible to generate change-logs in other formats as well (when needed) and to do automatic releases based on",
         "added change-log records. More on how to use it: https://github.com/vaimo/composer-changelogs"
     ],
+    "0.16.1": {
+        "maintenance": [
+            "root package installation fixes where the dependencies targeted private Packagist index",
+            "updates to README on output generator types and where to find the templates",
+            "fix to dev scripts not running as expected on Mac",
+            "code normalizer script not working as expected"
+        ]
+    },
     "0.16.0": {
         "feature": [
             "new command added to allow seamlessly set up the features that the plugin provides: changelog:bootstrap"

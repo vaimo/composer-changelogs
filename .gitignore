@@ -3,3 +3,4 @@ vendor/
 test/modules/composer-patches/
 phpcs.xml
 report-*
+.history

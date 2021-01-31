@@ -15,6 +15,8 @@ It comes with several commands that aid the developer on setting up automatic pa
 
 More information on recent changes [HERE](./CHANGELOG.md) (which also serves as an example of how MD formatting for changelog.json looks like).
 
+Note that the changelog output will only be generated when you have configured output generators for any of the output formats.
+
 ## Configuration: overview
 
 Environment variables can be defined as key value pairs in the project's composer.json
@@ -185,9 +187,9 @@ configuration within the composer.json of the package:
 }
 ```
 
-## Configuration: generators
+## Output: generators
 
-This example is based on making Sphinx documentation generation available
+This example is based on making Sphinx documentation generation available.
 
 ```json
 {
@@ -202,7 +204,9 @@ This example is based on making Sphinx documentation generation available
 }
 ```
 
-## Configuration: generator templates
+Available types: html, md, rst, slack, sphinx, txt, yml
+
+## Output: templates
 
 The plugin ships with built-in templates for each of the generators, which can be configured by defining 
 generators in an extended format.
@@ -252,6 +256,8 @@ The reserved names for partials in this plugin are:
 
 * root - main entry-point for the renderer
 * release - used by default to output certain changelog group/version and it's details AND by changelog:info
+
+The base files for each template can be found from [HERE](https://github.com/vaimo/composer-changelogs/tree/master/views).
 
 ## Commands
 
