@@ -59,7 +59,6 @@
         "code:deps": "Make sure that dependencies have code that will actually work with platform requirements defined"
     },
     "scripts": {
-        "test": "vendor/bin/phpunit",
         "code:analyse": "bin/analyse",
         "code:normalise": "bin/normalise",
         "code:deps": "bin/analyse-vendor",

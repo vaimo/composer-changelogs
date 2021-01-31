@@ -1,1 +1,2 @@
 Not an issue at this point: src/Mustache/Tokenizer.php,97,64,PHPCompatibility.IniDirectives.RemovedIniDirectives.mbstring_func_overloadDeprecated
+Not an issue at this point: src/Mustache/Tokenizer.php,102,64,PHPCompatibility.IniDirectives.RemovedIniDirectives.mbstring_func_overloadDeprecated
