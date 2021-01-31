@@ -61,7 +61,7 @@
     "scripts": {
         "code:analyse": "bin/analyse",
         "code:normalise": "bin/normalise",
-        "code:deps": "bin/analyse-vendor",
+        "code:deps": "bin/analyse-dependencies",
         "post-install-cmd": "bin/bootstrap",
         "post-update-cmd" : "bin/bootstrap"
     },
