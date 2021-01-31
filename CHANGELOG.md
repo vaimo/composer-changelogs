@@ -2,6 +2,17 @@
 
 _This file has been auto-generated from the contents of changelog.json_
 
+## 0.16.1
+
+### Maintenance
+
+* root package installation fixes where the dependencies targeted private Packagist index
+* updates to README on output generator types and where to find the templates
+* fix to dev scripts not running as expected on Mac
+* code normalizer script not working as expected
+
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.16.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.16.0...0.16.1)
+
 ## 0.16.0 (2019-09-24)
 
 ### Feature

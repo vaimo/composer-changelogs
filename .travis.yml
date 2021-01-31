@@ -27,4 +27,4 @@ install:
 
 script:
   - "composer code:analyse"
-  - "composer code:deps"
+  - "composer code:deps current"

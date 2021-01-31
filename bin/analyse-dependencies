@@ -52,7 +52,6 @@ validate_dependency()
     local whitelist_root=${2}
     
     local src_paths=$(get_autoload_paths "${dependency}")
-
     local code=$(echo ${dependency}|sed 's/\//-/g')
 
     local report_file=report-${code}.csv
@@ -129,7 +128,13 @@ get_autoload_paths()
             true
         ); 
                 
-        echo implode(\PHP_EOL, \$config['autoload']['psr-4']);
+        if (isset(\$config['autoload']['psr-4'])) {
+            echo implode(\PHP_EOL, \$config['autoload']['psr-4']);
+        }
+
+        if (isset(\$config['autoload']['psr-0'])) {
+            echo implode(\PHP_EOL, \$config['autoload']['psr-0']);
+        }
 SCRIPT
 )
     local src_paths=
@@ -199,6 +204,7 @@ is_production_dependency()
         version_mm=$(echo ${version}|cut -d'.' -f1-2)
 
         sed -i.org 's|_VERSION_|'${version_mm}'|g' $(pwd)/phpcs.xml
+        rm $(pwd)/phpcs.xml.org
         
         _line '=' 80
         _title "CHECK VIABILITY WITH" "PHP ${version_mm}" "code compatibility of required dependencies"
