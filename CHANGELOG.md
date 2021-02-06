@@ -2,7 +2,7 @@
 
 _This file has been auto-generated from the contents of changelog.json_
 
-## 0.16.1
+## 0.16.1 (2021-01-31)
 
 ### Maintenance
 

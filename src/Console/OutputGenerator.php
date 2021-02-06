@@ -34,10 +34,7 @@ class OutputGenerator
             array_filter((array)$exception->getExtraInfo())
         );
         
-        array_map(
-            array($this->output, 'writeln'),
-            $messages
-        );
+        array_walk($messages, array($this->output, 'writeln'));
     }
     
     public function writeLines(array $lines)
@@ -46,6 +43,6 @@ class OutputGenerator
             return;
         }
         
-        array_map(array($this->output, 'writeln'), $lines);
+        array_walk($lines, array($this->output, 'writeln'));
     }
 }

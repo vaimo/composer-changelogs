@@ -75,17 +75,17 @@ class ChangelogConfigResolver
         $dataUtils = $this->dataUtils;
         $pathUtils = $this->pathUtils;
 
-        return array_filter(
-            array_map(function ($config) use ($installPath, $dataUtils, $pathUtils) {
-                $path = is_array($config) ? $dataUtils->extractValue($config, 'path') : $config;
+        $allTargets = array_map(function ($config) use ($installPath, $dataUtils, $pathUtils) {
+            $path = is_array($config) ? $dataUtils->extractValue($config, 'path') : $config;
 
-                if (!$path) {
-                    return false;
-                }
+            if (!$path) {
+                return false;
+            }
 
-                return $pathUtils->composePath($installPath, $path);
-            }, $config['output'])
-        );
+            return $pathUtils->composePath($installPath, $path);
+        }, $config['output']);
+
+        return array_filter($allTargets);
     }
     
     public function resolveOutputEscapersForType($type)
