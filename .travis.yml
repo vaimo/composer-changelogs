@@ -14,5 +14,4 @@ install:
   - composer install
 
 script:
-  - "composer code:analyse"
-  - "composer code:deps current"
+  - "composer ci:build"
