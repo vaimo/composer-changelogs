@@ -4,6 +4,14 @@
         "possible to generate change-logs in other formats as well (when needed) and to do automatic releases based on",
         "added change-log records. More on how to use it: https://github.com/vaimo/composer-changelogs"
     ],
+    "DEV-0.17.0": {
+        "feature": [
+            "support for Composer 2"
+        ],
+        "maintenance": [
+            "introduce ready-to-use development environment setup for quicker developer onboarding"
+        ]
+    },
     "0.16.1": {
         "maintenance": [
             "root package installation fixes where the dependencies targeted private Packagist index",
