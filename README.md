@@ -169,11 +169,12 @@ composer changelog:generate --url=false
 
 ## Feature: release dates
 
-The module will try to resolve the release date of certain version from the package's repository when it's
-available. The available options to be used in output templates are: {{date}}, {{time}}.
+The module will try to resolve the release date of certain version from the package 
+repository when it's available. The available options to be used in output templates 
+are: {{date}}, {{time}}.
 
-This feature is enabled by default, but can be enabled by defining the following under changelog 
-configuration within the composer.json of the package: 
+This feature is enabled by default, but can be enabled by defining the following under 
+changelog configuration within the composer.json of the package: 
 
 ```json
 {

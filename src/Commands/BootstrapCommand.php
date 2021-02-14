@@ -41,7 +41,7 @@ class BootstrapCommand extends \Composer\Command\BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $packageName = $input->getArgument('name');
-        $type = $input->getOption('type');
+        $format = $input->getOption('format');
 
         $composerCtxFactory = new \Vaimo\ComposerChangelogs\Factories\ComposerContextFactory($this->getComposer());
         $composerCtx = $composerCtxFactory->create();
@@ -77,10 +77,9 @@ class BootstrapCommand extends \Composer\Command\BaseCommand
         }
         
         try {
-            $packageManager->bootstrapChangelogGeneration($package, $type);
+            $packageManager->bootstrapChangelogGeneration($package, $format);
         } catch (\Vaimo\ComposerChangelogs\Exceptions\UpdaterException $exception) {
             $message = sprintf('<error>%s</error>', $exception->getMessage());
-            
             $output->writeln($message);
             
             return 1;

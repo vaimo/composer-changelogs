@@ -86,4 +86,18 @@ class Plugin implements
 
         $this->changelogManager = null;
     }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function deactivate(\Composer\Composer $composer, \Composer\IO\IOInterface $appIO)
+    {
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function uninstall(\Composer\Composer $composer, \Composer\IO\IOInterface $appIO)
+    {
+    }
 }

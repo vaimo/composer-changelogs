@@ -163,10 +163,10 @@ class InfoCommand extends \Composer\Command\BaseCommand
 
             $generalInfo = $detailsResolver->resolveOverview($details);
 
-            $groups = array(
+            $groups = array_filter(array(
                 'overview' => $generalInfo['overview'],
                 'summary' => sprintf('Includes: %s', implode(', ', $summary))
-            );
+            ));
         } elseif ($generalInfo['overview']) {
             $groups = array_merge(
                 $groups,
