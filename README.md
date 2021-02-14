@@ -308,8 +308,9 @@ any side-effects.
 
 ## Development
 
-The modules ships with a dedicated development branch `devbox` which contains configuration for spinning
-up a dedicated development environment that can be used together with VSCode's [Remote Containers](https://code.visualstudio.com/docs/remote/containers).
+The modules ships with a dedicated development branch [devbox](https://github.com/vaimo/composer-changelogs/tree/devbox) 
+which contains configuration for spinning up a dedicated development environment that can be used together 
+with VSCode's [Remote Containers](https://code.visualstudio.com/docs/remote/containers).
 
 Note that there is no strict requirement to use such a setup, but it's what was used to author the plugin
 and if you want to be sure that you have everything up and running without hick-ups, you can just as well
