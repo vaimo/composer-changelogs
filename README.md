@@ -323,8 +323,8 @@ System requirements:
 
 Setup:
 
-1. git checkout devbox .devcontainer Dockerfile docker-compose.yml mutagen.yml
-1. git reset .devcontainer Dockerfile docker-compose.yml mutagen.yml
+1. `git checkout devbox .devcontainer Dockerfile docker-compose.yml mutagen.yml`
+1. `git reset .devcontainer Dockerfile docker-compose.yml mutagen.yml`
 1. [open the project with VSCode that has Remote Container extension installed]
 1. [use the 'Reopen in Container' option that is given in a prompt that opens]
 1. Use 'Terminal > New Terminal' to open a terminal within the IDE.
