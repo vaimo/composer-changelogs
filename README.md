@@ -305,3 +305,30 @@ classes from the new version.
 
 It is safe to ignore errors like these when running the `composer update` command again does not produce 
 any side-effects.
+
+## Development
+
+The modules ships with a dedicated development branch `devbox` which contains configuration for spinning
+up a dedicated development environment that can be used together with VSCode's [Remote Containers](https://code.visualstudio.com/docs/remote/containers).
+
+Note that there is no strict requirement to use such a setup, but it's what was used to author the plugin
+and if you want to be sure that you have everything up and running without hick-ups, you can just as well
+take the shortcut.
+
+System requirements:
+
+1. Have Docker installed.
+1. Have VSCode installed with 'Remote - Containers' extension.
+1. Have Mutagen installed (used for selecting syncing).
+
+Setup:
+
+1. git checkout devbox .devcontainer Dockerfile docker-compose.yml mutagen.yml
+1. git reset .devcontainer Dockerfile docker-compose.yml mutagen.yml
+1. [open the project with VSCode that has Remote Container extension installed]
+1. [use the 'Reopen in Container' option that is given in a prompt that opens]
+1. Use 'Terminal > New Terminal' to open a terminal within the IDE.
+1. [from the terminal you can install the packages, trigger debugger, etc].
+
+Note this setup does come with a pre-bootstrapped xDebugger, you just have to use the Run menu 
+in VSCode and start listening and trigger a command via the terminal.
