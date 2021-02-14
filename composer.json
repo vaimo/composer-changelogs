@@ -53,17 +53,19 @@
         }
     },
     "scripts-descriptions": {
-        "test": "Run tests",
-        "code:analyse": "Run static code analysis for the source code",
-        "code:normalise": "Apply automatic fixes to the code based on the static code analysis (where applicable)",
+        "code:test": "Run tests (which currently just means that all the commands are executed and expected to succeed)",
+        "code:lint": "Run static code analysis for the source code",
+        "code:fix": "Apply automatic fixes to the code based on the static code analysis (where applicable)",
         "code:deps": "Make sure that dependencies have code that will actually work with platform requirements defined"
     },
     "scripts": {
-        "code:analyse": "bin/analyse",
-        "code:normalise": "bin/normalise",
+        "code:test": "composer changelog:generate && composer changelog:info && composer changelog:validate && composer changelog:version",
+        "code:lint": "bin/analyse",
+        "code:fix": "bin/normalise",
         "code:deps": "bin/analyse-dependencies",
         "post-install-cmd": "bin/bootstrap",
-        "post-update-cmd" : "bin/bootstrap"
+        "post-update-cmd" : "bin/bootstrap",
+        "ci:build": "composer code:lint && composer code:deps && composer code:test"
     },
     "autoload": {
         "psr-4": {
