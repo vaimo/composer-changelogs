@@ -11,3 +11,7 @@ test/dependencies/modules
 test/modules
 *.org
 .history
+.devcontainer
+Dockerfile
+mutagen*
+docker-compose.yml
