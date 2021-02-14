@@ -6,12 +6,12 @@ _This file has been auto-generated from the contents of changelog.json_
 
 ### Feature
 
-* support for Composer 2
+* add support for Composer 2 [issues/3]
 
 ### Fix
 
 * remove 'overview' from output when there is none (in info with brief mode)
-* fix bootstrap command that never worked (throwed: The 'type' option does not exist.)
+* fix bootstrap command that never worked (error: The 'type' option does not exist.)
 
 ### Maintenance
 
