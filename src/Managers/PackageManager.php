@@ -43,8 +43,6 @@ class PackageManager
         $installPath = $packageInfoResolver->getInstallPath($package);
         $config = $configExtractor->getPackageFullConfig($package);
 
-        throw new \Vaimo\ComposerChangelogs\Exceptions\UpdaterException('boop');
-
         $paths = array(
             'md' => 'CHANGELOG.md',
             'sphinx' => 'docs/changelog.rst',

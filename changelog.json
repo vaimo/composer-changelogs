@@ -4,6 +4,14 @@
         "possible to generate change-logs in other formats as well (when needed) and to do automatic releases based on",
         "added change-log records. More on how to use it: https://github.com/vaimo/composer-changelogs"
     ],
+    "0.17.1": {
+        "fix": [
+            "bootstrap command throwing an error in every possible use case, rendering the command unusable"
+        ],
+        "maintenance": [
+            "update CI job to have one job per Composer MAJOR"
+        ]
+    },
     "0.17.0": {
         "feature": [
             "add support for Composer 2 [issues/3]"
