@@ -2,6 +2,18 @@
 
 _This file has been auto-generated from the contents of changelog.json_
 
+## 0.17.1 (2021-02-24)
+
+### Fix
+
+* bootstrap command throwing an error in every possible use case, rendering the command unusable
+
+### Maintenance
+
+* update CI job to have one job per Composer MAJOR
+
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.17.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.17.0...0.17.1)
+
 ## 0.17.0 (2021-02-14)
 
 ### Feature
