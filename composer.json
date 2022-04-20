@@ -9,12 +9,13 @@
         "composer-plugin-api": "^1.0 || ^2.0",
         "mustache/mustache": "^v2.12.0",
         "seld/jsonlint": "^1.7.1",
-        "camspiers/json-pretty": "^1.0.2"
+        "camspiers/json-pretty": "^1.0.2",
+        "symfony/process": ">=4.2"
     },
     "require-dev": {
         "composer/composer": "^1.0 || ^2.0",
         "vaimo/composer-changelogs-proxy": "1.0.0",
-        "squizlabs/php_codesniffer": "^2.9.2",
+        "squizlabs/php_codesniffer": "^3.6.2",
         "phpcompatibility/php-compatibility": "^9.1.1",
         "phpmd/phpmd": "^2.6.0",
         "phpunit/phpunit": "^4.8.36",
@@ -22,7 +23,10 @@
     },
     "config": {
         "platform": {
-            "php": "5.3.9"
+            "php": "7.4.13"
+        },
+        "allow-plugins": {
+            "vaimo/composer-changelogs-proxy": true
         }
     },
     "support": {

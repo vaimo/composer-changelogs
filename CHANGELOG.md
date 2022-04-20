@@ -2,6 +2,14 @@
 
 _This file has been auto-generated from the contents of changelog.json_
 
+## 1.0.0
+
+### Feature
+
+* drop old `symfony/process` support [issues/6]
+
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/1.0.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.17.1...1.0.0)
+
 ## 0.17.1 (2021-02-24)
 
 ### Fix
