@@ -6,7 +6,7 @@
     ],
     "1.0.0": {
         "feature": [
-            "drop old `symfony/process` support [issues/6]"
+            "drop PHP <7.4 and symfony/process <4.2 support [issues/6]"
         ]
     },
     "0.17.1": {

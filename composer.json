@@ -4,7 +4,7 @@
     "license": "MIT",
     "description": "Provide information about package changes based on changelog files that are bundled with releases; provide tools for generating documentation files from changelog sources",
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=7.4.0",
         "ext-json": "*",
         "composer-plugin-api": "^1.0 || ^2.0",
         "mustache/mustache": "^v2.12.0",
