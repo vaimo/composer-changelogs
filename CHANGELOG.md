@@ -6,7 +6,7 @@ _This file has been auto-generated from the contents of changelog.json_
 
 ### Feature
 
-* drop old `symfony/process` support [issues/6]
+* drop PHP <7.4 and symfony/process <4.2 support [issues/6]
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/1.0.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.17.1...1.0.0)
 
