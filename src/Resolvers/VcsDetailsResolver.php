@@ -36,7 +36,7 @@ class VcsDetailsResolver
      */
     private $dateQueryTemplates = array(
         '.hg' => 'hg log --rev \'{version}\' --template=\'{date|isodate}\'',
-        '.git' => 'git log {version}~1..{version} --simplify-by-decoration --pretty="format:%ai"',
+        '.git' => 'git log {version}~1..{version} --simplify-by-decoration --pretty=format:"%ai"',
     );
 
     private $headQueryTemplates = array(
@@ -115,8 +115,8 @@ class VcsDetailsResolver
             if (!$result) {
                 return array();
             }
-            
-            $segments = explode(' ', trim($result));
+
+            $segments = explode(' ', trim($result, " \t\n\r\0\x0B\""));
 
             return array(
                 'date' => array_shift($segments),

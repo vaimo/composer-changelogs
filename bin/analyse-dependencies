@@ -11,7 +11,7 @@ source ${script_root}/lib/output.sh
 package="vaimo/composer-changelogs-local"
 
 if [ "${1}" != "current" ] ; then
-    versions="5.3.9 5.4.45 5.5.38 5.6.40 7.0.33 7.1.32 7.2.22 7.3.25 7.4.13 8.0.0"
+    versions="7.4.13 8.0.0 8.1.1"
 else
     versions=$(php -r 'echo phpversion();'|cut -d '-' -f1)
 fi
