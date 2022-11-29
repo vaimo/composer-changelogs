@@ -11,7 +11,7 @@ class VcsDetailsResolver
      * @var \Vaimo\ComposerChangelogs\Utils\SystemUtils
      */
     private $systemUtils;
-    
+
     /**
      * @var \Vaimo\ComposerChangelogs\Utils\PathUtils
      */
@@ -61,16 +61,16 @@ class VcsDetailsResolver
 
             $result = $this->systemUtils->getCommandStdOut($command, $repositoryRoot, '0');
         }
-        
+
         return trim($result);
     }
-    
+
     public function resolveReleaseLinks($repositoryUrl, $version, $lastVersion = '')
     {
         if (!$repositoryUrl) {
             return array();
         }
-        
+
         $urlComponents = parse_url($repositoryUrl);
 
         if (!isset($urlComponents['host'])) {
@@ -82,7 +82,7 @@ class VcsDetailsResolver
         if (!isset($this->linkTemplates[$hostCode])) {
             return array();
         }
-        
+
         $data = array();
 
         foreach ($this->linkTemplates[$hostCode] as $code => $template) {
@@ -95,22 +95,26 @@ class VcsDetailsResolver
 
         return $data;
     }
-    
+
     public function resolveReleaseTime($repositoryRoot, $version)
     {
         if (!$repositoryRoot) {
             return array();
         }
-        
+
         foreach ($this->dateQueryTemplates as $folder => $commandTemplate) {
             if (!file_exists($this->pathUtils->composePath($repositoryRoot, $folder))) {
                 continue;
             }
 
-            $result = $this->systemUtils->getCommandStdOut(
-                str_replace('{version}', $version, $commandTemplate),
-                $repositoryRoot
-            );
+            try {
+                $result = $this->systemUtils->getCommandStdOut(
+                    str_replace('{version}', $version, $commandTemplate),
+                    $repositoryRoot
+                );
+            } catch (\Exception $exception) {
+                return array();
+            }
 
             if (!$result) {
                 return array();
@@ -123,7 +127,7 @@ class VcsDetailsResolver
                 'time' => array_shift($segments)
             );
         }
-        
+
         return array();
     }
 }
