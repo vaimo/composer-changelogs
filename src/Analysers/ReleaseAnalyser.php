@@ -15,7 +15,7 @@ class ReleaseAnalyser
     /**
      * @var string[]
      */
-    private $mainBranches = array('master', 'default');
+    private $mainBranches = array('main', 'master', 'default');
         
     public function __construct()
     {
