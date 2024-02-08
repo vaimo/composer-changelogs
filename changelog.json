@@ -4,7 +4,7 @@
         "possible to generate change-logs in other formats as well (when needed) and to do automatic releases based on",
         "added change-log records. More on how to use it: https://github.com/vaimo/composer-changelogs"
     ],
-    "1.0.1-dev": {
+    "1.0.1": {
         "fix": [
             "branch named 'main' is not considered as main branch for changes to happen"
         ]

@@ -16,7 +16,7 @@ class ReleaseAnalyser
      * @var string[]
      */
     private $mainBranches = array('main', 'master', 'default');
-        
+
     public function __construct()
     {
         $this->detailsResolver = new \Vaimo\ComposerChangelogs\Resolvers\ReleaseDetailsResolver();

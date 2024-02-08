@@ -2,7 +2,15 @@
 
 _This file has been auto-generated from the contents of changelog.json_
 
-## 1.0.0
+## 1.0.1
+
+### Fix
+
+* branch named 'main' is not considered as main branch for changes to happen
+
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/1.0.1) [diff](https://github.com/vaimo/composer-changelogs/compare/1.0.0...1.0.1)
+
+## 1.0.0 (2022-04-21)
 
 ### Feature
 
