@@ -18,7 +18,7 @@ class TemplateLoader implements \Mustache_Loader
     private $pathResolver;
 
     public function __construct(
-        \Closure $pathResolver = null
+        ?\Closure $pathResolver = null
     ) {
         $this->pathResolver = $pathResolver;
     }

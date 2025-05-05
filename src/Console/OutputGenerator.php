@@ -18,7 +18,7 @@ class OutputGenerator
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      */
     public function __construct(
-        \Symfony\Component\Console\Output\OutputInterface $output = null
+        ?\Symfony\Component\Console\Output\OutputInterface $output = null
     ) {
         $this->output = $output;
     }
