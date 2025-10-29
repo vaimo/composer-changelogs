@@ -30,7 +30,7 @@ class PackageManager
         $pluginConfig = new \Vaimo\ComposerChangelogs\Composer\Plugin\Config();
         $formats = $pluginConfig->getAvailableFormats();
         
-        if (!isset($formats[$format])) {
+        if (!in_array($format, $formats, true)) {
             throw new \Vaimo\ComposerChangelogs\Exceptions\UpdaterException(
                 sprintf('Unknown format: %s', $format)
             );
