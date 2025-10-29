@@ -62,8 +62,8 @@ class PackageManager
         );
 
         $pathUtils = new \Vaimo\ComposerChangelogs\Utils\PathUtils();
-        $jsonEncoder = new \Camspiers\JsonPretty\JsonPretty();
-        $encodedConfig = $jsonEncoder->prettify(array_replace_recursive($config, $update), null, '    ');
+        $config = array_replace_recursive($config, $update);
+        $encodedConfig = json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         $pkgConfigPath = $pathUtils->composePath($installPath, ComposerFiles::PACKAGE_CONFIG);
         $chLogConfigPath = $pathUtils->composePath($installPath, 'changelog.json');
 
@@ -80,7 +80,7 @@ class PackageManager
                 )
             );
 
-            $encodedChangeLog = $jsonEncoder->prettify($changeLog, null, '    ');
+            $encodedChangeLog = json_encode($changeLog, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
             file_put_contents($chLogConfigPath, $encodedChangeLog);
         }
     }
