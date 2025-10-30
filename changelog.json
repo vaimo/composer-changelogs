@@ -4,6 +4,17 @@
         "possible to generate change-logs in other formats as well (when needed) and to do automatic releases based on",
         "added change-log records. More on how to use it: https://github.com/vaimo/composer-changelogs"
     ],
+    "1.0.3": {
+        "fix": [
+            "Fixed changelog:bootstrap command not working as expected"
+        ]
+    },
+    "1.0.2": {
+        "fix": [
+            "Fixed crash on missing tag in version control",
+            "Fixed PHP 8.4 related deprecations"
+        ]
+    },
     "1.0.1": {
         "fix": [
             "branch named 'main' is not considered as main branch for changes to happen"

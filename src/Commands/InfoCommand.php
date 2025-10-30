@@ -182,9 +182,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
         $composerRuntime = $this->getComposer();
 
         if ($format === 'json') {
-            $jsonEncoder = new \Camspiers\JsonPretty\JsonPretty();
-
-            return $jsonEncoder->prettify($groups, null, '    ');
+            return json_encode($groups, JSON_PRETTY_PRINT);
         }
         
         $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerCtx);
