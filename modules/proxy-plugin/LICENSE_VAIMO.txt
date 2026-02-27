@@ -1,4 +1,4 @@
-Copyright © 2009-2019 Vaimo Group.
+Copyright © 2009-2026 Vaimo Group.
 
 Vaimo reserves all rights in the Program as delivered. The Program
 or any portion thereof may not be reproduced in any form whatsoever without
