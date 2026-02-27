@@ -24,7 +24,7 @@ class ReleaseAnalyser
 
     public function isSameBranch(array $item, $branch)
     {
-        $branch = urldecode($branch);
+        $branch = urldecode((string) $branch);
 
         $itemBranch = $this->detailsResolver->resolveBranch($item);
 
