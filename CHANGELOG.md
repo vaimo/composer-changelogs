@@ -2,6 +2,31 @@
 
 _This file has been auto-generated from the contents of changelog.json_
 
+## 2.0.0
+
+### Breaking
+
+* Dropped Composer 1 compatibility in composer.json. Packagist doesn't work with it anymore, so we can't guarantee any future changes still work with it.
+
+### Feature
+
+* Included Symfony 8 support in backwards compatible manner all the way down to PHP 7.1
+* Allowed installing package on PHP versions 7.1 - 7.3 again, as there's no technical reason to limit us on 7.4 and above
+* Loosened up mustache/mustache version dependency to allow using newer versions of the package
+
+### Maintenance
+
+* Updated composer.lock with latest possible set of packages to avoid false alerts from Dependabot
+* Dropped sebastian/phpcpd from dev dependencies since the package is abandoned
+* Dropped phpunit/phpunit from dev dependencies since the package is not used by the repository anyway
+* Updated code:lint script to work correctly with all supported PHP versions in the package
+* Updated code:deps script to work correctly with all supported PHP versions in the package
+* Added Github workflows to run ci:build script from the package against PHP versions 7.1 - 8.5
+* Updated README with alternative steps to work on the package locally
+* Copied issue templates from vaimo/composer-patches for consistency
+
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/2.0.0) [diff](https://github.com/vaimo/composer-changelogs/compare/1.0.3...2.0.0)
+
 ## 1.0.3
 
 ### Fix
@@ -83,7 +108,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.16.1) [diff](ht
 
 ### Fix
 
-* allow the plugin to be installed as dependency to globally installed package; previously caused every composer call to crash with class declaration conflict
+* allow the plugin to be installed as dependency to globally installed package; previously caused every composer call to crash with class declaration conflict
 * allow usage on older Composer version (before plugins could provide new composer commands)
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.16.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.15.6...0.16.0)
