@@ -1,10 +1,12 @@
-version: "3.8"
 services:
   devbox:
     container_name: composer-changelogs
     build:
       dockerfile: Dockerfile
       context: .
+      args:
+        - PHP_VERSION=8.5-cli
+        - COMPOSER_VERSION=2.9.4
     volumes:
       - ./src:/module/src
     entrypoint: tail -f /dev/null
