@@ -23,7 +23,7 @@ class ChangelogRepositoryFactory
      */
     public function __construct(
         \Vaimo\ComposerChangelogs\Composer\Context $composerCtx,
-        \Symfony\Component\Console\Output\OutputInterface $output = null
+        ?\Symfony\Component\Console\Output\OutputInterface $output = null
     ) {
         $this->composerCtx = $composerCtx;
         $this->output = $output;

@@ -19,7 +19,7 @@ use Vaimo\ComposerChangelogs\Composer\Context as ComposerContext;
  */
 class InfoCommand extends \Composer\Command\BaseCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('changelog:info');
 
@@ -77,7 +77,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $packageName = $input->getArgument('name');
 
@@ -163,10 +163,10 @@ class InfoCommand extends \Composer\Command\BaseCommand
 
             $generalInfo = $detailsResolver->resolveOverview($details);
 
-            $groups = array(
+            $groups = array_filter(array(
                 'overview' => $generalInfo['overview'],
                 'summary' => sprintf('Includes: %s', implode(', ', $summary))
-            );
+            ));
         } elseif ($generalInfo['overview']) {
             $groups = array_merge(
                 $groups,
@@ -182,9 +182,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
         $composerRuntime = $this->getComposer();
 
         if ($format === 'json') {
-            $jsonEncoder = new \Camspiers\JsonPretty\JsonPretty();
-
-            return $jsonEncoder->prettify($groups, null, '    ');
+            return json_encode($groups, JSON_PRETTY_PRINT);
         }
         
         $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerCtx);

@@ -4,11 +4,11 @@
  See LICENSE_VAIMO.txt for license details.
 -->
 <ruleset name="LOCAL">
-    <description>PHP CodeSniffer rules for Composer Patches</description>
+    <description>PHP CodeSniffer rules for Composer Changelogs</description>
     
     <rule ref="PHPCompatibility" />
 
-    <config name="testVersion" value="5.3-"/>
+    <config name="testVersion" value="7.1-"/>
     
     <rule ref="PSR1"/>
     <rule ref="PSR2"/>

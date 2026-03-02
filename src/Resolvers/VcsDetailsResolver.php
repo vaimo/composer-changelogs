@@ -11,7 +11,7 @@ class VcsDetailsResolver
      * @var \Vaimo\ComposerChangelogs\Utils\SystemUtils
      */
     private $systemUtils;
-    
+
     /**
      * @var \Vaimo\ComposerChangelogs\Utils\PathUtils
      */
@@ -36,7 +36,7 @@ class VcsDetailsResolver
      */
     private $dateQueryTemplates = array(
         '.hg' => 'hg log --rev \'{version}\' --template=\'{date|isodate}\'',
-        '.git' => 'git log {version}~1..{version} --simplify-by-decoration --pretty="format:%ai"',
+        '.git' => 'git log {version}~1..{version} --simplify-by-decoration --pretty=format:"%ai"',
     );
 
     private $headQueryTemplates = array(
@@ -61,16 +61,16 @@ class VcsDetailsResolver
 
             $result = $this->systemUtils->getCommandStdOut($command, $repositoryRoot, '0');
         }
-        
+
         return trim($result);
     }
-    
+
     public function resolveReleaseLinks($repositoryUrl, $version, $lastVersion = '')
     {
         if (!$repositoryUrl) {
             return array();
         }
-        
+
         $urlComponents = parse_url($repositoryUrl);
 
         if (!isset($urlComponents['host'])) {
@@ -82,7 +82,7 @@ class VcsDetailsResolver
         if (!isset($this->linkTemplates[$hostCode])) {
             return array();
         }
-        
+
         $data = array();
 
         foreach ($this->linkTemplates[$hostCode] as $code => $template) {
@@ -95,35 +95,39 @@ class VcsDetailsResolver
 
         return $data;
     }
-    
+
     public function resolveReleaseTime($repositoryRoot, $version)
     {
         if (!$repositoryRoot) {
             return array();
         }
-        
+
         foreach ($this->dateQueryTemplates as $folder => $commandTemplate) {
             if (!file_exists($this->pathUtils->composePath($repositoryRoot, $folder))) {
                 continue;
             }
 
-            $result = $this->systemUtils->getCommandStdOut(
-                str_replace('{version}', $version, $commandTemplate),
-                $repositoryRoot
-            );
+            try {
+                $result = $this->systemUtils->getCommandStdOut(
+                    str_replace('{version}', $version, $commandTemplate),
+                    $repositoryRoot
+                );
+            } catch (\Exception $exception) {
+                return array();
+            }
 
             if (!$result) {
                 return array();
             }
-            
-            $segments = explode(' ', trim($result));
+
+            $segments = explode(' ', trim($result, " \t\n\r\0\x0B\""));
 
             return array(
                 'date' => array_shift($segments),
                 'time' => array_shift($segments)
             );
         }
-        
+
         return array();
     }
 }

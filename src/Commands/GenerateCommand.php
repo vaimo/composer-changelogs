@@ -13,7 +13,7 @@ use Vaimo\ComposerChangelogs\Factories;
 
 class GenerateCommand extends \Composer\Command\BaseCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('changelog:generate');
 
@@ -40,7 +40,7 @@ class GenerateCommand extends \Composer\Command\BaseCommand
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $packageName = $input->getArgument('name');
         

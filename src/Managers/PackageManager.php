@@ -28,23 +28,18 @@ class PackageManager
     public function bootstrapChangelogGeneration(\Composer\Package\PackageInterface $package, $format = 'md')
     {
         $pluginConfig = new \Vaimo\ComposerChangelogs\Composer\Plugin\Config();
-        
         $formats = $pluginConfig->getAvailableFormats();
         
-        if (!isset($formats[$format])) {
-            $message = sprintf('Unknown format: %s', $format);
-            
-            throw new \Vaimo\ComposerChangelogs\Exceptions\UpdaterException($message);
+        if (!in_array($format, $formats, true)) {
+            throw new \Vaimo\ComposerChangelogs\Exceptions\UpdaterException(
+                sprintf('Unknown format: %s', $format)
+            );
         }
         
         $composer = $this->composerCtx->getLocalComposer();
-        
-        $packageInfoResolver = new \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver(
-            $composer->getInstallationManager()
-        );
-
+        $installationManager = $composer->getInstallationManager();
+        $packageInfoResolver = new \Vaimo\ComposerChangelogs\Resolvers\PackageInfoResolver($installationManager);
         $configExtractor = new \Vaimo\ComposerChangelogs\Extractors\VendorConfigExtractor($packageInfoResolver);
-        
         $installPath = $packageInfoResolver->getInstallPath($package);
         $config = $configExtractor->getPackageFullConfig($package);
 
@@ -67,10 +62,8 @@ class PackageManager
         );
 
         $pathUtils = new \Vaimo\ComposerChangelogs\Utils\PathUtils();
-        $jsonEncoder = new \Camspiers\JsonPretty\JsonPretty();
-
-        $encodedConfig = $jsonEncoder->prettify(array_replace_recursive($config, $update), null, '    ');
-
+        $config = array_replace_recursive($config, $update);
+        $encodedConfig = json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         $pkgConfigPath = $pathUtils->composePath($installPath, ComposerFiles::PACKAGE_CONFIG);
         $chLogConfigPath = $pathUtils->composePath($installPath, 'changelog.json');
 
@@ -87,8 +80,7 @@ class PackageManager
                 )
             );
 
-            $encodedChangeLog = $jsonEncoder->prettify($changeLog, null, '    ');
-
+            $encodedChangeLog = json_encode($changeLog, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
             file_put_contents($chLogConfigPath, $encodedChangeLog);
         }
     }

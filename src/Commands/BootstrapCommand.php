@@ -15,7 +15,7 @@ use Vaimo\ComposerChangelogs\Composer\Config as ComposerConfig;
 
 class BootstrapCommand extends \Composer\Command\BaseCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         $pluginConfig = new \Vaimo\ComposerChangelogs\Composer\Plugin\Config();
 
@@ -38,10 +38,10 @@ class BootstrapCommand extends \Composer\Command\BaseCommand
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $packageName = $input->getArgument('name');
-        $type = $input->getOption('type');
+        $format = $input->getOption('format');
 
         $composerCtxFactory = new \Vaimo\ComposerChangelogs\Factories\ComposerContextFactory($this->getComposer());
         $composerCtx = $composerCtxFactory->create();
@@ -77,10 +77,9 @@ class BootstrapCommand extends \Composer\Command\BaseCommand
         }
         
         try {
-            $packageManager->bootstrapChangelogGeneration($package, $type);
+            $packageManager->bootstrapChangelogGeneration($package, $format);
         } catch (\Vaimo\ComposerChangelogs\Exceptions\UpdaterException $exception) {
             $message = sprintf('<error>%s</error>', $exception->getMessage());
-            
             $output->writeln($message);
             
             return 1;

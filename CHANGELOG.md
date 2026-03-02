@@ -2,7 +2,94 @@
 
 _This file has been auto-generated from the contents of changelog.json_
 
-## 0.16.1 (2021-01-31)
+## 2.0.0
+
+### Breaking
+
+* Dropped Composer 1 compatibility in composer.json. Packagist doesn't work with it anymore, so we can't guarantee any future changes still work with it.
+
+### Feature
+
+* Included Symfony 8 support in backwards compatible manner all the way down to PHP 7.1
+* Allowed installing package on PHP versions 7.1 - 7.3 again, as there's no technical reason to limit us on 7.4 and above
+* Loosened up mustache/mustache version dependency to allow using newer versions of the package
+
+### Maintenance
+
+* Updated composer.lock with latest possible set of packages to avoid false alerts from Dependabot
+* Dropped sebastian/phpcpd from dev dependencies since the package is abandoned
+* Dropped phpunit/phpunit from dev dependencies since the package is not used by the repository anyway
+* Updated code:lint script to work correctly with all supported PHP versions in the package
+* Updated code:deps script to work correctly with all supported PHP versions in the package
+* Added Github workflows to run ci:build script from the package against PHP versions 7.1 - 8.5
+* Updated README with alternative steps to work on the package locally
+* Copied issue templates from vaimo/composer-patches for consistency
+
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/2.0.0) [diff](https://github.com/vaimo/composer-changelogs/compare/1.0.3...2.0.0)
+
+## 1.0.3
+
+### Fix
+
+* Fixed changelog:bootstrap command not working as expected
+
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/1.0.3) [diff](https://github.com/vaimo/composer-changelogs/compare/1.0.2...1.0.3)
+
+## 1.0.2
+
+### Fix
+
+* Fixed crash on missing tag in version control
+* Fixed PHP 8.4 related deprecations
+
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/1.0.2) [diff](https://github.com/vaimo/composer-changelogs/compare/1.0.1...1.0.2)
+
+## 1.0.1
+
+### Fix
+
+* branch named 'main' is not considered as main branch for changes to happen
+
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/1.0.1) [diff](https://github.com/vaimo/composer-changelogs/compare/1.0.0...1.0.1)
+
+## 1.0.0
+
+### Feature
+
+* drop PHP <7.4 and symfony/process <4.2 support [issues/6]
+
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/1.0.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.17.1...1.0.0)
+
+## 0.17.1
+
+### Fix
+
+* bootstrap command throwing an error in every possible use case, rendering the command unusable
+
+### Maintenance
+
+* update CI job to have one job per Composer MAJOR
+
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.17.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.17.0...0.17.1)
+
+## 0.17.0
+
+### Feature
+
+* add support for Composer 2 [issues/3]
+
+### Fix
+
+* remove 'overview' from output when there is none (in info with brief mode)
+* fix bootstrap command that never worked (error: The 'type' option does not exist.)
+
+### Maintenance
+
+* introduce ready-to-use development environment setup for quicker developer onboarding
+
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.17.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.16.1...0.17.0)
+
+## 0.16.1
 
 ### Maintenance
 
@@ -13,7 +100,7 @@ _This file has been auto-generated from the contents of changelog.json_
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.16.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.16.0...0.16.1)
 
-## 0.16.0 (2019-09-24)
+## 0.16.0
 
 ### Feature
 
@@ -21,12 +108,12 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.16.1) [diff](ht
 
 ### Fix
 
-* allow the plugin to be installed as dependency to globally installed package; previously caused every composer call to crash with class declaration conflict
+* allow the plugin to be installed as dependency to globally installed package; previously caused every composer call to crash with class declaration conflict
 * allow usage on older Composer version (before plugins could provide new composer commands)
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.16.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.15.6...0.16.0)
 
-## 0.15.6 (2019-07-29)
+## 0.15.6
 
 ### Fix
 
@@ -34,7 +121,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.16.0) [diff](ht
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.6) [diff](https://github.com/vaimo/composer-changelogs/compare/0.15.5...0.15.6)
 
-## 0.15.5 (2019-07-19)
+## 0.15.5
 
 ### Fix
 
@@ -43,7 +130,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.6) [diff](ht
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.5) [diff](https://github.com/vaimo/composer-changelogs/compare/0.15.4...0.15.5)
 
-## 0.15.4 (2019-04-22)
+## 0.15.4
 
 ### Fix
 
@@ -51,7 +138,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.5) [diff](ht
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.4) [diff](https://github.com/vaimo/composer-changelogs/compare/0.15.3...0.15.4)
 
-## 0.15.3 (2019-04-16)
+## 0.15.3
 
 ### Fix
 
@@ -65,7 +152,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.4) [diff](ht
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.3) [diff](https://github.com/vaimo/composer-changelogs/compare/0.15.2...0.15.3)
 
-## 0.15.2 (2019-04-16)
+## 0.15.2
 
 ### Fix
 
@@ -74,7 +161,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.3) [diff](ht
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.2) [diff](https://github.com/vaimo/composer-changelogs/compare/0.15.1...0.15.2)
 
-## 0.15.1 (2019-04-14)
+## 0.15.1
 
 ### Fix
 
@@ -88,7 +175,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.2) [diff](ht
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.15.0...0.15.1)
 
-## 0.15.0 (2019-03-20)
+## 0.15.0
 
 ### Feature
 
@@ -96,7 +183,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.1) [diff](ht
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.14.0...0.15.0)
 
-## 0.14.0 (2019-03-12)
+## 0.14.0
 
 ### Feature
 
@@ -108,7 +195,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.15.0) [diff](ht
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.14.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.13.1...0.14.0)
 
-## 0.13.1 (2019-02-05)
+## 0.13.1
 
 ### Fix
 
@@ -117,7 +204,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.14.0) [diff](ht
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.13.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.13.0...0.13.1)
 
-## 0.13.0 (2019-02-05)
+## 0.13.0
 
 ### Feature
 
@@ -131,7 +218,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.13.1) [diff](ht
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.13.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.12.0...0.13.0)
 
-## 0.12.0 (2019-01-30)
+## 0.12.0
 
 ### Feature
 
@@ -144,7 +231,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.13.0) [diff](ht
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.12.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.11.0...0.12.0)
 
-## 0.11.0 (2019-01-30)
+## 0.11.0
 
 ### Feature
 
@@ -160,7 +247,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.12.0) [diff](ht
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.11.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.10.1...0.11.0)
 
-## 0.10.1 (2019-01-28)
+## 0.10.1
 
 ### Fix
 
@@ -169,7 +256,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.11.0) [diff](ht
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.10.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.10.0...0.10.1)
 
-## 0.10.0 (2019-01-24)
+## 0.10.0
 
 ### Feature
 
@@ -177,7 +264,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.10.1) [diff](ht
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.10.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.9.4...0.10.0)
 
-## 0.9.4 (2019-01-17)
+## 0.9.4
 
 ### Fix
 
@@ -185,7 +272,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.10.0) [diff](ht
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.4) [diff](https://github.com/vaimo/composer-changelogs/compare/0.9.3...0.9.4)
 
-## 0.9.3 (2018-12-10)
+## 0.9.3
 
 ### Fix
 
@@ -194,7 +281,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.4) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.3) [diff](https://github.com/vaimo/composer-changelogs/compare/0.9.2...0.9.3)
 
-## 0.9.2 (2018-12-03)
+## 0.9.2
 
 ### Fix
 
@@ -202,7 +289,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.3) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.2) [diff](https://github.com/vaimo/composer-changelogs/compare/0.9.1...0.9.2)
 
-## 0.9.1 (2018-11-30)
+## 0.9.1
 
 ### Fix
 
@@ -211,7 +298,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.2) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.9.0...0.9.1)
 
-## 0.9.0 (2018-11-30)
+## 0.9.0
 
 ### Feature
 
@@ -219,7 +306,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.1) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.8.0...0.9.0)
 
-## 0.8.0 (2018-11-28)
+## 0.8.0
 
 ### Feature
 
@@ -233,7 +320,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.9.0) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.8.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.7.0...0.8.0)
 
-## 0.7.0 (2018-10-04)
+## 0.7.0
 
 ### Feature
 
@@ -247,7 +334,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.8.0) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.7.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.6.4...0.7.0)
 
-## 0.6.4 (2018-09-02)
+## 0.6.4
 
 ### Fix
 
@@ -255,7 +342,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.7.0) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.4) [diff](https://github.com/vaimo/composer-changelogs/compare/0.6.3...0.6.4)
 
-## 0.6.3 (2018-09-02)
+## 0.6.3
 
 ### Fix
 
@@ -263,7 +350,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.4) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.3) [diff](https://github.com/vaimo/composer-changelogs/compare/0.6.2...0.6.3)
 
-## 0.6.2 (2018-08-15)
+## 0.6.2
 
 ### Fix
 
@@ -271,7 +358,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.3) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.2) [diff](https://github.com/vaimo/composer-changelogs/compare/0.6.1...0.6.2)
 
-## 0.6.1 (2018-08-15)
+## 0.6.1
 
 ### Fix
 
@@ -280,7 +367,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.2) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.6.0...0.6.1)
 
-## 0.6.0 (2018-08-15)
+## 0.6.0
 
 ### Feature
 
@@ -289,7 +376,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.1) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.5.2...0.6.0)
 
-## 0.5.2 (2018-08-08)
+## 0.5.2
 
 ### Fix
 
@@ -297,7 +384,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.6.0) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.5.2) [diff](https://github.com/vaimo/composer-changelogs/compare/0.5.1...0.5.2)
 
-## 0.5.1 (2018-08-07)
+## 0.5.1
 
 ### Fix
 
@@ -305,7 +392,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.5.2) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.5.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.5.0...0.5.1)
 
-## 0.5.0 (2018-08-07)
+## 0.5.0
 
 ### Feature
 
@@ -313,7 +400,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.5.1) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.5.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.4.0...0.5.0)
 
-## 0.4.0 (2018-08-07)
+## 0.4.0
 
 ### Feature
 
@@ -327,7 +414,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.5.0) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.4.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.3.1...0.4.0)
 
-## 0.3.1 (2018-08-06)
+## 0.3.1
 
 ### Fix
 
@@ -335,7 +422,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.4.0) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.3.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.3.0...0.3.1)
 
-## 0.3.0 (2018-08-06)
+## 0.3.0
 
 ### Feature
 
@@ -352,7 +439,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.3.1) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.3.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.2.0...0.3.0)
 
-## 0.2.0 (2018-08-03)
+## 0.2.0
 
 ### Feature
 
@@ -360,7 +447,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.3.0) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.2.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0.1.2...0.2.0)
 
-## 0.1.2 (2018-08-02)
+## 0.1.2
 
 ### Fix
 
@@ -369,7 +456,7 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.2.0) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.1.2) [diff](https://github.com/vaimo/composer-changelogs/compare/0.1.1...0.1.2)
 
-## 0.1.1 (2018-08-02)
+## 0.1.1
 
 ### Fix
 
@@ -377,11 +464,11 @@ Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.1.2) [diff](htt
 
 Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.1.1) [diff](https://github.com/vaimo/composer-changelogs/compare/0.1.0...0.1.1)
 
-## 0.1.0 (2018-08-02)
+## 0.1.0
 
 ### Feature
 
 * allow Sphinx documentation file to be generated from changelog contents ('changelog:generate' command)
 * generate changelog for root package on install/update
 
-Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.1.0) [diff](https://github.com/vaimo/composer-changelogs/compare/451d290bfed9a87b59afc6f980827bf307d38e6e...0.1.0)
+Links: [src](https://github.com/vaimo/composer-changelogs/tree/0.1.0) [diff](https://github.com/vaimo/composer-changelogs/compare/0...0.1.0)

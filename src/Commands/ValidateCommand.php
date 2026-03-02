@@ -12,7 +12,7 @@ use Vaimo\ComposerChangelogs\Factories;
 
 class ValidateCommand extends \Composer\Command\BaseCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('changelog:validate');
 
@@ -32,7 +32,7 @@ class ValidateCommand extends \Composer\Command\BaseCommand
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $packageName = $input->getArgument('name');
         $fromSource = $input->getOption('from-source');

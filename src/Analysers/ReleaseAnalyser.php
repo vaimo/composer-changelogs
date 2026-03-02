@@ -15,8 +15,8 @@ class ReleaseAnalyser
     /**
      * @var string[]
      */
-    private $mainBranches = array('master', 'default');
-        
+    private $mainBranches = array('main', 'master', 'default');
+
     public function __construct()
     {
         $this->detailsResolver = new \Vaimo\ComposerChangelogs\Resolvers\ReleaseDetailsResolver();
@@ -24,7 +24,7 @@ class ReleaseAnalyser
 
     public function isSameBranch(array $item, $branch)
     {
-        $branch = urldecode($branch);
+        $branch = urldecode((string) $branch);
 
         $itemBranch = $this->detailsResolver->resolveBranch($item);
 
