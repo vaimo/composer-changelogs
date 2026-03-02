@@ -15,7 +15,7 @@ use Vaimo\ComposerChangelogs\Composer\Config as ComposerConfig;
 
 class BootstrapCommand extends \Composer\Command\BaseCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         $pluginConfig = new \Vaimo\ComposerChangelogs\Composer\Plugin\Config();
 
@@ -38,7 +38,7 @@ class BootstrapCommand extends \Composer\Command\BaseCommand
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $packageName = $input->getArgument('name');
         $format = $input->getOption('format');

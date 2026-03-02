@@ -76,7 +76,7 @@ processing logic and is not perceived as a "changes" group in the code.
 
 ## Configuration: adding releases
 
-The releases should be added in ascending order where the latest release is always the topmost record (as 
+The releases should be added in ascending order where the latest release is always the topmost record (as 
 is the case with all change-logs that one might encounter).
 
 ```json
@@ -291,7 +291,7 @@ composer changelog:info
 # Validate changelog files content
 composer changelog:validate
 
-# Setup basic usage of the changelogs for a module
+# Setup basic usage of the changelogs for a module
 composer changelog:bootstrap
 ```
 
@@ -307,7 +307,9 @@ classes from the new version.
 It is safe to ignore errors like these when running the `composer update` command again does not produce 
 any side-effects.
 
-## Development
+## Development Container
+
+### Option 1
 
 The modules ships with a dedicated development branch [devbox](https://github.com/vaimo/composer-changelogs/tree/devbox) 
 which contains configuration for spinning up a dedicated development environment that can be used together 
@@ -320,18 +322,49 @@ take the shortcut.
 System requirements:
 
 1. Have Docker installed.
-1. Have VSCode installed with 'Remote - Containers' extension.
-1. Have Mutagen installed (used for selecting syncing).
+2. Have VSCode installed with 'Remote - Containers' extension.
+3. Have Mutagen installed (used for selecting syncing).
 
 Setup:
 
 1. `git checkout devbox .devcontainer Dockerfile docker-compose.yml mutagen.yml`
-1. `git reset .devcontainer Dockerfile docker-compose.yml mutagen.yml`
-1. [open the project with VSCode that has Remote Container extension installed]
-1. [use the 'Reopen in Container' option that is given in a prompt that opens]
-1. (only on Windows) `mutagen project start`
-1. Use 'Terminal > New Terminal' to open a terminal within the IDE.
-1. [from the terminal you can install the packages, trigger debugger, etc]
+2. `git reset .devcontainer Dockerfile docker-compose.yml mutagen.yml`
+3. [open the project with VSCode that has Remote Container extension installed]
+4. [use the 'Reopen in Container' option that is given in a prompt that opens]
+5. (only on Windows) `mutagen project start`
+6. Use 'Terminal > New Terminal' to open a terminal within the IDE.
+7. [from the terminal you can install the packages, trigger debugger, etc]
 
 Note this setup does come with a pre-bootstrapped xDebugger, you just have to use the Run menu 
 in VSCode and start listening and trigger a command via the terminal.
+
+### Option 2
+
+System requirements:
+
+* Have [Docker](https://www.docker.com/) installed
+* Have [Mutagen](https://mutagen.io) installed (used for selecting syncing)
+
+Setup:
+
+1. `git checkout devbox .devcontainer Dockerfile docker-compose.yml mutagen.yml`
+2. `git reset .devcontainer Dockerfile docker-compose.yml mutagen.yml`
+3. `docker-compose up -d`
+4. `mutagen project start`
+5. `docker-compose exec devbox composer config platform.php <PHP version>`
+6. `docker-compose exec devbox composer require --dev composer/composer:<Composer version> --no-update`
+7. `docker-compose exec devbox composer update`
+
+If you wish to change the PHP/Composer version:
+
+1. `docker-compose down --rmi all --volumes`
+2. `mutagen project terminate`
+3. Modify `docker-compose.yml` with the desired PHP and Composer version
+4. `docker-compose up -d`
+5. `mutagen project start`
+6. `docker-compose exec devbox composer config platform.php <PHP version>`
+7. `docker-compose exec devbox composer require --dev composer/composer:<Composer version> --no-update`
+8. `docker-compose exec devbox composer update`
+
+> **Note:** Keep in mind that these changes will update composer.json and composer.lock, so take care when committing
+> changes!
