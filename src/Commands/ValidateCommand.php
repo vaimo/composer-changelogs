@@ -32,7 +32,7 @@ class ValidateCommand extends \Composer\Command\BaseCommand
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $packageName = $input->getArgument('name');
         $fromSource = $input->getOption('from-source');
@@ -42,7 +42,7 @@ class ValidateCommand extends \Composer\Command\BaseCommand
         );
 
         $composerCtx = $composerCtxFactory->create();
-        
+
         $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($composerCtx, $output);
         $chLogRepo = $chLogRepoFactory->create($fromSource);
 
@@ -50,7 +50,7 @@ class ValidateCommand extends \Composer\Command\BaseCommand
             $packageName,
             $output->getVerbosity()
         );
-        
+
         return (int)($changelog === null);
     }
 }

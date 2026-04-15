@@ -77,7 +77,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $packageName = $input->getArgument('name');
 
@@ -91,12 +91,12 @@ class InfoCommand extends \Composer\Command\BaseCommand
         $composerCtxFactory = new \Vaimo\ComposerChangelogs\Factories\ComposerContextFactory(
             $this->getComposer()
         );
-        
+
         $composerCtx = $composerCtxFactory->create();
 
         $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($composerCtx, $output);
         $chLogRepo = $chLogRepoFactory->create($fromSource);
-        
+
         $changelog = $chLogRepo->getByPackageName(
             $packageName,
             $output->getVerbosity()
@@ -107,7 +107,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
         }
 
         $releases = $changelog->getReleases();
-        
+
         if (!$version) {
             $version = $this->resolveVersion($releases, $branch, $showUpcoming);
         }
@@ -184,13 +184,13 @@ class InfoCommand extends \Composer\Command\BaseCommand
         if ($format === 'json') {
             return json_encode($groups, JSON_PRETTY_PRINT);
         }
-        
+
         $confResolverFactory = new Factories\Changelog\ConfigResolverFactory($composerCtx);
 
         $confResolver = $confResolverFactory->create($fromSource);
 
         $templateResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogTemplateResolver($confResolver);
-        
+
         $templates = $templateResolver->getTemplates($package);
 
         $renderCtxGenerator = new \Vaimo\ComposerChangelogs\Generators\Changelog\RenderContextGenerator();
@@ -199,9 +199,9 @@ class InfoCommand extends \Composer\Command\BaseCommand
         $infoResolver = new Resolvers\PackageInfoResolver(
             $composerRuntime->getInstallationManager()
         );
-        
+
         $repositoryRoot = $infoResolver->getInstallPath($package);
-        
+
         $ctxData = $renderCtxGenerator->generate(
             array('' => $groups),
             '',
@@ -221,7 +221,7 @@ class InfoCommand extends \Composer\Command\BaseCommand
             array('root' => $templates[$format]['release'])
         );
     }
-    
+
     private function resolveVersion($changelog, $branch, $showUpcoming)
     {
         $releaseResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogReleaseResolver();

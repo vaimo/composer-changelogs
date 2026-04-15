@@ -38,7 +38,7 @@ class BootstrapCommand extends \Composer\Command\BaseCommand
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $packageName = $input->getArgument('name');
         $format = $input->getOption('format');
@@ -47,7 +47,7 @@ class BootstrapCommand extends \Composer\Command\BaseCommand
         $composerCtx = $composerCtxFactory->create();
 
         $commandCtx = new \Vaimo\ComposerChangelogs\Console\Command\ExecutionContext($output, $composerCtx);
-        
+
         $cfgResolverFactory = new \Vaimo\ComposerChangelogs\Factories\Changelog\ConfigResolverFactory($composerCtx);
         $cfgResolver = $cfgResolverFactory->create();
 
@@ -62,7 +62,7 @@ class BootstrapCommand extends \Composer\Command\BaseCommand
         $output->writeln(
             sprintf('Bootstrapping changelog generation for <info>%s</info>', $package->getName())
         );
-        
+
         if ($cfgResolver->hasConfig($package)) {
             $rootPath = array(ComposerConfig::CONFIG_ROOT, PluginConfig::ROOT);
 
@@ -70,23 +70,23 @@ class BootstrapCommand extends \Composer\Command\BaseCommand
                 'Configuration root (<comment>%s</comment>) already present in package config',
                 implode('/', $rootPath)
             );
-            
+
             $output->writeln($message);
-            
+
             return 0;
         }
-        
+
         try {
             $packageManager->bootstrapChangelogGeneration($package, $format);
         } catch (\Vaimo\ComposerChangelogs\Exceptions\UpdaterException $exception) {
             $message = sprintf('<error>%s</error>', $exception->getMessage());
             $output->writeln($message);
-            
+
             return 1;
         }
-        
+
         $output->writeln('<info>Done</info>');
-        
+
         return 0;
     }
 }

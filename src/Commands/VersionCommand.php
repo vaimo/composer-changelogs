@@ -46,7 +46,7 @@ class VersionCommand extends \Composer\Command\BaseCommand
             \Symfony\Component\Console\Input\InputOption::VALUE_OPTIONAL,
             'Number of segments of the version to return. <comment>[default: all segments]</comment>'
         );
-        
+
         $this->addOption(
             '--upcoming',
             null,
@@ -69,7 +69,7 @@ class VersionCommand extends \Composer\Command\BaseCommand
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $packageName = $input->getArgument('name');
         $fromSource = $input->getOption('from-source');
@@ -85,12 +85,12 @@ class VersionCommand extends \Composer\Command\BaseCommand
         );
 
         $composerCtx = $composerCtxFactory->create();
-        
+
         $chLogRepoFactory = new Factories\ChangelogRepositoryFactory(
             $composerCtx,
             $output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL ? $output : null
         );
-        
+
         $chLogRepo = $chLogRepoFactory->create($fromSource);
 
         $changelog = $chLogRepo->getByPackageName($packageName);
@@ -100,7 +100,7 @@ class VersionCommand extends \Composer\Command\BaseCommand
         }
 
         $releases = $changelog->getReleases();
-        
+
         $releaseResolver = new \Vaimo\ComposerChangelogs\Resolvers\ChangelogReleaseResolver();
 
         $version = key($releases);
@@ -120,11 +120,11 @@ class VersionCommand extends \Composer\Command\BaseCommand
         $versionResolver = new \Vaimo\ComposerChangelogs\Resolvers\VersionResolver();
 
         $version = $versionResolver->resolveValidVersion($version);
-            
+
         if ($format === 'regex') {
             $version = preg_quote($version, '/');
         }
-        
+
         if ($segmentsCount) {
             $version = implode(
                 '.',
@@ -135,9 +135,9 @@ class VersionCommand extends \Composer\Command\BaseCommand
                 )
             );
         }
-        
+
         $output->writeln($version);
-        
+
         return 0;
     }
 }

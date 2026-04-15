@@ -4,6 +4,11 @@
         "possible to generate change-logs in other formats as well (when needed) and to do automatic releases based on",
         "added change-log records. More on how to use it: https://github.com/vaimo/composer-changelogs"
     ],
+    "1.0.4": {
+        "fix": [
+            "Magento 2.4.9 compatibility fix: console command execute() method signature changed in Magento 2.4.9"
+        ]
+    },
     "1.0.3": {
         "fix": [
             "Fixed changelog:bootstrap command not working as expected"

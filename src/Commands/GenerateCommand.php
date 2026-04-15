@@ -40,10 +40,10 @@ class GenerateCommand extends \Composer\Command\BaseCommand
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $packageName = $input->getArgument('name');
-        
+
         $fromSource = $input->getOption('from-source');
         $repositoryUrl = $input->getOption('url');
 
@@ -54,7 +54,7 @@ class GenerateCommand extends \Composer\Command\BaseCommand
         );
 
         $composerCtx = $composerCtxFactory->create();
-        
+
         $chLogRepoFactory = new Factories\ChangelogRepositoryFactory($composerCtx, $output);
         $chLogRepo = $chLogRepoFactory->create($fromSource);
 
@@ -72,7 +72,7 @@ class GenerateCommand extends \Composer\Command\BaseCommand
         $confResolver = $confResolverFactory->create($fromSource);
 
         $package = $changelog->getOwner();
-        
+
         $output->writeln(
             sprintf('Generating changelog output for <info>%s</info>', $package->getName())
         );
@@ -84,7 +84,7 @@ class GenerateCommand extends \Composer\Command\BaseCommand
         $featureFlags = $confResolver->getFeatureFlags($package);
 
         $urlResolver = $this->createUrlResolver($repositoryUrl, $featureFlags);
-        
+
         $docsGenerator = new \Vaimo\ComposerChangelogs\Generators\DocumentationGenerator(
             $confResolver,
             $infoResolver,
@@ -102,10 +102,10 @@ class GenerateCommand extends \Composer\Command\BaseCommand
         }
 
         $output->writeln('<info>Done</info>');
-        
+
         return 0;
     }
-    
+
     private function createUrlResolver($repositoryUrl, array $featureFlags)
     {
         if ($repositoryUrl !== null || !$featureFlags['links']) {
@@ -113,7 +113,7 @@ class GenerateCommand extends \Composer\Command\BaseCommand
         }
 
         $composerRuntime = $this->getComposer();
-        
+
         $infoResolver = new Resolvers\PackageInfoResolver(
             $composerRuntime->getInstallationManager()
         );
