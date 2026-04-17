@@ -6,7 +6,7 @@ services:
       context: .
       args:
         - PHP_VERSION=8.5-cli
-        - COMPOSER_VERSION=2.9.4
+        - COMPOSER_VERSION=2.9.7
     volumes:
       - ./src:/module/src
     entrypoint: tail -f /dev/null
