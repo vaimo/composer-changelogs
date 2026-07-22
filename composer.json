@@ -22,7 +22,7 @@
     },
     "config": {
         "platform": {
-            "php": "8.5.5"
+            "php": "8.5.7"
         },
         "allow-plugins": {
             "vaimo/composer-changelogs-proxy": true
